@@ -54,7 +54,7 @@ export default function FeatureSection() {
           <Feature {...details} key={index} />
         ))}
       </div>
-      <Button className="w-[225px]" onClick={() => router.push("/login")}>
+      <Button className="w-[225px] bg-primary-400 text-white gradient-border shadow-buttonshadow outline-none" onClick={() => router.push("/login")}>
         Start practicing
       </Button>
     </section>

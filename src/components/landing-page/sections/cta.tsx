@@ -24,7 +24,11 @@ export default function CTASection() {
           exam prep. Whether you&apos;re brushing up on math or tackling past
           questions, Prepme is here to guide you every step of the way.
         </p>
-        <Button variant="secondary" onClick={() => router.push("/login")}>
+        <Button
+          variant="secondary"
+          className="white-gradient-border shadow-buttonshadow"
+          onClick={() => router.push("/login")}
+        >
           Start practicing for free
         </Button>
       </div>

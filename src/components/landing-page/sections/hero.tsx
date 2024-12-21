@@ -40,9 +40,9 @@ export default function HeroSection() {
       style={{
         background: "url('/background/svg/hero.svg')",
         backgroundRepeat: "no-repeat",
-        backgroundPosition: "bottom",
+        backgroundPosition: "center",
       }}
-      className="min-h-dvh relative w-full text-white flex flex-col items-center p-5 lg:px-10 lg:pb-72 space-y-20 md:space-y-32"
+      className="min-h-dvh relative w-full text-white flex flex-col items-center p-5 lg:px-10 lg:pb-72 space-y-20 md:space-y-[7rem]"
     >
       <div data-label="prepme-logo" aria-label="prepme-logo">
         <Image
@@ -61,7 +61,11 @@ export default function HeroSection() {
         <p className="text-lg">
           Turn Practice into Progress, Progress into Rewards
         </p>
-        <Button variant="secondary" className="w-[240px]" onClick={() => router.push("/login")}>
+        <Button
+          variant="secondary"
+          className="w-[240px] white-gradient-border shadow-buttonshadow"
+          onClick={() => router.push("/login")}
+        >
           Get Started
         </Button>
         <div className="flex items-center space-x-1">
@@ -81,8 +85,8 @@ export default function HeroSection() {
       >
         <Image
           className="w-full h-full max-w-[1225px] object-contain"
-          src="/images/landing-page/hero.png"
-          alt=""
+          src="/background/svg/heroImage.svg"
+          alt="hero image"
           width={1255}
           height={720}
         />
