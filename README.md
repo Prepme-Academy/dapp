@@ -5,7 +5,7 @@
 The **Prep Me Client** is a modern frontend application built with Next.js 14, offering server-side rendering, static site generation, and a powerful developer experience.
 
 ## Project Structure
-
+```
 frontend/
 ├── src/
 │ ├── app/
@@ -32,6 +32,7 @@ frontend/
 │ ├── icons/
 │ └── images/
 └── config files
+```
 
 ```bash
  The structure follows Next.js 15 conventions with:
