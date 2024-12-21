@@ -5,8 +5,8 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: {
-    template: "Prepme | Onboarding - %s",
-    default: "Prepme | Onboarding",
+    template: "Prepme Academy | Onboarding - %s",
+    default: "Prepme Academy | Onboarding",
   },
   description: "The Fun way to conquer Exams with Confidence",
 };

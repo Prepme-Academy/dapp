@@ -4,11 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 const socials = [
-  { name: "telegram", icon: telegram, href: "" },
+  { name: "telegram", icon: telegram, href: "http://t.me/prepmeacademy" },
   {
     name: "x",
     icon: x,
-    href: "",
+    href: "https://x.com/prepmeacademy",
   },
 ];
 
@@ -47,7 +47,7 @@ export default function Footer() {
       <div className="flex flex-col md:hidden items-start w-full space-y-5">
         <div className="space-x-2.5 flex items-center">
           {socials.map((platform, index) => (
-            <a href={platform.href} target="_blank" key={index}>
+            <Link href={platform.href} target="_blank" key={index}>
               <Image
                 src={platform.icon}
                 alt={platform.name}
@@ -55,7 +55,7 @@ export default function Footer() {
                 height={24}
                 priority
               />
-            </a>
+            </Link>
           ))}
         </div>
         <p className="text-muted-foreground">
