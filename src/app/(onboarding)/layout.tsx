@@ -17,7 +17,7 @@ export default function OnboardingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="bg-authbg bg-no-repeat lg:h-dvh lg:overflow-hidden flex flex-col px-4 md:px-0">
+    <main className="bg-authbg bg-no-repeat lg:h-dvh lg:overflow-hidden flex flex-col px-4 md:px-0 gap-5">
       <nav className="w-full py-6 md:px-10 lg:px-20 md:py-10 flex items-center justify-between">
         <Link href="/" data-label="prepme-logo" aria-label="prepme-logo">
           <Image
@@ -31,7 +31,7 @@ export default function OnboardingLayout({
       </nav>
       <OnboardingProgress />
 
-      <section className="w-full flex items-center justify-center bg-white border border-muted-300 shadow-authcardshadow rounded-2xl p-4 max-w-[404px] mx-auto">
+      <section className="w-full flex items-center justify-center max-w-[706px] mx-auto pb-10 lg:pb-0">
         {children}
       </section>
     </main>
