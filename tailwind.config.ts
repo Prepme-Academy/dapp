@@ -43,6 +43,7 @@ export default {
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          100: "#DFDFDF",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -50,6 +51,7 @@ export default {
           100: "#E4E7EB",
           200: "#828589",
           300: "#6D7177",
+          400: "#475467",
           500: "#292D32",
         },
         accent: {

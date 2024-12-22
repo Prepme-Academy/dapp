@@ -29,7 +29,7 @@ const UsernameForm: React.FC = () => {
         variant={"unstyled"}
         type="submit"
         disabled={username.length === 0}
-        onClick={() => router.push("/exam-option")}
+        onClick={() => router.push("/onboarding/exam-option")}
         className="bg-primary-400 text-white w-full h-12 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
       >
         Continue
