@@ -20,6 +20,7 @@ export default {
       },
       backgroundImage: {
         authbg: "url('/background/authbg.png')",
+        herobg: "url('/background/svg/hero.svg')",
       },
       colors: {
         background: "hsl(var(--background))",
@@ -48,7 +49,7 @@ export default {
           foreground: "hsl(var(--muted-foreground))",
           100: "#E4E7EB",
           200: "#828589",
-          300:"#6D7177",
+          300: "#6D7177",
           500: "#292D32",
         },
         accent: {
