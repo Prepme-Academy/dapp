@@ -56,3 +56,16 @@ export const resetNotificationStatus = () => {
   localStorage.removeItem("hasVisitedNotificationPage");
   localStorage.removeItem("prepmeNotifications");
 };
+
+// export const handleToggle = (type: keyof NotificationSettings) => {
+//   if (notifications.allowNotifications) {
+//     setNotifications((prev) => {
+//       const updatedState = {
+//         ...prev,
+//         [type]: !prev[type],
+//       };
+//       localStorage.setItem("prepmeNotifications", JSON.stringify(updatedState));
+//       return updatedState;
+//     });
+//   }
+// };

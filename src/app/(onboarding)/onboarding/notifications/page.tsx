@@ -80,22 +80,6 @@ export default function Notificationpage() {
     }
   }, [notifications.allowNotifications, router]);
 
-  const handleToggle = (type: keyof NotificationSettings) => {
-    if (notifications.allowNotifications) {
-      setNotifications((prev) => {
-        const updatedState = {
-          ...prev,
-          [type]: !prev[type],
-        };
-        localStorage.setItem(
-          "prepmeNotifications",
-          JSON.stringify(updatedState)
-        );
-        return updatedState;
-      });
-    }
-  };
-
   const handleNotificationPermission = () => {
     if ("Notification" in window) {
       Notification.requestPermission()
