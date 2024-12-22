@@ -37,12 +37,7 @@ export default function HeroSection() {
     <section
       data-label="hero"
       aria-label="hero"
-      style={{
-        background: "url('/background/svg/hero.svg')",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
-      }}
-      className="min-h-dvh relative w-full text-white flex flex-col items-center p-5 lg:px-10 lg:pb-72 space-y-20 md:space-y-[7rem]"
+      className="md:min-h-dvh relative w-full text-white flex flex-col items-center px-5 lg:px-10 pb-40 lg:pb-72 space-y-20 md:space-y-[7rem] bg-herobg bg-no-repeat bgposition"
     >
       <div data-label="prepme-logo" aria-label="prepme-logo">
         <Image
