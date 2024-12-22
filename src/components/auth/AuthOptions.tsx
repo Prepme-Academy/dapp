@@ -75,7 +75,7 @@ const AuthOptions: React.FC = () => {
         </h2>
         <Button
           variant={"outline"}
-          className="flex items-center justify-start gap-2"
+          className="flex items-center justify-start gap-2 col-span-2 md:col-span-1"
           onClick={() => router.push("/login/email")}
         >
           <Image
@@ -100,7 +100,7 @@ const AuthOptions: React.FC = () => {
         </Button>
         <Button
           variant={"outline"}
-          className="flex items-center justify-start gap-2"
+          className="flex items-center justify-start gap-2 col-span-2 md:col-span-1"
         >
           <Image
             src="/icons/discord.svg"
@@ -124,7 +124,7 @@ const AuthOptions: React.FC = () => {
         </Button>
         <Button
           variant={"outline"}
-          className="flex items-center justify-start gap-2"
+          className="flex items-center justify-start gap-2 col-span-2 md:col-span-1"
         >
           <Image
             src="/icons/twitter.svg"

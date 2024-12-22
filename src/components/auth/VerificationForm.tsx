@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import useClientStore from "@/store/clientStore";
 
 interface VerificationFormProps {
   email: string;
@@ -15,6 +16,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const router = useRouter();
+  const { isFirstVisit } = useClientStore();
 
   // Handle countdown timer
   useEffect(() => {
@@ -96,6 +98,12 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
     }
   };
 
+  const handleClick = () => {
+    if (isFirstVisit) {
+      router.push("/onboarding/username");
+    }
+  };
+
   return (
     <div className="w-full flex flex-col items-start justify-start gap-8">
       <div className="w-full flex flex-col items-start justify-start gap-2">
@@ -145,7 +153,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
         variant={"unstyled"}
         type="submit"
         disabled={otp.join("").length === 0}
-        onClick={() => router.push(`/onboarding/username`)}
+        onClick={handleClick}
         className="bg-primary-400 text-white w-full h-12 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
       >
         Send verification code

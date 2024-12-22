@@ -22,7 +22,7 @@ export default function AuthLayout({
         <Link href="/" data-label="prepme-logo" aria-label="prepme-logo">
           <Image
             src="/icons/logo-blue.svg"
-            alt="Prepme Logo"
+            alt="Prepme Academy Logo"
             width={144}
             height={144}
             className="w-28 sm:w-36"

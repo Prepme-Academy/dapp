@@ -14,7 +14,7 @@ export default function ExamOptionPage() {
         <h1 className="text-xl font-medium text-muted-500 text-center w-full">
           What exams do you want to Practice?
         </h1>
-        <p className="text-sm font-normal text-muted-400">
+        <p className="text-sm font-normal text-muted-400 text-center">
           Please choose at least one from the following items to get started.
         </p>
       </div>

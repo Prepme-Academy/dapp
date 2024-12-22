@@ -1,3 +1,4 @@
+import { DashboardHeader, DashboardSidebar } from "@/components/dashboard";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,12 +15,14 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="">
-      
-
-      <section className="w-full flex items-center justify-center max-w-[706px] mx-auto pb-10 lg:pb-0">
-        {children}
-      </section>
+    <main className="lg:h-screen flex flex-col">
+      <DashboardHeader />
+      <div className="flex flex-col lg:flex-row items-start lg:flex-1 lg:overflow-hidden">
+        <DashboardSidebar />
+        <section className="w-full lg:max-w-full lg:flex-1 p-4 lg:overflow-y-auto lg:h-full">
+          {children}
+        </section>
+      </div>
     </main>
   );
 }
