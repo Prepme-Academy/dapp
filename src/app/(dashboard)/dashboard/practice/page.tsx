@@ -1,3 +1,8 @@
+import {
+  ExploreExamType,
+  ExplorePastQuestions,
+  StartPracticeSearch,
+} from "@/components/dashboard/practice";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -5,5 +10,11 @@ export const metadata: Metadata = {
 };
 
 export default function PracticePage() {
-  return <div className="flex flex-col gap-5">practice</div>;
+  return (
+    <section className="space-y-4">
+      <StartPracticeSearch />
+      <ExploreExamType />
+      <ExplorePastQuestions />
+    </section>
+  );
 }

@@ -89,12 +89,10 @@
   background-clip: padding-box, border-box;
 }
 
-.bgposition {
-  background-position: 48% center;
-}
-
-@media (min-width: 768px) {
-  .bgposition {
-    background-position: center;
-  }
+select {
+  background-image: url(/icons/chevrondown.svg);
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  appearance: none;
+  cursor: pointer;
 }
