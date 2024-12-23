@@ -19,15 +19,15 @@ const tabData = [
   },
 ];
 
-export default function ProfilePage({
+export default async function ProfilePage({
   searchParams,
 }: {
-  searchParams: {
+  searchParams: Promise<{
     tab: string | undefined;
-  };
+  }>;
 }) {
-  const currentTab = searchParams.tab || "earning";
-  console.log(currentTab);
+  const params = await searchParams;
+  const currentTab = params.tab || "earning";
 
   const pageContent = currentTab === "earning" ? <MyEarningTab /> : <ShopTab />;
 
@@ -38,7 +38,12 @@ export default function ProfilePage({
           <Link
             key={index}
             href={`profile?tab=${path}`}
-            className={cn("text-base md:text-lg text-center lg:text-xl font-medium px-6 lg:px-10 py-4", path === currentTab ? "text-muted-400 border-b-2 border-primary-400" : "text-muted-200")}
+            className={cn(
+              "text-base md:text-lg text-center lg:text-xl font-medium px-6 lg:px-10 py-4",
+              path === currentTab
+                ? "text-muted-400 border-b-2 border-primary-400"
+                : "text-muted-200"
+            )}
           >
             {name}
           </Link>
