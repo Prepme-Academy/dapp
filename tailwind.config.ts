@@ -19,6 +19,7 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       backgroundImage: {
+        adbg: "url('/background/adbg.png')",
         authbg: "url('/background/authbg.png')",
         herobg: "url('/background/svg/hero.svg')",
       },
@@ -33,10 +34,22 @@ export default {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
+        grey: {
+          DEFAULT: "#636978",
+          100: "#F6F6F6",
+          200: "#F4F4F4",
+          300: "#E6ECF5",
+          400: "#F7F7F7",
+          500: "#F0F0F0",
+          600: "#F0F0F0",
+          700: "#F7F8FA",
+          800: "#55575A",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
           100: "#F1F9FF",
+          200: "#EEF0F2",
           300: "#2A87FF",
           400: "#1877F2",
           500: "#2964CC",
@@ -113,6 +126,7 @@ export default {
       boxShadow: {
         authcardshadow: "0px 1px 4px 0px #0000000D",
         buttonshadow: "0px 1px 0px 2px #334058",
+        cardshadow: "0px 1px 4px 0px #0000000F",
       },
     },
   },

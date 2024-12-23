@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import DashboardMobileHeader from "./DashboardMobileHeader";
+import DashboardMobileHeader from "./navigations/DashboardMobileHeader";
 import { Button } from "../ui/button";
 
 const DashboardHeader: React.FC = () => {

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 
 const DashboardSidebar: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -82,6 +82,7 @@ const DashboardSidebar: React.FC = () => {
                     ? " bg-primary-100 border border-primary-400 text-muted-500"
                     : "text-muted-400"
                 )}
+                onClick={() => setShowMenu(false)}
               >
                 {link.icon}
                 <span>{link.title}</span>

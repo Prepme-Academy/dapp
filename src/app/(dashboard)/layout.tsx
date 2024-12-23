@@ -1,4 +1,8 @@
-import { DashboardHeader, DashboardSidebar } from "@/components/dashboard";
+import {
+  DashboardHeader,
+  DashboardRightSidebar,
+  DashboardSidebar,
+} from "@/components/dashboard";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -22,6 +26,7 @@ export default function DashboardLayout({
         <section className="w-full lg:max-w-full lg:flex-1 p-4 lg:overflow-y-auto lg:h-full">
           {children}
         </section>
+        <DashboardRightSidebar />
       </div>
     </main>
   );
