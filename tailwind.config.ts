@@ -44,6 +44,7 @@ export default {
           600: "#F0F0F0",
           700: "#F7F8FA",
           800: "#55575A",
+          900: "#E2E6EA",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
