@@ -11,8 +11,8 @@ const UsernameForm: React.FC = () => {
   return (
     <div className="w-full flex flex-col items-start justify-start gap-8">
       <div className="w-full flex flex-col items-start justify-start gap-2">
-        <label htmlFor="email" className="text-sm font-normal text-muted-500">
-          Email address
+        <label htmlFor="username" className="text-sm font-normal text-muted-500">
+          Username
         </label>
         <input
           type="text"

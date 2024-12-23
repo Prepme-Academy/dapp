@@ -12,35 +12,66 @@ const ExamOptionSelect: React.FC = () => {
   const router = useRouter();
 
   return (
-    <div className="w-full flex flex-wrap items-center justify-center gap-y-4 gap-x-3">
-      {examOptions.map((option, index) => (
-        <Button
-          key={option.id}
-          variant={"unstyled"}
-          className={cn(
-            "w-[calc(25%-12px)] min-h-[141px] p-4 rounded-lg flex flex-col items-center justify-center gap-4 bg-white border",
-            selectedOption === option.name
-              ? "border-primary-500"
-              : "border-secondary-100",
-            index === 4 ? "ml-[calc(129px/2)]" : ""
-          )}
-          onClick={() => {
-            setSelectedOption(option.name);
-            router.push("/onboarding/practice-duration");
-          }}
-        >
-          <Image
-            src={option.examicon}
-            alt={`${option.name} icon`}
-            width={54}
-            height={54}
-            priority
-          />
-          <span className="text-sm font-normal text-muted-500 uppercase">
-            {option.name}
-          </span>
-        </Button>
-      ))}
+    <div className="w-full">
+      <div className="w-full hidden lg:flex flex-wrap items-center justify-center gap-y-4 gap-x-3">
+        {examOptions.map((option, index) => (
+          <Button
+            key={option.id}
+            variant={"unstyled"}
+            className={cn(
+              "w-[calc(25%-12px)] min-h-[141px] p-4 rounded-lg flex flex-col items-center justify-center gap-4 bg-white border",
+              selectedOption === option.name
+                ? "border-primary-500"
+                : "border-secondary-100",
+              index === 4 ? "ml-[calc(129px/2)]" : ""
+            )}
+            onClick={() => {
+              setSelectedOption(option.name);
+              router.push("/onboarding/practice-duration");
+            }}
+          >
+            <Image
+              src={option.examicon}
+              alt={`${option.name} icon`}
+              width={54}
+              height={54}
+              priority
+            />
+            <span className="text-sm font-normal text-muted-500 uppercase">
+              {option.name}
+            </span>
+          </Button>
+        ))}
+      </div>
+      <div className="w-full grid grid-cols-2 lg:hidden items-center justify-center gap-y-4 gap-x-3">
+        {examOptions.map((option) => (
+          <Button
+            key={option.id}
+            variant={"unstyled"}
+            className={cn(
+              "w-full min-h-[141px] p-4 rounded-lg flex flex-col items-center justify-center gap-4 bg-white border",
+              selectedOption === option.name
+                ? "border-primary-500"
+                : "border-secondary-100"
+            )}
+            onClick={() => {
+              setSelectedOption(option.name);
+              router.push("/onboarding/practice-duration");
+            }}
+          >
+            <Image
+              src={option.examicon}
+              alt={`${option.name} icon`}
+              width={54}
+              height={54}
+              priority
+            />
+            <span className="text-sm font-normal text-muted-500 uppercase">
+              {option.name}
+            </span>
+          </Button>
+        ))}
+      </div>
     </div>
   );
 };
