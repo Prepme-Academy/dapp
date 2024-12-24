@@ -96,3 +96,28 @@ select {
   appearance: none;
   cursor: pointer;
 }
+
+
+@layer components {
+  .odometer-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .odometer {
+    position: absolute;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: opacity 0.5s, transform 0.5s;
+    font-size: 150px;
+    line-height: 278px;
+    @apply md:text-[200px] lg:text-[278px] font-medium;
+  }
+
+  .odometer.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
