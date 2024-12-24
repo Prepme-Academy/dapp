@@ -33,7 +33,14 @@ const Providers: React.FC<ProvidersProps> = ({ children }) => {
             accentColor: "#676FFF",
             logo: "https://www.prepme.academy/images/logo-site.png",
           },
-          loginMethods: ["email", "google", "apple", "discord", "twitter"],
+          loginMethods: [
+            "email",
+            "google",
+            "apple",
+            "discord",
+            "twitter",
+            "wallet",
+          ],
         }}
       >
         {children}

@@ -44,6 +44,7 @@ const AuthOptions: React.FC = () => {
         <Button
           variant={"outline"}
           className="flex items-center justify-start gap-2"
+          onClick={() => handleSocialLogin("wallet")}
         >
           <Image
             src="/icons/metamask.svg"
@@ -56,6 +57,7 @@ const AuthOptions: React.FC = () => {
         <Button
           variant={"outline"}
           className="flex items-center justify-start gap-2"
+          onClick={() => handleSocialLogin("wallet")}
         >
           <Image
             src="/icons/trustwallet.svg"
@@ -68,6 +70,7 @@ const AuthOptions: React.FC = () => {
         <Button
           variant={"outline"}
           className="col-span-2 flex items-center justify-start gap-2"
+          onClick={() => handleSocialLogin("wallet")}
         >
           <Image
             src="/icons/walletconnect.svg"
