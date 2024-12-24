@@ -8,24 +8,28 @@ import { Button } from "@/components/ui/button";
 import AdsComponent from "./AdsComponent";
 import { leaderboardData } from "@/utils/constant";
 import { usePathname } from "next/navigation";
+import { EditProfile } from "../profile";
 
 const DashboardRightSidebar: React.FC = () => {
   const pathname = usePathname();
   return (
     <aside className="hidden lg:flex flex-col gap-y-4 items-start justify-start w-80 h-full bg-white p-4 border-l border-secondary-200 flex-shrink-0 overflow-y-auto relative rounded-s-3xl">
-      {pathname !== "/dashboard/quests" && <QuestCard showAllLink={true} />}
-      {pathname !== "/dashboard/leaderboard" && (
-        <LeaderboardCard
-          showTitle={false}
-          className="border border-primary-200"
-          data={leaderboardData.slice(0, 4)}
-        />
-      )}
+      {pathname === "/dashboard/profile" && <EditProfile />}
+      {pathname !== "/dashboard/quests" &&
+        pathname !== "/dashboard/profile" && <QuestCard showAllLink={true} />}
+      {pathname !== "/dashboard/leaderboard" &&
+        pathname !== "/dashboard/profile" && (
+          <LeaderboardCard
+            showTitle={false}
+            className="border border-primary-200"
+            data={leaderboardData.slice(0, 4)}
+          />
+        )}
       <Card className="w-full p-3 border-gray-200 space-y-3 flex items-center justify-between">
         <div className="flex items-center justify-start gap-2">
           <Image
             src="/icons/dashboard/leaderboard.svg"
-            alt="quest box"
+            alt="leaderboard icon"
             width={32}
             height={32}
           />
@@ -45,7 +49,7 @@ const DashboardRightSidebar: React.FC = () => {
           Join
         </Button>
       </Card>
-      <AdsComponent />
+      {pathname !== "/dashboard/profile" && <AdsComponent />}
     </aside>
   );
 };

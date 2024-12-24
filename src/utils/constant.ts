@@ -154,3 +154,63 @@ export const examQuestions = [
     ],
   },
 ];
+
+export const transactionHistory = [
+  {
+    id: "1",
+    date: "Dec 4, 2024",
+    transactions: [
+      {
+        id: "01",
+        transationInfo: {
+          title: "Send EDU",
+          info: "-20 EDU",
+          debit: "-500 XP",
+        },
+        status: "Confirmed",
+      },
+      {
+        id: "02",
+        transationInfo: {
+          title: "Convert 200 XP",
+          info: "-200 XP",
+          debit: "20 EDU",
+        },
+        status: "Pending",
+      },
+      {
+        id: "03",
+        transationInfo: {
+          title: "Send EDU",
+          info: "-20 EDU",
+          debit: "-500 XP",
+        },
+        status: "Confirmed",
+      },
+    ],
+  },
+  {
+    id: "2",
+    date: "Dec 2, 2024",
+    transactions: [
+      {
+        id: "01",
+        transationInfo: {
+          title: "Convert 200 XP",
+          info: "-20 EDU",
+          debit: "-500 XP",
+        },
+        status: "Confirmed",
+      },
+      {
+        id: "02",
+        transationInfo: {
+          title: "Convert 200 XP",
+          info: "-200 XP",
+          debit: "20 EDU",
+        },
+        status: "Failed",
+      },
+    ],
+  },
+];
