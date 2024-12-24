@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -43,12 +45,38 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
+
+    // Create a ref for the audio element
+    const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+    // Handle button click to play the audio
+    const handleClick = (
+      event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
+      // Play the audio when the button is clicked
+      if (audioRef.current) {
+        audioRef.current.play();
+      }
+
+      // Call any existing onClick handler passed via props
+      if (props.onClick) {
+        props.onClick(event);
+      }
+    };
+
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
+      <>
+        <Comp
+          className={cn(buttonVariants({ variant, size, className }))}
+          ref={ref}
+          {...props}
+          onClick={handleClick}
+        />
+        <audio ref={audioRef}>
+        <source src="/audios/click.mp3" type="audio/mpeg" />
+        <source src="/audios/click.ogg" type="audio/ogg" />
+        </audio>
+      </>
     );
   }
 );

@@ -12,6 +12,14 @@ import { EditProfile } from "../profile";
 
 const DashboardRightSidebar: React.FC = () => {
   const pathname = usePathname();
+  const shouldHideSidebar = /^\/dashboard\/analysis\/detail\/[^/]+$/.test(
+    pathname
+  );
+
+  if (shouldHideSidebar) {
+    return null;
+  }
+
   return (
     <aside className="hidden lg:flex flex-col gap-y-4 items-start justify-start w-80 h-full bg-white p-4 border-l border-secondary-200 flex-shrink-0 overflow-y-auto relative rounded-s-3xl">
       {pathname === "/dashboard/profile" && <EditProfile />}

@@ -1,71 +1,67 @@
-"use client";
-
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { ActionButton } from "@/components/dashboard/practice";
+import { Card } from "@/components/ui/card";
 import { examQuestions } from "@/utils/constant";
+import { Info } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
-import RenderExamLogo from "./RenderExamLogo";
-import { useState } from "react";
-import { ExamType } from "@/types";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import PracticeModal from "./PracticeModal";
 
-const ExplorePastQuestions: React.FC = () => {
-  const [examDetail, setExamDetail] = useState<ExamType | null>(null);
+type Params = Promise<{ id: string }>;
 
-  return (
-    <Dialog>
-      <div className="flex flex-col items-start justify-start gap-4 w-full">
-        <div className="flex flex-col items-start md:flex-row md:items-center justify-start gap-4 md:justify-between w-full">
-          <h2 className="text-xl font-medium text-muted-500">
-            Explore Past Exam Questions
-          </h2>
-          <div className="flex items-center justify-end gap-3">
-            <label
-              htmlFor="sort_by"
-              className="text-sm font-normal text-muted-500"
-            >
-              Sort by:
-            </label>
-            <select
-              id="sort_by"
-              className="outline-none w-28 h-10 rounded-lg px-3 focus:border-primary-400 border border-muted-100"
-            >
-              <option value="Popular">Popular</option>
-            </select>
-          </div>
-        </div>
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {examQuestions.map((option) => (
-            <Card
-              key={option.id}
-              className="w-full p-3 border-grey-500 space-y-3 flex flex-col items-start justify-start group hover:cursor-pointer"
-            >
-              <CardHeader className="px-0 py-0 items-start justify-start flex-row gap-3 space-y-0 w-full">
-                <div className="w-12 h-12 bg-grey-600 rounded-full flex items-center justify-center">
-                  <RenderExamLogo type={option.examType} />
-                </div>
-                <div className="flex flex-col items-start justify-start gap-1">
-                  <h5 className="text-xs font-normal text-secondary-300 uppercase">
-                    {option.examType}
-                  </h5>
-                  <h3 className="text-sm font-normal text-muted-500">
-                    {option.year} {option.subject}
+export const metadata: Metadata = {
+  title: "Ready",
+};
+
+export default async function ReadyScreenPage({ params }: { params: Params }) {
+  const { id } = await params;
+  const examInfo = examQuestions.find((question) => question.id === id);
+
+  if (examInfo)
+    return (
+      <div className="w-full h-full overflow-auto flex md:items-center md:justify-center">
+        <div className="w-full max-w-[635px] mx-auto">
+          <Card className="w-full p-4 border-grey-500 space-y-6 flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center gap-3">
+              <Image
+                src="/icons/dashboard/info.svg"
+                alt="info icon"
+                width={56}
+                height={50}
+                priority
+              />
+              <h2 className="text-lg md:text-xl text-center text-muted-500">
+                Are you ready?
+              </h2>
+            </div>
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 align-top">
+              <Card className="w-full p-3 border-grey-500 space-y-3 flex flex-col items-start justify-start">
+                <div className="w-full flex items-center justify-between gap-3">
+                  <h3 className="text-xs font-normal text-[#909397]">
+                    Exam Type:
                   </h3>
-                  <div className="flex items-center justify-start gap-2 p-1 bg-grey-700 rounded-full text-xs font-normal text-grey-800">
-                    <Image
-                      src="/icons/dashboard/group.svg"
-                      alt="group icon"
-                      width={32}
-                      height={20}
-                      priority
-                      className="!h-auto !w-fit"
-                    />
-                    <span>300+ attempted</span>
-                  </div>
+                  <h2 className="text-sm font-normal text-muted-500 uppercase">
+                    {examInfo.examType}
+                  </h2>
                 </div>
-              </CardHeader>
-              <CardContent className="p-0 flex flex-col md:flex-row items-start md:items-center justify-start md:justify-between gap-y-3">
-                <div className="p-0 flex flex-col items-start justify-start gap-y-3">
+                <div className="w-full flex items-center justify-between gap-3">
+                  <h3 className="text-xs font-normal text-[#909397]">
+                    Exam Subject:
+                  </h3>
+                  <h2 className="text-sm font-normal text-muted-500">
+                    {examInfo.subject}
+                  </h2>
+                </div>
+                <div className="w-full flex items-center justify-between gap-3">
+                  <h3 className="text-xs font-normal text-[#909397]">
+                    Exam Year:
+                  </h3>
+                  <h2 className="text-sm font-normal text-muted-500">
+                    {examInfo.year}
+                  </h2>
+                </div>
+                <div className="w-full flex items-center justify-between gap-3">
+                  <h3 className="text-xs font-normal text-[#909397]">
+                    Duration:
+                  </h3>
                   <div className="flex items-center justify-start gap-2">
                     <svg
                       width="12"
@@ -120,10 +116,15 @@ const ExplorePastQuestions: React.FC = () => {
                       </defs>
                     </svg>
 
-                    <span className="text-xs font-normal text-muted-400">
+                    <span className="text-sm font-normal text-muted-400">
                       30 mins
                     </span>
                   </div>
+                </div>
+                <div className="w-full flex items-center justify-between gap-3">
+                  <h3 className="text-xs font-normal text-[#909397]">
+                    Questions:
+                  </h3>
                   <div className="flex items-center justify-start gap-2">
                     <svg
                       width="16"
@@ -154,29 +155,54 @@ const ExplorePastQuestions: React.FC = () => {
                       />
                     </svg>
 
-                    <span className="text-xs font-normal text-muted-400">
+                    <span className="text-sm font-normal text-muted-400">
                       50 questions
                     </span>
                   </div>
                 </div>
-                <div
-                  onClick={() => {
-                    setExamDetail(option);
-                  }}
-                  className="lg:translate-x-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
-                >
-                  <DialogTrigger className="bg-primary-400 text-white w-fit h-9 px-6 rounded-lg gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
-                    Practice
-                  </DialogTrigger>
+                <div className="w-full flex items-center justify-between gap-3">
+                  <h3 className="text-xs font-normal text-[#909397]">
+                    Potential earning:
+                  </h3>
+                  <div className="flex items-center justify-start gap-2">
+                    <Image
+                      src="/icons/dashboard/bolt.svg"
+                      alt="bolt icon"
+                      width={16}
+                      height={16}
+                      priority
+                    />
+
+                    <span className="text-xs sm:text-sm font-normal text-muted-400">
+                      30 XP
+                    </span>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              </Card>
+              <Card className="w-full p-3 bg-grey-200 border-grey-200 space-y-3 flex flex-col items-start justify-start">
+                <div className="flex items-center justify-start gap-2 text-[#E6485D]">
+                  <Info />
+                  <h3 className="text-xs md:text-sm font-normal">
+                    Test Instructions
+                  </h3>
+                </div>
+                <ul className="space-y-2">
+                  <li className="text-sm font-normal text-muted-500">
+                    1. Attempt all questions
+                  </li>
+                  <li className="text-sm font-normal text-muted-500">
+                    2. You can’t leave once you start
+                  </li>
+                  <li className="text-sm font-normal text-muted-500">
+                    3. If you close this window, we assume you’re done with your
+                    test.
+                  </li>
+                </ul>
+              </Card>
+            </div>
+            <ActionButton id={id} />
+          </Card>
         </div>
       </div>
-      {examDetail && <PracticeModal examDetail={examDetail} />}
-    </Dialog>
-  );
-};
-
-export default ExplorePastQuestions;
+    );
+}
