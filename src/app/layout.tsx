@@ -39,12 +39,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Providers>
-      <html lang="en">
-        <body className={`${fredokaSans.variable} antialiased`}>
-          {children}
-        </body>
-      </html>
-    </Providers>
+    <html lang="en">
+      <body className={`${fredokaSans.variable} antialiased`}>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
   );
 }

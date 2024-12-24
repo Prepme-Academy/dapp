@@ -3,10 +3,38 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { usePrivy } from "@privy-io/react-auth";
+
+type methods =
+  | "wallet"
+  | "email"
+  | "sms"
+  | "google"
+  | "twitter"
+  | "discord"
+  | "github"
+  | "linkedin"
+  | "spotify"
+  | "instagram"
+  | "tiktok"
+  | "apple"
+  | "farcaster"
+  | "telegram";
 
 const AuthOptions: React.FC = () => {
   const router = useRouter();
-  
+  const { login } = usePrivy();
+
+  // Function to handle social login
+  const handleSocialLogin = async (method: methods) => {
+    try {
+      const response = login({ loginMethods: [method] });
+      console.log("🚀 ~ handleSocialLogin ~ response:", response);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
   return (
     <section className="w-full grid grid-cols-1 gap-6">
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -89,6 +117,7 @@ const AuthOptions: React.FC = () => {
         <Button
           variant={"outline"}
           className="flex items-center justify-start gap-2"
+          onClick={() => handleSocialLogin("google")}
         >
           <Image
             src="/icons/google.svg"
@@ -101,6 +130,7 @@ const AuthOptions: React.FC = () => {
         <Button
           variant={"outline"}
           className="flex items-center justify-start gap-2 col-span-2 md:col-span-1"
+          onClick={() => handleSocialLogin("discord")}
         >
           <Image
             src="/icons/discord.svg"
@@ -113,6 +143,7 @@ const AuthOptions: React.FC = () => {
         <Button
           variant={"outline"}
           className="flex items-center justify-start gap-2"
+          onClick={() => handleSocialLogin("apple")}
         >
           <Image
             src="/icons/apple.svg"
@@ -125,6 +156,7 @@ const AuthOptions: React.FC = () => {
         <Button
           variant={"outline"}
           className="flex items-center justify-start gap-2 col-span-2 md:col-span-1"
+          onClick={() => handleSocialLogin("twitter")}
         >
           <Image
             src="/icons/twitter.svg"
