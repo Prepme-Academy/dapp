@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { useEffect } from "react";
 
 type methods =
   | "wallet"
@@ -21,14 +22,50 @@ type methods =
   | "farcaster"
   | "telegram";
 
+type walletMethod =
+  | "metamask"
+  | "coinbase_wallet"
+  | "rainbow"
+  | "phantom"
+  | "zerion"
+  | "cryptocom"
+  | "uniswap"
+  | "okx_wallet"
+  | "universal_profile"
+  | "detected_wallets"
+  | "detected_solana_wallets"
+  | "detected_ethereum_wallets"
+  | "wallet_connect"
+  | "rabby_wallet"
+  | "bybit_wallet"
+  | "safe";
+
 const AuthOptions: React.FC = () => {
   const router = useRouter();
-  const { login } = usePrivy();
+  const { login, connectWallet, user, authenticated, ready } = usePrivy();
+  const { wallets } = useWallets();
 
+  useEffect(() => {
+   
+    console.log("🚀 ~ wallet:", wallets[0]);
+    console.log("🚀 ~ user:", user);
+    console.log("🚀 ~ authenticated:", authenticated);
+    console.log("🚀 ~ ready:", ready);
+  }, [user, ready, authenticated, wallets]);
+
+  // Function to handle wallet login
+  const handleWalletLogin = async (method: walletMethod) => {
+    try {
+      const response = await connectWallet({ walletList: [method] });
+      console.log("🚀 ~ handleWalletLogin ~ response:", response);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
   // Function to handle social login
   const handleSocialLogin = async (method: methods) => {
     try {
-      const response = login({ loginMethods: [method] });
+      const response = await login({ loginMethods: [method] });
       console.log("🚀 ~ handleSocialLogin ~ response:", response);
     } catch (error) {
       console.error("Login failed:", error);
@@ -44,7 +81,7 @@ const AuthOptions: React.FC = () => {
         <Button
           variant={"outline"}
           className="flex items-center justify-start gap-2"
-          onClick={() => handleSocialLogin("wallet")}
+          onClick={() => handleWalletLogin("metamask")}
         >
           <Image
             src="/icons/metamask.svg"
@@ -57,7 +94,7 @@ const AuthOptions: React.FC = () => {
         <Button
           variant={"outline"}
           className="flex items-center justify-start gap-2"
-          onClick={() => handleSocialLogin("wallet")}
+          onClick={() => handleWalletLogin("rainbow")}
         >
           <Image
             src="/icons/trustwallet.svg"
@@ -70,7 +107,7 @@ const AuthOptions: React.FC = () => {
         <Button
           variant={"outline"}
           className="col-span-2 flex items-center justify-start gap-2"
-          onClick={() => handleSocialLogin("wallet")}
+          onClick={() => handleWalletLogin("wallet_connect")}
         >
           <Image
             src="/icons/walletconnect.svg"
@@ -172,14 +209,15 @@ const AuthOptions: React.FC = () => {
         <Button
           variant={"outline"}
           className="flex items-center justify-start gap-2"
+          onClick={() => handleSocialLogin("telegram")}
         >
           <Image
-            src="/icons/facebook.svg"
+            src="/icons/telegram.svg"
             width={26}
             height={26}
             alt="Facebook Logo"
           />
-          <span className="text-sm font-normal">Facebook</span>
+          <span className="text-sm font-normal">Telegram</span>
         </Button>
       </div>
       <label htmlFor="term" className="flex items-center justify-start gap-2">
