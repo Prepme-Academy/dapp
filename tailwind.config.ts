@@ -129,6 +129,9 @@ export default {
         buttonshadow: "0px 1px 0px 2px #334058",
         cardshadow: "0px 1px 4px 0px #0000000F",
       },
+      screens: {
+        xxl: "1450px",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
