@@ -228,8 +228,8 @@ const AuthOptions: React.FC = () => {
           defaultChecked
         />
         <span className="text-sm font-normal text-muted-500">
-          I agree to the <a  href="/legal/terms-of-service.html" className="underline">Terms of Service</a> and{" "}
-          <a href="/legal/privacy-policy.html"  className="underline">Privacy Policy</a>
+          I agree to the <a target="_blank" href="/legal/terms-of-service.html" className="underline">Terms of Service</a> and{" "}
+          <a target="_blank" href="/legal/privacy-policy.html"  className="underline">Privacy Policy</a>
         </span>
       </label>
     </section>
