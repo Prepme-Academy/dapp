@@ -35,11 +35,11 @@ export default function Footer() {
           ))}
         </div>
         <p className="text-muted-foreground">
-          <Link href="/" className="underline">
+          <Link href="/legal/privacy-policy.html" className="underline">
             Privacy Policy
           </Link>{" "}
           and{" "}
-          <Link href="/" className="underline">
+          <Link href="/legal/terms-of-service.html" className="underline">
             Terms of Service
           </Link>
         </p>
