@@ -156,7 +156,7 @@ export default async function ReadyScreenPage({ params }: { params: Params }) {
                     </svg>
 
                     <span className="text-sm font-normal text-muted-400">
-                      50 questions
+                      {examInfo.questions.length} questions
                     </span>
                   </div>
                 </div>

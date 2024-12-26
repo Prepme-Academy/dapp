@@ -18,7 +18,7 @@ interface PracticeModalProps {
 
 const PracticeModal: React.FC<PracticeModalProps> = ({ examDetail }) => {
   const router = useRouter();
-  
+
   return (
     <DialogContent>
       <DialogHeader className="space-y-0 mt-6">
@@ -138,7 +138,7 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ examDetail }) => {
                 </svg>
 
                 <span className="text-xs sm:text-sm font-normal text-muted-400 truncate">
-                  50 questions
+                  {examDetail.questions.length} questions
                 </span>
               </div>
               <div className="flex items-center justify-start gap-2">
