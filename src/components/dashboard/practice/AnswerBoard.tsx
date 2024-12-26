@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
@@ -35,6 +35,14 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
     [key: number]: string;
   }>({});
   const [timeLeft, setTimeLeft] = useState(initialTimeLeft);
+  const topRef = useRef<HTMLDivElement>(null);
+
+  // Function to handle scrolling to the top
+  const scrollToTop = () => {
+    if (topRef.current) {
+      topRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const totalQuestions = examInfo.questions.length;
   const totalAttemptedQuestions = Object.keys(selectedAnswers).length;
@@ -74,6 +82,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
 
   const handleNavigation = (index: number) => {
     setCurrentQuestionIndex(index);
+    scrollToTop()
   };
 
   const handleNext = () => {
@@ -104,6 +113,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
 
   return (
     <Dialog>
+      <div ref={topRef} />
       <div className="w-full flex flex-col items-center justify-start gap-8 py-4 px-4">
         <div className="w-full flex flex-col items-center justify-start">
           <div className="w-full flex items-center justify-end lg:w-fit lg:absolute lg:right-10 lg:top-5">
@@ -170,7 +180,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
             />
             <span> Question route</span>
           </h3>
-          <div className="grid grid-cols-10 gap-2">
+          <div className="grid grid-cols-8 md:grid-cols-10 lg:grid-cols-20 gap-2 justify-items-center">
             {Array.from({ length: totalQuestions }, (_, i) => (
               <button
                 key={i}
