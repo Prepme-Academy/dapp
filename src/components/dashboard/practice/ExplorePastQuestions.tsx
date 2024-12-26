@@ -155,7 +155,7 @@ const ExplorePastQuestions: React.FC = () => {
                     </svg>
 
                     <span className="text-xs font-normal text-muted-400">
-                      50 questions
+                      {option.questions.length} questions
                     </span>
                   </div>
                 </div>
