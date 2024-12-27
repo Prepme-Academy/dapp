@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePrivy } from "@privy-io/react-auth";
+import { useEffect } from "react";
 import DashboardMobileHeader from "./navigations/DashboardMobileHeader";
 import { Button } from "../ui/button";
 import {
@@ -7,8 +11,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useRouter } from "next/navigation";
 
 const DashboardHeader: React.FC = () => {
+  const { user, ready, authenticated, logout } = usePrivy();
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log("🚀 ~ user:", user);
+  }, [user]);
+
+  const disableLogout = !ready || (ready && !authenticated);
+
   return (
     <header className="w-full px-4 py-3 lg:py-0 border-b border-secondary-200 flex items-center justify-between">
       <Link
@@ -351,6 +365,11 @@ const DashboardHeader: React.FC = () => {
 
                 <Button
                   variant={"unstyled"}
+                  disabled={disableLogout}
+                  onClick={() => {
+                    logout();
+                    router.replace("/login");
+                  }}
                   className="bg-[#EAEBED] text-[#717172] hover:bg-secondary/80 w-full h-10 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 rounded-xl"
                 >
                   Log out
