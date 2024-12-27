@@ -127,7 +127,7 @@ export default function Notificationpage() {
   };
 
   return (
-    <section className="bg-white border border-muted-300 shadow-authcardshadow rounded-2xl p-4 w-[404px] flex flex-col items-center justify-center gap-4">
+    <section className="bg-white border border-grey-500 shadow-authcardshadow rounded-2xl p-4 w-[404px] flex flex-col items-center justify-center gap-4">
       <Image
         src="/icons/bell.svg"
         alt="notification bell icon"

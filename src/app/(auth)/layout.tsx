@@ -30,7 +30,7 @@ export default function AuthLayout({
         </Link>
         <CloseButtonIcon />
       </nav>
-      <section className="w-full flex items-center justify-center bg-white border border-muted-300 shadow-authcardshadow rounded-2xl p-4 max-w-[404px] mx-auto">
+      <section className="w-full flex items-center justify-center bg-white border border-grey-500 shadow-authcardshadow rounded-2xl p-4 max-w-[404px] mx-auto">
         {children}
       </section>
     </main>
