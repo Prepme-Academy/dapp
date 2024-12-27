@@ -132,6 +132,9 @@ export default {
       screens: {
         xxl: "1450px",
       },
+      gridTemplateColumns: {
+        '20': 'repeat(20, minmax(0, 1fr))',
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
