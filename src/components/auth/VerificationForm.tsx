@@ -3,20 +3,24 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import useClientStore from "@/store/clientStore";
+// import useClientStore from "@/store/clientStore";
+import { useLoginWithEmail } from "@privy-io/react-auth";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
 
 interface VerificationFormProps {
   email: string;
 }
 
 const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
-  console.log("🚀 ~ email:", email);
+  // const { isFirstVisit } = useClientStore();
   const [resendEnabled, setResendEnabled] = useState(false);
   const [resendCountdown, setResendCountdown] = useState(60);
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
+  const [success, setSuccess] = useState("");
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const router = useRouter();
-  const { isFirstVisit } = useClientStore();
+  const { loginWithCode, sendCode, state } = useLoginWithEmail();
 
   // Handle countdown timer
   useEffect(() => {
@@ -38,6 +42,24 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
       if (interval) clearInterval(interval);
     };
   }, [resendCountdown, resendEnabled]);
+
+  const handleVerifyCode = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const code = otp.join("");
+      await loginWithCode({ code });
+
+      router.push("/dashboard/practice");
+      setSuccess("Verification successful! Redirecting...");
+      // if (isFirstVisit) {
+      //   router.push("/onboarding/username");
+      // } else {
+      //   router.push("/dashboard/practice");
+      // }
+    } catch (error) {
+      console.error("Failed to verify code:", error);
+    } 
+  };
 
   // Handle OTP input changes
   const handleChange = (element: HTMLInputElement, index: number) => {
@@ -88,9 +110,8 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
   // Handle resend OTP
   const handleResendOTP = async () => {
     try {
-      // Add your resend OTP logic here
-      // await resendOTP();
-
+      await sendCode({ email });
+      setSuccess("Code resent successfully!");
       setResendEnabled(false);
       setResendCountdown(60);
     } catch (error) {
@@ -98,14 +119,23 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
     }
   };
 
-  const handleClick = () => {
-    if (isFirstVisit) {
-      router.push("/onboarding/username");
-    }
-  };
-
   return (
-    <div className="w-full flex flex-col items-start justify-start gap-8">
+    <form
+      onSubmit={handleVerifyCode}
+      className="w-full flex flex-col items-start justify-start gap-8"
+    >
+      {state.status === 'error' && (
+        <Alert variant="destructive" className="w-full">
+          <AlertDescription>{state.error?.message}</AlertDescription>
+        </Alert>
+      )}
+      {success && (
+        <Alert className="w-full bg-green-50 border-green-200">
+          <AlertDescription className="text-green-600">
+            {success}
+          </AlertDescription>
+        </Alert>
+      )}
       <div className="w-full flex flex-col items-start justify-start gap-2">
         <label
           htmlFor="verification_code"
@@ -152,13 +182,22 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
       <Button
         variant={"unstyled"}
         type="submit"
-        disabled={otp.join("").length === 0}
-        onClick={handleClick}
+        disabled={
+          otp.join("").length === 0 ||
+          state.status !== "awaiting-code-input"
+        }
         className="bg-primary-400 text-white w-full h-12 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
       >
-        Send verification code
+        {state.status === 'submitting-code' ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Verifying...
+          </>
+        ) : (
+          "Verify email"
+        )}
       </Button>
-    </div>
+    </form>
   );
 };
 
