@@ -15,39 +15,57 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ExamType } from "@/types";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePrivy } from "@privy-io/react-auth";
+import { useExamQuestions, useSubmitExam } from "@/lib/actions/exam.action";
 
 interface AnswerBoardProps {
-  examInfo: ExamType;
+  id: string;
 }
 
-const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
+const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { user } = usePrivy();
+  const authUserId = user?.id;
+
   const initialQuestionIndex = Number(searchParams.get("q")) || 0;
   const initialTimeLeft = Number(searchParams.get("t")) || 1800;
 
   const [currentQuestionIndex, setCurrentQuestionIndex] =
     useState(initialQuestionIndex);
+
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string;
   }>({});
+
   const [timeLeft, setTimeLeft] = useState(initialTimeLeft);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const topRef = useRef<HTMLDivElement>(null);
+
+  // Custom hook to fetch exam questions
+  const {
+    data: examData,
+    isLoading,
+    isError,
+    error,
+  } = useExamQuestions(Number(id), authUserId || "");
+    console.log("🚀 ~ error:", error)
+    console.log("🚀 ~ isError:", isError)
+
+  const { mutate: submitExam, isLoading: isSubmitting } = useSubmitExam();
 
   // Function to handle scrolling to the top
   const scrollToTop = () => {
     if (topRef.current) {
-      topRef.current.scrollIntoView({ behavior: 'smooth' });
+      topRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  const totalQuestions = examInfo.questions.length;
-  const totalAttemptedQuestions = Object.keys(selectedAnswers).length;
-
   useEffect(() => {
+    if (isSubmitted) return;
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime > 0) {
@@ -59,7 +77,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [isSubmitted]);
 
   useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
@@ -73,6 +91,12 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
     router.replace(`?${newSearchParams.toString()}`);
   }, [currentQuestionIndex, searchParams, router]);
 
+  useEffect(() => {
+    if (isError) {
+      router.push(`/dashboard/practice/detail/${id}/success`);
+    }
+  }, [isError, error, id, router]);
+
   const handleAnswerSelect = (index: number, option: string) => {
     setSelectedAnswers((prevAnswers) => ({
       ...prevAnswers,
@@ -82,11 +106,11 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
 
   const handleNavigation = (index: number) => {
     setCurrentQuestionIndex(index);
-    scrollToTop()
+    scrollToTop();
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex < totalQuestions - 1) {
+    if (currentQuestionIndex < (examData?.data.length || 0) - 1) {
       handleNavigation(currentQuestionIndex + 1);
     }
   };
@@ -98,8 +122,42 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
   };
 
   const handleSubmit = () => {
-    console.log("Submit the CBT test");
-    router.push(`/dashboard/practice/detail/${examInfo.id}/success`);
+    if (!authUserId || !examData) return;
+
+    const questions = examData.data.map((question, index) => ({
+      id: question.id,
+      answered: !!selectedAnswers[index],
+      answer: selectedAnswers[index]
+        ? question.options.find(
+            (option) => option.value === selectedAnswers[index]
+          ) || null
+        : null,
+    }));
+
+    const numOfQuestionsAnswered = questions.filter((q) => q.answered).length;
+    const numOfQuestionsNotAnswered = questions.length - numOfQuestionsAnswered;
+
+    const submitData = {
+      numOfQuestionsAnswered,
+      numOfQuestionsNotAnswered,
+      questions,
+      endDate: new Date().toISOString(),
+      duration: (initialTimeLeft - timeLeft) / 60,
+    };
+
+    submitExam(
+      { attemptId: Number(id), authUserId, data: submitData },
+      {
+        onSuccess: (data) => {
+          console.log("Exam submitted successfully:", data);
+          setIsSubmitted(true);
+          router.push(`/dashboard/practice/detail/${id}/success`);
+        },
+        onError: (error) => {
+          console.error("Error submitting the exam:", error);
+        },
+      }
+    );
   };
 
   const formatTime = (seconds: number) => {
@@ -109,7 +167,20 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
   };
 
   const progressPercentage =
-    (Object.keys(selectedAnswers).length / totalQuestions) * 100;
+    (Object.keys(selectedAnswers).length / (examData?.data.length || 1)) * 100;
+
+  if (isLoading || !examData) {
+    return (
+      <div className="w-full h-full overflow-auto flex md:items-center md:justify-center">
+        <div className="w-full max-w-[635px] mx-auto">
+          <div className="w-full min-h-40 lg:min-h-80 bg-gray-300 animate-pulse" />
+        </div>
+      </div>
+    );
+  }
+
+  const totalQuestions = examData.data.length;
+  const totalAttemptedQuestions = Object.keys(selectedAnswers).length;
 
   return (
     <Dialog>
@@ -138,17 +209,20 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
           </div>
         </div>
         <Card className="w-full max-w-[635px] mx-auto px-3 py-4 border-grey-500 space-y-3 flex flex-col items-start justify-start">
-          <h2 className="w-full text-center text-lg md:text-xl font-medium text-muted-500">
-            {examInfo.questions[currentQuestionIndex].question}
-          </h2>
+          <h2
+            className="w-full text-center text-lg md:text-xl font-medium text-muted-500"
+            dangerouslySetInnerHTML={{
+              __html: examData.data[currentQuestionIndex].text,
+            }}
+          />
           <div className="space-y-2 w-full">
-            {examInfo.questions[currentQuestionIndex].options.map(
+            {examData.data[currentQuestionIndex].options.map(
               (option, index) => (
                 <label
                   key={index}
                   className={cn(
                     "flex items-center space-x-3 border p-3 rounded-lg cursor-pointer",
-                    selectedAnswers[currentQuestionIndex] === option
+                    selectedAnswers[currentQuestionIndex] === option.value
                       ? "bg-blue-100"
                       : "hover:bg-gray-100"
                   )}
@@ -157,13 +231,15 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
                     type="radio"
                     name={`answer-${currentQuestionIndex}`}
                     className="form-radio h-5 w-5 text-blue-600"
-                    checked={selectedAnswers[currentQuestionIndex] === option}
+                    checked={
+                      selectedAnswers[currentQuestionIndex] === option.value
+                    }
                     onChange={() =>
-                      handleAnswerSelect(currentQuestionIndex, option as string)
+                      handleAnswerSelect(currentQuestionIndex, option.value)
                     }
                   />
                   <span className="text-gray-700">
-                    {String.fromCharCode(65 + index)}. {option}
+                    {String.fromCharCode(65 + index)}. {option.value}
                   </span>
                 </label>
               )
@@ -261,9 +337,17 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ examInfo }) => {
           <Button
             variant={"unstyled"}
             onClick={handleSubmit}
+            disabled={isSubmitting}
             className="bg-primary-400 text-white w-fit px-6 h-9 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
           >
-            Yes I&apos;m done
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              "Yes I'm done"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

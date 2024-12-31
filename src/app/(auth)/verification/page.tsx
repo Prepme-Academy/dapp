@@ -5,7 +5,16 @@ export const metadata: Metadata = {
   title: "Verify Email",
 };
 
-export default async function VerificationPage() {
+export default async function VerificationPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    email: string | undefined;
+  }>;
+}) {
+  const params = await searchParams;
+  const currentEmail = params.email || "";
+
   return (
     <section className="w-full grid grid-cols-1 gap-6">
       <div className="space-y-2 text-center w-full">
@@ -14,7 +23,7 @@ export default async function VerificationPage() {
           Enter verification code sent to your email address
         </p>
       </div>
-      <VerificationForm email={""} />
+      <VerificationForm email={currentEmail} />
     </section>
   );
 }

@@ -3,17 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-// import useClientStore from "@/store/clientStore";
+import useClientStore from "@/store/clientStore";
 import { useLoginWithEmail } from "@privy-io/react-auth";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
+import Cookies from "js-cookie";
+
 
 interface VerificationFormProps {
   email: string;
 }
 
 const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
-  // const { isFirstVisit } = useClientStore();
+  const { isFirstVisit } = useClientStore();
   const [resendEnabled, setResendEnabled] = useState(false);
   const [resendCountdown, setResendCountdown] = useState(60);
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
@@ -48,17 +50,19 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
     try {
       const code = otp.join("");
       await loginWithCode({ code });
-
-      router.push("/dashboard/practice");
       setSuccess("Verification successful! Redirecting...");
-      // if (isFirstVisit) {
-      //   router.push("/onboarding/username");
-      // } else {
-      //   router.push("/dashboard/practice");
-      // }
+
+      setTimeout(() => {
+        if (isFirstVisit === false) {
+          router.push("/onboarding/username");
+        } else {
+          Cookies.set("onboarded", "true");
+          router.push("/dashboard/practice");
+        }
+      }, 500);
     } catch (error) {
       console.error("Failed to verify code:", error);
-    } 
+    }
   };
 
   // Handle OTP input changes
@@ -124,7 +128,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
       onSubmit={handleVerifyCode}
       className="w-full flex flex-col items-start justify-start gap-8"
     >
-      {state.status === 'error' && (
+      {state.status === "error" && (
         <Alert variant="destructive" className="w-full">
           <AlertDescription>{state.error?.message}</AlertDescription>
         </Alert>
@@ -183,12 +187,11 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
         variant={"unstyled"}
         type="submit"
         disabled={
-          otp.join("").length === 0 ||
-          state.status !== "awaiting-code-input"
+          otp.join("").length === 0 || state.status !== "awaiting-code-input"
         }
         className="bg-primary-400 text-white w-full h-12 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
       >
-        {state.status === 'submitting-code' ? (
+        {state.status === "submitting-code" ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Verifying...

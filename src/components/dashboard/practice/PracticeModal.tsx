@@ -1,5 +1,5 @@
 "use client";
-import { ExamType } from "@/types";
+import { Exam } from "@/types";
 import {
   DialogClose,
   DialogContent,
@@ -7,13 +7,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import RenderExamLogo from "./RenderExamLogo";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 interface PracticeModalProps {
-  examDetail: ExamType;
+  examDetail: Exam;
 }
 
 const PracticeModal: React.FC<PracticeModalProps> = ({ examDetail }) => {
@@ -26,14 +25,19 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ examDetail }) => {
           <div className="w-full flex  items-start justify-between gap-5">
             <div className="flex flex-col items-start justify-start md:flex-row gap-3">
               <div className="w-12 h-12 bg-grey-600 rounded-full flex items-center justify-center">
-                <RenderExamLogo type={examDetail.examType} />
+                <Image
+                  src={examDetail.exam.logo}
+                  alt={`${examDetail.exam.name} logo`}
+                  width={37}
+                  height={37}
+                />
               </div>
               <div className="flex flex-col items-start justify-start gap-3">
                 <h5 className="text-xs font-normal text-secondary-300 uppercase">
-                  {examDetail.examType}
+                  {examDetail.exam.name}
                 </h5>
                 <h3 className="text-sm font-normal text-muted-500">
-                  {examDetail.year} {examDetail.subject}
+                  {examDetail.year} {examDetail.subject.name}
                 </h3>
                 <div className="flex items-center justify-start gap-2 p-1 bg-grey-700 rounded-full text-xs font-normal text-grey-800 truncate">
                   <Image
@@ -44,7 +48,7 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ examDetail }) => {
                     priority
                     className="!h-auto !w-fit"
                   />
-                  <span>300 people have attempted this</span>
+                  <span>{examDetail.noOfAttempts} people have attempted this</span>
                 </div>
               </div>
             </div>
@@ -104,7 +108,7 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ examDetail }) => {
                 </svg>
 
                 <span className="text-xs sm:text-sm font-normal text-muted-400">
-                  30 mins
+                  {examDetail.duration} mins
                 </span>
               </div>
               <div className="flex items-center justify-start gap-2">
@@ -138,7 +142,7 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ examDetail }) => {
                 </svg>
 
                 <span className="text-xs sm:text-sm font-normal text-muted-400 truncate">
-                  {examDetail.questions.length} questions
+                  {examDetail.noOfQuestions} questions
                 </span>
               </div>
               <div className="flex items-center justify-start gap-2">
@@ -151,7 +155,7 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ examDetail }) => {
                 />
 
                 <span className="text-xs sm:text-sm font-normal text-muted-400">
-                  30 XP
+                  {examDetail.xp} XP
                 </span>
               </div>
             </div>

@@ -3,8 +3,9 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
-import { useEffect } from "react";
+import { usePrivy } from "@privy-io/react-auth";
+import useClientStore from "@/store/clientStore";
+import Cookies from "js-cookie";
 
 type methods =
   | "wallet"
@@ -42,22 +43,21 @@ type walletMethod =
 
 const AuthOptions: React.FC = () => {
   const router = useRouter();
-  const { login, connectWallet, user, authenticated, ready } = usePrivy();
-  const { wallets } = useWallets();
-
-  useEffect(() => {
-   
-    console.log("🚀 ~ wallet:", wallets[0]);
-    console.log("🚀 ~ user:", user);
-    console.log("🚀 ~ authenticated:", authenticated);
-    console.log("🚀 ~ ready:", ready);
-  }, [user, ready, authenticated, wallets]);
+  const { login, connectWallet } = usePrivy();
+  const { isFirstVisit } = useClientStore();
 
   // Function to handle wallet login
   const handleWalletLogin = async (method: walletMethod) => {
     try {
-      const response = await connectWallet({ walletList: [method] });
-      console.log("🚀 ~ handleWalletLogin ~ response:", response);
+      await connectWallet({ walletList: [method] });
+      setTimeout(() => {
+        if (isFirstVisit === false) {
+          router.push("/onboarding/username");
+        } else {
+          Cookies.set("onboarded", "true");
+          router.push("/dashboard/practice");
+        }
+      }, 500);
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -65,8 +65,15 @@ const AuthOptions: React.FC = () => {
   // Function to handle social login
   const handleSocialLogin = async (method: methods) => {
     try {
-      const response = await login({ loginMethods: [method] });
-      console.log("🚀 ~ handleSocialLogin ~ response:", response);
+      await login({ loginMethods: [method] });
+      setTimeout(() => {
+        if (isFirstVisit === false) {
+          router.push("/onboarding/username");
+        } else {
+          Cookies.set("onboarded", "true");
+          router.push("/dashboard/practice");
+        }
+      }, 500);
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -228,8 +235,22 @@ const AuthOptions: React.FC = () => {
           defaultChecked
         />
         <span className="text-sm font-normal text-muted-500">
-          I agree to the <a target="_blank" href="/legal/terms-of-service.html" className="underline">Terms of Service</a> and{" "}
-          <a target="_blank" href="/legal/privacy-policy.html"  className="underline">Privacy Policy</a>
+          I agree to the{" "}
+          <a
+            target="_blank"
+            href="/legal/terms-of-service.html"
+            className="underline"
+          >
+            Terms of Service
+          </a>{" "}
+          and{" "}
+          <a
+            target="_blank"
+            href="/legal/privacy-policy.html"
+            className="underline"
+          >
+            Privacy Policy
+          </a>
         </span>
       </label>
     </section>

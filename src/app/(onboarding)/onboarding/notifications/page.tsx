@@ -1,129 +1,84 @@
 "use client";
 
-import { useEffect, useState } from "react"; 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useCreateUser, useOnboardUser } from "@/lib/actions";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import useUserStore from "@/store/userStore";
+import { CreateUserPayload, OnboardUserPayload } from "@/types";
+import { useNotifications } from "@/hooks/useNotifications";
+import useClientStore from "@/store/clientStore";
+import { Loader2 } from "lucide-react";
+import Cookies from "js-cookie";
 
-interface NotificationSettings {
-  allowNotifications: boolean;
-  practiceReminders: boolean;
-  examUpdates: boolean;
-  studyTips: boolean;
-  achievements: boolean;
-}
-
-export default function Notificationpage() {
+export default function NotificationPage() {
   const router = useRouter();
-  const [notifications, setNotifications] = useState<NotificationSettings>({
-    allowNotifications: false,
-    practiceReminders: false,
-    examUpdates: false,
-    studyTips: false,
-    achievements: false,
-  });
+  const { isEnabled, requestNotificationPermission } = useNotifications();
+  const { mutateAsync: createUser } = useCreateUser();
+  const { mutateAsync: onboardUser } = useOnboardUser();
+  const { username, examType, dailyDuration, resetState } = useUserStore();
+  const { setFirstVisit } = useClientStore();
+  const { user } = usePrivy();
+  const { wallets } = useWallets();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Load saved notification settings on mount
-  useEffect(() => {
-    const storedSettings = localStorage.getItem("prepmeNotifications");
-    if (storedSettings) {
-      setNotifications(JSON.parse(storedSettings));
-    }
-  }, []);
+  const RegisterUser: CreateUserPayload = {
+    email: user?.email?.address || "",
+    walletAddress: user?.wallet?.address || wallets[0]?.address || "",
+    authId: user?.id || "",
+  };
 
-  // Handle notification permission request
-  useEffect(() => {
-    const requestNotificationPermission = async () => {
-      if ("Notification" in window) {
-        const permission = await Notification.requestPermission();
-        const allowNotifications = permission === "granted";
+  const OnBoardingUser: OnboardUserPayload = {
+    username: username,
+    examType: examType,
+    dailyDuration: dailyDuration,
+    notificationEnabled: isEnabled,
+  };
 
-        if (allowNotifications) {
-          setNotifications((prev) => {
-            const updatedState = {
-              ...prev,
-              allowNotifications,
-              practiceReminders: allowNotifications,
-              examUpdates: allowNotifications,
-              studyTips: allowNotifications,
-              achievements: allowNotifications,
-            };
-            localStorage.setItem(
-              "prepmeNotifications",
-              JSON.stringify(updatedState)
-            );
+  const handleUserActions = async () => {
+    setIsSubmitting(true);
+    try {
+      const userResponse = await createUser(RegisterUser);
+      console.log("🚀 ~ handleUserActions ~ userResponse:", userResponse)
 
-            // Show welcome notification
-            new Notification("Welcome to Prepme Academy!", {
-              body: "You will now receive important updates and reminders.",
-              icon: "/images/logo-site.png",
-            });
+      // Ensure authId is available
+      const authId = RegisterUser.authId;
+      console.log("🚀 ~ handleUserActions ~ authId:", authId)
 
-            return updatedState;
-          });
+      // Onboard user with the correct authId
+      const onboardResponse = await onboardUser({
+        payload: OnBoardingUser,
+        authId: authId,
+      });
+      
+      // Log the result
+      console.log("🚀 ~ handleUserActions ~ onboardResponse:", onboardResponse)
 
-          // Redirect after a short delay
-          setTimeout(() => {
-            router.replace("/dashboard/practice");
-          }, 1500);
-        } else {
-          router.replace("/dashboard/practice");
-        }
-      }
-    };
-
-    // Check if this is the first visit
-    const hasVisited = localStorage.getItem("hasVisitedNotificationPage");
-    if (!hasVisited && !notifications.allowNotifications) {
-      localStorage.setItem("hasVisitedNotificationPage", "true");
-      requestNotificationPermission();
-    }
-  }, [notifications.allowNotifications, router]);
-
-  const handleNotificationPermission = () => {
-    if ("Notification" in window) {
-      Notification.requestPermission()
-        .then((permission) => {
-          const allowNotifications = permission === "granted";
-          setNotifications((prev) => {
-            const updatedState = {
-              ...prev,
-              allowNotifications,
-              practiceReminders: allowNotifications,
-              examUpdates: allowNotifications,
-              studyTips: allowNotifications,
-              achievements: allowNotifications,
-            };
-            localStorage.setItem(
-              "prepmeNotifications",
-              JSON.stringify(updatedState)
-            );
-            return updatedState;
-          });
-
-          if (allowNotifications) {
-            new Notification("Welcome to Prepme Academy!", {
-              body: "You will now receive important updates and reminders.",
-              icon: "/images/logo-site.png",
-            });
-            setTimeout(() => {
-              router.replace("/dashboard/practice");
-            }, 1500);
-          } else {
-            router.replace("/dashboard/practice");
-          }
-        })
-        .catch((error) => {
-          console.error("Error requesting notification permission:", error);
-          router.replace("/dashboard/practice");
-        });
+      Cookies.set("onboarded", "true");
+      setFirstVisit(true);
+      resetState();
+      router.replace("/dashboard/practice");
+      return { userResponse, onboardResponse };
+    } catch (error) {
+      console.error("Error in user actions: ", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleDoLater = () => {
-    localStorage.setItem("hasVisitedNotificationPage", "true");
-    localStorage.setItem("prepmeNotifications", JSON.stringify(notifications));
-    router.replace("/dashboard/practice");
+  const handleNotificationPermission = async () => {
+    try {
+      await Promise.all([requestNotificationPermission(), handleUserActions()]);
+    } catch (error) {
+      console.log("🚀 ~ handleNotificationPermission ~ error:", error);
+    }
+  };
+
+  const handleDoLater = async () => {
+    localStorage.setItem("notificationEnabled", "false");
+    await handleUserActions();
   };
 
   return (
@@ -140,20 +95,29 @@ export default function Notificationpage() {
 
       <div className="w-full flex items-center justify-between gap-4">
         <Button
-          variant={"unstyled"}
+          variant="unstyled"
           onClick={handleDoLater}
           className="bg-secondary text-secondary-foreground hover:bg-secondary/80 w-full h-10 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
         >
           Do later
         </Button>
         <Button
-          variant={"unstyled"}
+          variant="unstyled"
           onClick={handleNotificationPermission}
           className="bg-primary-400 text-white w-full h-10 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
         >
           Allow
         </Button>
       </div>
+
+      {isSubmitting && (
+        <div className="fixed inset-0 flex items-center justify-center bg-[#0E1824DE]">
+          <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-[400px] mx-auto space-y-5">
+            <Loader2 className="mr-2 h-10 w-10 text-primary-400 animate-spin" />
+            <p className="text-lg font-medium">Submitting user data...</p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
