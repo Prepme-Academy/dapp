@@ -12,9 +12,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
+import useClientStore from "@/store/clientStore";
 
 const DashboardHeader: React.FC = () => {
   const { user, ready, authenticated, logout } = usePrivy();
+  const { resetState } = useClientStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -368,6 +370,7 @@ const DashboardHeader: React.FC = () => {
                   disabled={disableLogout}
                   onClick={() => {
                     logout();
+                    resetState();
                     router.replace("/login");
                   }}
                   className="bg-[#EAEBED] text-[#717172] hover:bg-secondary/80 w-full h-10 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 rounded-xl"

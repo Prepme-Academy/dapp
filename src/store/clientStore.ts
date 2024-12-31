@@ -3,10 +3,12 @@ import { persist, PersistOptions } from "zustand/middleware";
 
 interface StoreState {
   isFirstVisit: boolean;
+  initializingState: boolean;
 }
 
 interface StoreActions {
   setFirstVisit: (value: boolean) => void;
+  setinitializingState: (value: boolean) => void;
   resetState: () => void;
 }
 
@@ -15,12 +17,17 @@ type UseStore = StoreState & StoreActions;
 const useClientStore = create<UseStore>()(
   persist<UseStore>(
     (set) => ({
-      isFirstVisit: true,
+      isFirstVisit: false,
+      initializingState: false,
+      setinitializingState: (value) => set({ initializingState: value }),
       setFirstVisit: (value) => set({ isFirstVisit: value }),
       resetState: () => set(() => ({ isFirstVisit: false })),
     }),
     {
-      name: "client-store",
+      name: "prepme-academy-client-store",
+      onRehydrateStorage: () => (state) => {
+        console.log("Rehydrated State:", state);
+      },
     } as PersistOptions<UseStore>
   )
 );

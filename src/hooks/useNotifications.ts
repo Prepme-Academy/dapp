@@ -1,40 +1,53 @@
 "use client";
-
-// hooks/useNotifications.ts
 import { useState, useEffect } from "react";
 
-export interface NotificationSettings {
-  allowNotifications: boolean;
-  practiceReminders: boolean;
-  examUpdates: boolean;
-  studyTips: boolean;
-  achievements: boolean;
-}
-
-export const useNotifications = () => {
-  const [settings, setSettings] = useState<NotificationSettings>({
-    allowNotifications: false,
-    practiceReminders: false,
-    examUpdates: false,
-    studyTips: false,
-    achievements: false,
-  });
+export const useNotifications = (autoRequest: boolean = false) => {
+  const [isEnabled, setIsEnabled] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("prepmeNotifications");
+    const stored = localStorage.getItem("notificationEnabled");
     if (stored) {
-      setSettings(JSON.parse(stored));
+      setIsEnabled(JSON.parse(stored));
     }
-  }, []);
 
-  const sendNotification = (
-    title: string,
-    options?: NotificationOptions,
-    type?: keyof NotificationSettings
-  ) => {
+    // Auto-request notifications if enabled and not previously asked
+    if (autoRequest) {
+      const hasVisited = localStorage.getItem("hasVisitedNotificationPage");
+      if (!hasVisited && "Notification" in window) {
+        requestNotificationPermission();
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoRequest]);
+
+  const requestNotificationPermission = async () => {
+    if ("Notification" in window) {
+      try {
+        const permission = await Notification.requestPermission();
+        const isGranted = permission === "granted";
+        
+        updateNotificationStatus(isGranted);
+        localStorage.setItem("hasVisitedNotificationPage", "true");
+
+        if (isGranted) {
+          new Notification("Welcome to Prepme Academy!", {
+            body: "You will now receive important updates and reminders.",
+            icon: "/images/logo-site.png",
+          });
+        }
+
+        return isGranted;
+      } catch (error) {
+        console.error("Error requesting notification permission:", error);
+        return false;
+      }
+    }
+    return false;
+  };
+
+  const sendNotification = (title: string, options?: NotificationOptions) => {
     if (
-      settings.allowNotifications &&
-      (!type || settings[type]) &&
+      isEnabled &&
       "Notification" in window &&
       Notification.permission === "granted"
     ) {
@@ -46,26 +59,28 @@ export const useNotifications = () => {
     return null;
   };
 
+  const updateNotificationStatus = (status: boolean) => {
+    setIsEnabled(status);
+    localStorage.setItem("notificationEnabled", JSON.stringify(status));
+  };
+
+  const getNotificationStatus = () => {
+    if ("Notification" in window) {
+      return Notification.permission === "granted" && isEnabled;
+    }
+    return false;
+  };
+
   return {
-    settings,
+    isEnabled,
     sendNotification,
+    updateNotificationStatus,
+    getNotificationStatus,
+    requestNotificationPermission,
   };
 };
 
 export const resetNotificationStatus = () => {
   localStorage.removeItem("hasVisitedNotificationPage");
-  localStorage.removeItem("prepmeNotifications");
+  localStorage.removeItem("notificationEnabled");
 };
-
-// export const handleToggle = (type: keyof NotificationSettings) => {
-//   if (notifications.allowNotifications) {
-//     setNotifications((prev) => {
-//       const updatedState = {
-//         ...prev,
-//         [type]: !prev[type],
-//       };
-//       localStorage.setItem("prepmeNotifications", JSON.stringify(updatedState));
-//       return updatedState;
-//     });
-//   }
-// };

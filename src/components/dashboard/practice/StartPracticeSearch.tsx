@@ -2,9 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { examOptions } from "@/utils/constant";
+import { useExamTypes } from "@/lib/actions/exam.action";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select, { SingleValue } from "react-select";
 
 interface ExamOption {
@@ -12,32 +12,61 @@ interface ExamOption {
   label: string;
 }
 
-const formattedExamOptions: ExamOption[] = examOptions.map((option) => ({
-  value: option.id,
-  label: option.name,
-}));
-
-// Define the options for subjects and years
-const subjectOptions: ExamOption[] = [
-  { value: "MTH", label: "Mathematics" },
-  { value: "ENG", label: "English" },
-  // Add more subjects as needed
-];
-
-const yearOptions: ExamOption[] = [
-  { value: "2021", label: "2021" },
-  { value: "2022", label: "2022" },
-  // Add more years as needed
-];
-
 const StartPracticeSearch: React.FC = () => {
+  const { data, isLoading } = useExamTypes();
+
   const [selectedExam, setSelectedExam] =
     useState<SingleValue<ExamOption>>(null);
+
+  const [subjectOptions, setSubjectOptions] = useState<ExamOption[]>([]);
+
+  const [yearOptions, setYearOptions] = useState<ExamOption[]>([]);
+
   const [selectedSubject, setSelectedSubject] =
     useState<SingleValue<ExamOption>>(null);
+
   const [selectedYear, setSelectedYear] =
     useState<SingleValue<ExamOption>>(null);
+
   const router = useRouter();
+
+  useEffect(() => {
+    if (selectedExam) {
+      const exam = data?.data.find(
+        (exam) => exam.name === selectedExam.label
+      );
+      if (exam) {
+        setSubjectOptions(
+          exam.subjects.map((subject) => ({
+            value: subject.name,
+            label: subject.name,
+          }))
+        );
+        setYearOptions([]);
+        setSelectedSubject(null);
+        setSelectedYear(null);
+      }
+    }
+  }, [selectedExam, data]);
+
+  useEffect(() => {
+    if (selectedSubject && selectedExam) {
+      const exam = data?.data.find(
+        (exam) => exam.name === selectedExam.label
+      );
+      const subject = exam?.subjects.find(
+        (subject) => subject.name === selectedSubject.label
+      );
+      if (subject) {
+        setYearOptions(
+          subject.years.map((year) => ({
+            value: year,
+            label: year,
+          }))
+        );
+      }
+    }
+  }, [selectedSubject, selectedExam, data]);
 
   const handleChangeExam = (option: SingleValue<ExamOption>) => {
     setSelectedExam(option);
@@ -53,7 +82,7 @@ const StartPracticeSearch: React.FC = () => {
 
   const handleSearch = () => {
     const query = {
-      exam: selectedExam?.value || "",
+      exam_type: selectedExam?.value || "",
       subject: selectedSubject?.value || "",
       year: selectedYear?.value || "",
     };
@@ -88,15 +117,24 @@ const StartPracticeSearch: React.FC = () => {
           >
             Exam Type
           </label>
-          <Select
-            id="exam_type"
-            options={formattedExamOptions}
-            value={selectedExam}
-            onChange={handleChangeExam}
-            placeholder="WAEC, GRE....."
-            className="w-full"
-            filterOption={filterOption}
-          />
+          {isLoading ? (
+            <div className="w-full h-10 rounded-lg bg-gray-300 animate-pulse" />
+          ) : (
+            <Select
+              id="exam_type"
+              options={
+                data?.data.map((exam) => ({
+                  value: exam.name,
+                  label: exam.name,
+                })) || []
+              }
+              value={selectedExam}
+              onChange={handleChangeExam}
+              placeholder="WAEC, GRE....."
+              className="w-full"
+              filterOption={filterOption}
+            />
+          )}
         </div>
         <div className="flex flex-col items-start justify-start gap-2 w-full">
           <label
@@ -113,6 +151,7 @@ const StartPracticeSearch: React.FC = () => {
             placeholder="MTH, ENG....."
             className="w-full"
             filterOption={filterOption}
+            isDisabled={!selectedExam}
           />
         </div>
         <div className="flex flex-col items-start justify-start gap-2 w-full">
@@ -127,6 +166,7 @@ const StartPracticeSearch: React.FC = () => {
             placeholder="2021, 2022....."
             className="w-full"
             filterOption={filterOption}
+            isDisabled={!selectedSubject}
           />
         </div>
       </CardContent>

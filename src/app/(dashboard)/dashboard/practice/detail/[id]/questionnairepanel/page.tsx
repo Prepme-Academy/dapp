@@ -14,7 +14,7 @@ export default async function QuestionnairePanelPage({
   if (examInfo)
     return (
       <div className="w-full h-full overflow-auto relative">
-        <AnswerBoard examInfo={examInfo} />
+        <AnswerBoard examInfo={{examInfo}} />
       </div>
     );
 }

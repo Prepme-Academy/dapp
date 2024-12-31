@@ -18,7 +18,7 @@ export default function ExamOptionPage() {
           Please choose at least one from the following items to get started.
         </p>
       </div>
-      <ExamOptionSelect/>
+      <ExamOptionSelect />
     </section>
   );
 }
