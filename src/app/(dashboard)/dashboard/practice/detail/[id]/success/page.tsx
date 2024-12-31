@@ -7,6 +7,8 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { useExamAnalysis } from "@/lib/actions/exam.action";
+import { usePrivy } from "@privy-io/react-auth";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -60,12 +62,27 @@ export default function PracticeSuccessPage() {
 
 const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
   const router = useRouter();
+  const { user } = usePrivy();
+  const authUserId = user?.id;
+
+  const { data: analysisData, isLoading } = useExamAnalysis(
+    Number(id),
+    authUserId || ""
+  );
+
+  if (isLoading || !analysisData) {
+    return <div>Loading...</div>;
+  }
+
+  const { correct, incorrect, unanswered, score, percentage, examTest } =
+    analysisData.data;
+
   return (
     <Card className="w-full max-w-[483px] mx-auto p-4 border-grey-500 space-y-6 flex flex-col items-center justify-center relative">
       <Button
         variant={"unstyled"}
         className="absolute right-3 top-3 rounded-full w-10 h-10 bg-[#EFF8FF] flex items-center justify-center "
-        onClick={() => router.push(`/dashboard/practice`)}
+        onClick={() => router.replace(`/dashboard/practice`)}
       >
         <X className="h-4 w-4" />
       </Button>
@@ -78,14 +95,14 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
           priority
         />
         <h6 className="text-xs text-center text-muted-400 select-none flex items-center justify-start gap-1 w-fit rounded-full bg-[#FFF0A6] px-2 py-1">
-          90% Amazing
+          {percentage}% Amazing
         </h6>
       </div>
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
         <div className="w-full flex flex-col items-center justify-center gap-2">
           <h4 className="text-xs font-normal text-muted-400">You scored</h4>
           <h2 className="text-2xl md:text-3xl font-medium text-muted-500 text-center">
-            35/50
+            {score}/{examTest.marks}
           </h2>
         </div>
         <div className="w-full flex flex-col items-center justify-center gap-2">
@@ -100,7 +117,7 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
             <span>XP</span>
           </h4>
           <h2 className="text-2xl md:text-3xl font-medium text-muted-500 text-center">
-            30
+            {examTest.xp}
           </h2>
         </div>
       </div>
@@ -157,7 +174,7 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
               </span>
             </div>
             <h2 className="text-base text-center font-medium text-muted-500">
-              50
+              {examTest.noOfQuestions}
             </h2>
           </Card>
           <Card className="w-full p-3 min-h-12 border-[#77C93E] shadow-[0px_1px_0px_0px_#77C93E] shadow-successshadow space-y-3 flex flex-col items-center justify-center">
@@ -196,7 +213,7 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
               </span>
             </div>
             <h2 className="text-base text-center font-medium text-muted-500">
-              30
+              {correct}
             </h2>
           </Card>
           <Card className="w-full p-3 min-h-12 border-[#FE646F] shadow-[0px_1px_0px_0px_#FE646F] space-y-3 flex flex-col items-center justify-center">
@@ -235,7 +252,7 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
               </span>
             </div>
             <h2 className="text-base text-center font-medium text-muted-500">
-              10
+              {incorrect}
             </h2>
           </Card>
           <Card className="w-full p-3 min-h-12 border-[#E6C729] shadow-[0px_1px_0px_0px_#E6C729] space-y-3 flex flex-col items-center justify-center">
@@ -274,7 +291,7 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
               </span>
             </div>
             <h2 className="text-base text-center font-medium text-muted-500">
-              5
+              {unanswered}
             </h2>
           </Card>
         </CardContent>

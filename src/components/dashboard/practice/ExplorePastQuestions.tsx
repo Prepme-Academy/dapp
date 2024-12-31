@@ -18,7 +18,7 @@ const ExplorePastQuestions: React.FC = () => {
 
   // Extract query parameters from the URL
   const type = searchParams.get("type") || "JAMB";
-  const subject = searchParams.get("subject") || "Literature in English";
+  const subject = searchParams.get("subject") || "English Language";
   const year = searchParams.get("year") || "2022";
   const sort = searchParams.get("sort") || "popularity";
   const [examDetail, setExamDetail] = useState<Exam | null>(null);
@@ -96,12 +96,12 @@ const ExplorePastQuestions: React.FC = () => {
             ? Array.from({ length: 6 }).map((_, index) => (
                 <div
                   key={index}
-                  className="w-full p-3 border-grey-500 space-y-3 flex flex-col items-start justify-start animation-pulse"
+                  className="w-full p-3 border border-grey-200 min-h-20 rounded-lg space-y-3 flex flex-col items-start justify-start animation-pulse"
                 >
-                  <div className="w-full h-14" />
-                  <div className="w-3/4 h-14" />
-                  <div className="w-1/2 h-14" />
-                  <div className="w-full h-14" />
+                  <div className="w-full h-6 rounded-lg bg-gray-200" />
+                  <div className="w-3/4 h-6 rounded-lg bg-gray-400" />
+                  <div className="w-1/2 h-6 rounded-lg bg-gray-300" />
+                  <div className="w-full h-6 rounded-lg bg-gray-200" />
                 </div>
               ))
             : examsData?.exams.length === 0

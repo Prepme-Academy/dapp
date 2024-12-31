@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardHeader } from "@/components/ui/card";
 import {
   Dialog,
@@ -6,9 +8,30 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useExamAnalysis } from "@/lib/actions/exam.action";
 import { cn } from "@/lib/utils";
+import { usePrivy } from "@privy-io/react-auth";
+import { useState } from "react";
 
-const ExamScoreCardTab: React.FC = () => {
+interface ExamScoreCardTabProps {
+  id: string | string[] | undefined;
+}
+
+const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({ id }) => {
+  const { user } = usePrivy();
+  const authUserId = user?.id;
+  const { data: analysisData, isLoading } = useExamAnalysis(
+    Number(id),
+    authUserId || ""
+  );
+  const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
+
+  if (isLoading || !analysisData) {
+    return <div>Loading...</div>;
+  }
+
+  const { userAnswers } = analysisData.data;
+
   return (
     <Dialog>
       <div className="w-full flex flex-col items-start justify-start gap-4">
@@ -17,99 +40,143 @@ const ExamScoreCardTab: React.FC = () => {
           explanation
         </h3>
         <ul className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <li>
-            <DialogTrigger asChild>
-              <Card
-                className={cn(
-                  "w-full min-h-36 rounded-2xl flex flex-col items-start justify-between gap-4 p-3 cursor-pointer",
-                  statusColor("Correct")
-                )}
-              >
-                <CardHeader className="px-0 py-0 items-start justify-between flex-row gap-3 space-y-0 w-full">
-                  <h4 className="w-32 text-sm font-medium">
-                    What is the oxidation state of sulfur in H2SO4 ?
-                  </h4>
-                  <RenderScoreIcon status="Correct" />
-                </CardHeader>
-                <div className="flex items-center justify-start gap-1 text-xs">
-                  <span className="font-normal text-[10px]">Answer: </span>
-                  <span className="font-medium">Separating funnel</span>
-                </div>
-              </Card>
-            </DialogTrigger>
-          </li>
+          {userAnswers.map((answer, index) => (
+            <li key={index}>
+              <DialogTrigger asChild>
+                <Card
+                  className={cn(
+                    "w-full min-h-36 rounded-2xl flex flex-col items-start justify-between gap-4 p-3 cursor-pointer",
+                    statusColor(answer.correct)
+                  )}
+                  onClick={() => setSelectedQuestion(index)}
+                >
+                  <CardHeader className="px-0 py-0 items-start justify-between flex-row gap-3 space-y-0 w-full">
+                    <h4
+                      className="w-32 text-sm font-medium truncate"
+                      dangerouslySetInnerHTML={{
+                        __html: answer.question.text,
+                      }}
+                    />
+                    <RenderScoreIcon
+                      status={answer.correct ? "Correct" : "Incorrect"}
+                    />
+                  </CardHeader>
+                  <div className="flex items-center justify-start gap-1 text-xs">
+                    <span className="font-normal text-[10px]">Answer: </span>
+                    <span className="font-medium">
+                      {answer.userOption?.value}
+                    </span>
+                  </div>
+                </Card>
+              </DialogTrigger>
+            </li>
+          ))}
         </ul>
       </div>
-      <DialogContent className="h-[95vh] overflow-hidden hover:overflow-y-auto hover:overflow-x-hidden">
-        <DialogHeader className="space-y-0 mt-6">
-          <DialogTitle>
-            <div className="w-full flex  items-start justify-between gap-5">
-              <h3 className="text-sm font-medium text-muted-500">Question 1</h3>
-              <div
-                className={cn(
-                  "border-none flex items-center justify-end gap-2 text-xs font-medium",
-                  statusColor("Correct")
-                )}
-              >
-                <RenderScoreIcon status="Correct" />
-                <span>Correct</span>
+      {selectedQuestion !== null && (
+        <DialogContent className="h-[95vh] overflow-hidden hover:overflow-y-auto hover:overflow-x-hidden">
+          <DialogHeader className="space-y-0 mt-6">
+            <DialogTitle>
+              <div className="w-full flex  items-start justify-between gap-5">
+                <h3 className="text-sm font-medium text-muted-500">
+                  Question {selectedQuestion + 1}
+                </h3>
+                <div
+                  className={cn(
+                    "border-none flex items-center justify-end gap-2 text-xs font-medium",
+                    statusColor(userAnswers[selectedQuestion].correct)
+                  )}
+                >
+                  <RenderScoreIcon
+                    status={
+                      userAnswers[selectedQuestion].correct
+                        ? "Correct"
+                        : "Incorrect"
+                    }
+                  />
+                  <span>
+                    {userAnswers[selectedQuestion].correct
+                      ? "Correct"
+                      : "Incorrect"}
+                  </span>
+                </div>
               </div>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="w-full space-y-3">
+            <h2
+              className="text-sm font-medium text-muted-500"
+              dangerouslySetInnerHTML={{
+                __html: userAnswers[selectedQuestion].question.text,
+              }}
+            />
+            <div className="space-y-2 w-full">
+              <span className="text-sm font-normal text-muted-500 block">
+                {userAnswers[selectedQuestion].correct_option.label}{" "}
+                {userAnswers[selectedQuestion].correct_option.value} correct
+                answer
+              </span>
+
+              <span className="text-sm font-normal text-muted-500 block">
+                {userAnswers[selectedQuestion].userOption?.label}{" "}
+                {userAnswers[selectedQuestion].userOption?.value} your answer
+              </span>
+              {/* {userAnswers[selectedQuestion].question.options.map(
+                (option, index) => (
+                  <label
+                    key={index}
+                    className={cn(
+                      "flex items-center space-x-3 border p-3 rounded-lg relative",
+                      userAnswers[selectedQuestion].correct_option.value ===
+                        option.value
+                        ? "bg-[#DEFFC8] border-2 border-[#63B42B]"
+                        : userAnswers[selectedQuestion].userOption?.value ===
+                          option.value
+                        ? "bg-[#FFD1D1] border-2 border-[#E6485D]"
+                        : ""
+                    )}
+                  >
+                    <span className="text-gray-700">
+                      {String.fromCharCode(65 + index)}. {option.value}
+                    </span>
+                    {userAnswers[selectedQuestion].correct_option.value ===
+                      option.value && (
+                      <span className="text-sm font-normal text-muted-500 absolute right-4 top-3 hidden lg:block">
+                        correct answer
+                      </span>
+                    )}
+                    {userAnswers[selectedQuestion].userOption?.value ===
+                      option.value && (
+                      <span className="text-sm font-normal text-muted-500 absolute right-4 top-3 hidden lg:block">
+                        your answer
+                      </span>
+                    )}
+                  </label>
+                )
+              )} */}
             </div>
-          </DialogTitle>
-        </DialogHeader>
-        <div className="w-full space-y-3">
-          <h2 className="text-sm font-medium text-muted-500">
-            In an exothermic reaction, heat is .....
-          </h2>
-          <div className="space-y-2 w-full">
-            {[
-              "Increase in screening effect",
-              "Increase in nuclear charge",
-              "Decrease in screening effect",
-              "Decrease in nuclear charge",
-            ].map((option, index) => (
-              <label
-                key={index}
-                className="flex items-center space-x-3 border p-3 rounded-lg last:bg-[#DEFFC8] last:border-2 relative"
-              >
-                <span className="text-gray-700">
-                  {String.fromCharCode(65 + index)}. {option}
-                </span>
-                <span className="text-sm font-normal text-muted-500 absolute right-4 top-3 hidden lg:block">
-                  correct answer
-                </span>
-              </label>
-            ))}
+            <h1 className="text-sm font-medium text-muted-500">
+              Answer Explanation:
+            </h1>
+            <Card className="w-full p-3 border-grey-200 space-y-3 flex flex-col items-start justify-start">
+              <p
+                className="text-sm font-normal text-[#4E5153]"
+                dangerouslySetInnerHTML={{
+                  __html: userAnswers[selectedQuestion].question.explanation,
+                }}
+              />
+            </Card>
           </div>
-          <h1 className="text-sm font-medium text-muted-500">
-            Answer Explanation:
-          </h1>
-          <Card className="w-full p-3 border-grey-200 space-y-3 flex flex-col items-start justify-start">
-            <p className="text-sm font-normal text-[#4E5153]">
-              In an exothermic reaction, energy is released to the surroundings,
-              usually in the form of heat. This occurs because the energy
-              required to break the bonds in the reactants is less than the
-              energy released when new bonds are formed in the products. As a
-              result, the overall energy of the system decreases, and heat is
-              given off.
-              <br />
-              <br /> For example: <br /> C+O2→CO2+heatIn this combustion
-              reaction, heat is released, making it exothermic.
-              <br />
-              <br /> This is in contrast to an endothermic reaction, where heat
-              is absorbed from the surroundings.
-            </p>
-          </Card>
-        </div>
-      </DialogContent>
+        </DialogContent>
+      )}
     </Dialog>
   );
 };
 
-const statusColor = (status: string) => {
-  if (status === "Correct") {
+const statusColor = (correct: boolean | null) => {
+  if (correct === true) {
     return "text-[#2B5A0A] border-[#9EE071]";
-  } else if (status === "Incorrect") {
+  } else if (correct === false) {
     return "text-[#E6485D] border-[#FF5876]";
   }
   return "text-[#DA9714] border-[#FED402]";

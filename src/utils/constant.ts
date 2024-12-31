@@ -90,7 +90,7 @@ export const leaderboardData = [
 
 export const examQuestions = [
     {
-      id: "jamb_chemistry_2020",
+      id: "2022-jamb-english-language-57",
       examType: "Jamb",
       year: 2020,
       subject: "Chemistry",
