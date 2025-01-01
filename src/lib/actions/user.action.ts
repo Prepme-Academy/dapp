@@ -1,4 +1,8 @@
-import { createUser, onboardUser } from "@/services/apis/user.api";
+import {
+  checkUsername,
+  createUser,
+  onboardUser,
+} from "@/services/apis/user.api";
 import {
   CreateUserPayload,
   OnboardUserPayload,
@@ -6,6 +10,10 @@ import {
   UserResponse,
 } from "@/types";
 import { useMutation } from "@tanstack/react-query";
+
+export const useCheckUsername = () => {
+  return useMutation((username: string) => checkUsername(username));
+};
 
 export const useCreateUser = () => {
   return useMutation<UserResponse, Error, CreateUserPayload>((payload) =>

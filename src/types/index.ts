@@ -1,3 +1,8 @@
+export interface CheckUsernameResponse {
+  success: boolean;
+  message: string;
+}
+
 export interface CreateUserPayload {
   email?: string;
   walletAddress: string;

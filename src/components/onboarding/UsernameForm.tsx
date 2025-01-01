@@ -5,26 +5,31 @@ import React, { useState } from "react";
 import { Button } from "../ui/button";
 import useUserStore from "@/store/userStore";
 import { Loader2 } from "lucide-react";
+import { useCheckUsername } from "@/lib/actions";
+import { formatAxiosErrorMessage } from "@/utils/errors";
+import { AxiosError } from "axios";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const UsernameForm: React.FC = () => {
   const [username, setUsername] = useState("");
   const { setUser } = useUserStore();
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { mutate, isLoading, isError, error } = useCheckUsername();
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleUserNameSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
+    setSuccessMessage(null);
 
-    if (username.length !== 0) {
-      setUser({
-        username: username,
-      });
-      router.push("/onboarding/exam-option");
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 5000);
-    }
+    mutate(username, {
+      onSuccess: (data) => {
+        if (data.success) {
+          setUser({ username });
+          router.push("/onboarding/exam-option");
+          setSuccessMessage(data.message);
+        }
+      },
+    });
   };
 
   return (
@@ -32,6 +37,20 @@ const UsernameForm: React.FC = () => {
       onSubmit={handleUserNameSubmit}
       className="w-full flex flex-col items-start justify-start gap-8"
     >
+      {isError && (
+        <Alert variant="destructive" className="w-full">
+          <AlertDescription>
+            {formatAxiosErrorMessage(error as AxiosError)}
+          </AlertDescription>
+        </Alert>
+      )}
+      {successMessage && (
+        <Alert className="w-full bg-green-50 border-green-200">
+          <AlertDescription className="text-green-600">
+            {successMessage}
+          </AlertDescription>
+        </Alert>
+      )}
       <div className="w-full flex flex-col items-start justify-start gap-2">
         <label
           htmlFor="username"
