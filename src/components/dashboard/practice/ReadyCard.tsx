@@ -19,6 +19,7 @@ const ReadyCard: React.FC<ReadyCardProps> = ({ slug }) => {
   const [examInfo, setExamInfo] = useState<StartExamResponse["data"] | null>(
     null
   );
+  
 
   const { mutate: startExam, isLoading: isStartingExam } = useStartExam();
 

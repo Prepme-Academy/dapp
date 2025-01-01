@@ -8,7 +8,6 @@ export default async function QuestionnairePanelPage({
   params: Params;
 }) {
   const { id } = await params;
-  console.log("🚀 ~ id:", id)
 
   return (
     <div className="w-full h-full overflow-auto relative">
