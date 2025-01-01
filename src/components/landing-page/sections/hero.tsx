@@ -75,7 +75,7 @@ export default function HeroSection() {
         </div>
       </div>
       <aside
-        className="absolute -bottom-[30%]  lg:-bottom-[90%] left-1/2 transform -translate-x-1/2 -translate-y-1/2  w-[80%] mx-auto"
+        className="absolute -bottom-[30%] md:-bottom-[67%] lg:-bottom-[90%] left-1/2 transform -translate-x-1/2 -translate-y-1/2  w-[80%] mx-auto"
         ref={heroImageRef}
       >
         <Image

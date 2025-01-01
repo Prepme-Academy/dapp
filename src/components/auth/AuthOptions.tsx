@@ -3,9 +3,10 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 import useClientStore from "@/store/clientStore";
 import Cookies from "js-cookie";
+import { useEffect } from "react";
 
 type methods =
   | "wallet"
@@ -43,37 +44,64 @@ type walletMethod =
 
 const AuthOptions: React.FC = () => {
   const router = useRouter();
-  const { login, connectWallet } = usePrivy();
+  const { user, login, connectWallet, authenticated, ready } = usePrivy();
+  const { wallets } = useWallets();
   const { isFirstVisit } = useClientStore();
 
+  useEffect(() => {
+    console.log("🚀 ~ wallet:", wallets[0]);
+    console.log("🚀 ~ user:", user);
+    console.log("🚀 ~ authenticated:", authenticated);
+    console.log("🚀 ~ ready:", ready);
+  }, [user, ready, authenticated, wallets]);
+
+  useEffect(() => {
+    if (user && authenticated && ready) {
+      if (isFirstVisit === false) {
+        router.push("/onboarding/username");
+      } else {
+        Cookies.set("onboarded", "true");
+        router.push("/dashboard/practice");
+      }
+    }
+  }, [authenticated, ready, isFirstVisit, router, wallets, user]);
+
+  useEffect(() => {
+    if (!authenticated && !user && ready && wallets?.[0]?.address) {
+      wallets[0]?.loginOrLink();
+    }
+  }, [authenticated, ready, isFirstVisit, router, wallets, user]);
+
   // Function to handle wallet login
-  const handleWalletLogin = async (method: walletMethod) => {
+  const handleWalletLogin = (method: walletMethod) => {
     try {
-      await connectWallet({ walletList: [method] });
-      setTimeout(() => {
+      connectWallet({ walletList: [method] });
+
+      if (wallets[0]?.address && ready) {
         if (isFirstVisit === false) {
           router.push("/onboarding/username");
         } else {
           Cookies.set("onboarded", "true");
           router.push("/dashboard/practice");
         }
-      }, 500);
+      }
     } catch (error) {
       console.error("Login failed:", error);
     }
   };
   // Function to handle social login
-  const handleSocialLogin = async (method: methods) => {
+  const handleSocialLogin = (method: methods) => {
     try {
-      await login({ loginMethods: [method] });
-      setTimeout(() => {
+      login({ loginMethods: [method] });
+
+      if (authenticated) {
         if (isFirstVisit === false) {
           router.push("/onboarding/username");
         } else {
           Cookies.set("onboarded", "true");
           router.push("/dashboard/practice");
         }
-      }, 500);
+      }
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -144,7 +172,7 @@ const AuthOptions: React.FC = () => {
             Connect <span className="font-medium">OC-ID</span>
           </span>
         </Button>
-          <span className="text-[10px] -translate-y-3">Coming soon</span>
+        <span className="text-[10px] -translate-y-3">Coming soon</span>
       </div>
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         <h2 className="col-span-3 text-base font-medium text-muted-500">

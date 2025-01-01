@@ -1,5 +1,5 @@
 export interface CreateUserPayload {
-  email: string;
+  email?: string;
   walletAddress: string;
   authId: string;
 }
