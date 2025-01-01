@@ -31,9 +31,9 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const router = useRouter();
   const { user } = usePrivy();
   const authUserId = user?.id;
-
   const initialQuestionIndex = Number(searchParams.get("q")) || 0;
   const STORAGE_KEY = `exam-${id}-timer`;
+  const ANSWERS_STORAGE_KEY = `exam-${id}-answers`;
   const INITIAL_TIME = 1800;
 
   const [timeLeft, setTimeLeft] = useState(() => {
@@ -47,7 +47,13 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
 
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string;
-  }>({});
+  }>(() => {
+    if (typeof window === "undefined") return {};
+    const savedAnswers = localStorage.getItem(ANSWERS_STORAGE_KEY);
+    return savedAnswers ? JSON.parse(savedAnswers) : {};
+  });
+
+  console.log("🚀 ~ selectedAnswers:", selectedAnswers);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -60,7 +66,6 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     isError,
     error,
   } = useExamQuestions(Number(id), authUserId || "");
-
   const { mutate: submitExam, isLoading: isSubmitting } = useSubmitExam();
 
   // Function to handle scrolling to the top
@@ -97,10 +102,14 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   }, [currentQuestionIndex, searchParams, router]);
 
   const handleAnswerSelect = (index: number, option: string) => {
-    setSelectedAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [index]: option,
-    }));
+    setSelectedAnswers((prevAnswers) => {
+      const newAnswers = {
+        ...prevAnswers,
+        [index]: option,
+      };
+      localStorage.setItem(ANSWERS_STORAGE_KEY, JSON.stringify(newAnswers));
+      return newAnswers;
+    });
   };
 
   const handleNavigation = (index: number) => {
@@ -150,6 +159,8 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
         onSuccess: (data) => {
           console.log("Exam submitted successfully:", data);
           setIsSubmitted(true);
+          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem(ANSWERS_STORAGE_KEY)
           router.push(`/dashboard/practice/detail/${id}/success`);
         },
         onError: (error) => {
