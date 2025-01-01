@@ -10,6 +10,8 @@ import {
   ExamScoreCardTab,
 } from "../misc/components";
 import { Suspense } from "react";
+import { usePrivy } from "@privy-io/react-auth";
+import { useExamAnalysis } from "@/lib/actions/exam.action";
 
 export default function AnalysisInfoPage() {
   const router = useRouter();
@@ -17,9 +19,32 @@ export default function AnalysisInfoPage() {
   const searchParams = useSearchParams();
   const currentTab = searchParams.get("tab") || "exam-scorecard";
 
+  const { user } = usePrivy();
+  const authUserId = user?.id;
+
+  const {
+    data: analysisData,
+    isLoading,
+    isError,
+    error
+  } = useExamAnalysis(Number(params.id), authUserId || "");
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading exam analysis data. {error.message}</div>;
+  }
+
+  const { currentPage, pageSize, totalCount } = analysisData.data;
+  // console.log("🚀 ~ AnalysisInfoPage ~ totalCount:", totalCount);
+  // console.log("🚀 ~ AnalysisInfoPage ~ pageSize:", pageSize);
+  // console.log("🚀 ~ AnalysisInfoPage ~ currentPage:", currentPage);
+
   const pageContent =
     currentTab === "exam-scorecard" ? (
-      <ExamScoreCardTab id={params.id} />
+      <ExamScoreCardTab id={params.id} analysisData={analysisData.data} />
     ) : (
       <ExamAnalysisTab />
     );
@@ -37,7 +62,13 @@ export default function AnalysisInfoPage() {
       <div className="w-full grid grid-cols-1 lg:grid-cols-[320px_1fr] xxl:grid-cols-[420px_1fr] gap-4 items-start justify-start">
         <AnalysisSidebar id={params.id} />
         <div className="w-full flex flex-col items-start justify-start gap-3">
-          <AnalysisHeader id={params.id} currentTab={currentTab} />
+          <AnalysisHeader
+            id={params.id}
+            currentTab={currentTab}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            totalCount={totalCount}
+          />
           <Suspense key={currentTab} fallback={"loading..."}>
             {pageContent}
           </Suspense>

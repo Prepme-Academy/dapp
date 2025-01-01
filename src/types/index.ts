@@ -224,6 +224,10 @@ export interface SubmitExamResponse {
 export interface ExamAnalysisResponse {
   success: boolean;
   data: {
+    currentPage: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages: number;
     id: number;
     correct: number;
     noOfQuestions: number;

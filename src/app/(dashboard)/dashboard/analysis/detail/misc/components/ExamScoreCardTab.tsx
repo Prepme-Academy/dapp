@@ -8,29 +8,27 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useExamAnalysis } from "@/lib/actions/exam.action";
 import { cn } from "@/lib/utils";
-import { usePrivy } from "@privy-io/react-auth";
+import { ExamAnalysisResponse } from "@/types";
 import { useState } from "react";
 
 interface ExamScoreCardTabProps {
   id: string | string[] | undefined;
+  analysisData: ExamAnalysisResponse['data'];
 }
 
-const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({ id }) => {
-  const { user } = usePrivy();
-  const authUserId = user?.id;
-  const { data: analysisData, isLoading } = useExamAnalysis(
-    Number(id),
-    authUserId || ""
-  );
+const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
+  id,
+  analysisData,
+}) => {
+  console.log("🚀 ~ id:", id);
   const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
 
-  if (isLoading || !analysisData) {
+  if (!analysisData) {
     return <div>Loading...</div>;
   }
 
-  const { userAnswers } = analysisData.data;
+  const { userAnswers } = analysisData;
 
   return (
     <Dialog>
@@ -111,25 +109,7 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({ id }) => {
               }}
             />
             <div className="space-y-2 w-full">
-              <span className="text-sm font-normal text-muted-500 flex items-center space-x-3 p-3 rounded-lg relative bg-[#DEFFC8] border-2 border-[#63B42B]">
-                {userAnswers[selectedQuestion].correct_option.label}{" "}
-                {userAnswers[selectedQuestion].correct_option.value} correct
-                answer
-              </span>
-
-              <span
-                className={cn(
-                  "text-sm font-normal text-muted-500 flex items-center space-x-3 p-3 rounded-lg relative",
-                  userAnswers[selectedQuestion].correct_option.value ===
-                    userAnswers[selectedQuestion].userOption?.value
-                    ? "bg-[#DEFFC8] border-2 border-[#63B42B]"
-                    : "bg-[#FFD1D1] border-2 border-[#E6485D]"
-                )}
-              >
-                {userAnswers[selectedQuestion].userOption?.label}{" "}
-                {userAnswers[selectedQuestion].userOption?.value} your answer
-              </span>
-              {/* {userAnswers[selectedQuestion].question.options.map(
+              {userAnswers[selectedQuestion].question.options.map(
                 (option, index) => (
                   <label
                     key={index}
@@ -161,7 +141,7 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({ id }) => {
                     )}
                   </label>
                 )
-              )} */}
+              )}
             </div>
             <h1 className="text-sm font-medium text-muted-500">
               Answer Explanation:

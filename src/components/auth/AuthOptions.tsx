@@ -131,7 +131,8 @@ const AuthOptions: React.FC = () => {
         </h2>
         <Button
           variant={"outline"}
-          className="col-span-2 flex items-center justify-start gap-2"
+          className="col-span-2 flex items-center justify-start gap-2 relative disabled:bg-gray-300 disabled:cursor-not-allowed disabled:pointer-events-auto"
+          disabled
         >
           <Image
             src="/icons/logo-oc.svg"
@@ -142,6 +143,7 @@ const AuthOptions: React.FC = () => {
           <span className="text-sm font-normal">
             Connect <span className="font-medium">OC-ID</span>
           </span>
+          <span className="absolute bottom-0 right-0 text-[10px] bg-red-400 text-white p-2 rounded-lg">Coming soon</span>
         </Button>
       </div>
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">

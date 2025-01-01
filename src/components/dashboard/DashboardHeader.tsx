@@ -10,16 +10,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { redirect } from "next/navigation";
 import { dummyAddress, formatWalletAddress } from "@/hooks/useAddress";
+import { useRouter } from "next/navigation";
 
 const DashboardHeader: React.FC = () => {
   const { user, ready, authenticated, logout } = usePrivy();
+  const router = useRouter();
 
   const handleLogout = async () => {
     try {
       await logout();
-      redirect("/login");
+      router.replace("/login");
     } catch (error) {
       console.log("🚀 ~ handleLogout ~ error:", error);
     }
