@@ -8,29 +8,27 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useExamAnalysis } from "@/lib/actions/exam.action";
 import { cn } from "@/lib/utils";
-import { usePrivy } from "@privy-io/react-auth";
+import { ExamAnalysisResponse } from "@/types";
 import { useState } from "react";
 
 interface ExamScoreCardTabProps {
   id: string | string[] | undefined;
+  analysisData: ExamAnalysisResponse['data'];
 }
 
-const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({ id }) => {
-  const { user } = usePrivy();
-  const authUserId = user?.id;
-  const { data: analysisData, isLoading } = useExamAnalysis(
-    Number(id),
-    authUserId || ""
-  );
+const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
+  id,
+  analysisData,
+}) => {
+  console.log("🚀 ~ id:", id);
   const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
 
-  if (isLoading || !analysisData) {
+  if (!analysisData) {
     return <div>Loading...</div>;
   }
 
-  const { userAnswers } = analysisData.data;
+  const { userAnswers } = analysisData;
 
   return (
     <Dialog>

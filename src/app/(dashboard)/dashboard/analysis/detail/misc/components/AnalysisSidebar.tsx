@@ -187,7 +187,7 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
           <Button
             variant={"unstyled"}
             onClick={() =>
-              router.push(`/dashboard/practice/detail/${id}/preparing`)
+              router.push(`/dashboard/practice/detail/${id}/ready`)
             }
             className="bg-primary-400 text-white w-fit h-9 px-6 rounded-lg gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
           >

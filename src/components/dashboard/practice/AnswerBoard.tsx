@@ -19,6 +19,8 @@ import { Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePrivy } from "@privy-io/react-auth";
 import { useExamQuestions, useSubmitExam } from "@/lib/actions/exam.action";
+import { formatAxiosErrorMessage } from "@/utils/errors";
+import { AxiosError } from "axios";
 
 interface AnswerBoardProps {
   id: string;
@@ -31,7 +33,14 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const authUserId = user?.id;
 
   const initialQuestionIndex = Number(searchParams.get("q")) || 0;
-  const initialTimeLeft = Number(searchParams.get("t")) || 1800;
+  const STORAGE_KEY = `exam-${id}-timer`;
+  const INITIAL_TIME = 1800;
+
+  const [timeLeft, setTimeLeft] = useState(() => {
+    if (typeof window === "undefined") return INITIAL_TIME;
+    const savedTime = localStorage.getItem(STORAGE_KEY);
+    return savedTime ? parseInt(savedTime) : INITIAL_TIME;
+  });
 
   const [currentQuestionIndex, setCurrentQuestionIndex] =
     useState(initialQuestionIndex);
@@ -40,7 +49,6 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     [key: number]: string;
   }>({});
 
-  const [timeLeft, setTimeLeft] = useState(initialTimeLeft);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const topRef = useRef<HTMLDivElement>(null);
@@ -52,8 +60,6 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     isError,
     error,
   } = useExamQuestions(Number(id), authUserId || "");
-    console.log("🚀 ~ error:", error)
-    console.log("🚀 ~ isError:", isError)
 
   const { mutate: submitExam, isLoading: isSubmitting } = useSubmitExam();
 
@@ -66,36 +72,29 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
 
   useEffect(() => {
     if (isSubmitted) return;
+
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
-        if (prevTime > 0) {
-          return prevTime - 1;
+        if (prevTime <= 0) {
+          clearInterval(timer);
+          return 0;
         }
-        clearInterval(timer);
-        return 0;
+        const newTime = prevTime - 1;
+        localStorage.setItem(STORAGE_KEY, newTime.toString());
+        return newTime;
       });
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [isSubmitted]);
-
-  useEffect(() => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.set("t", timeLeft.toString());
-    router.replace(`?${newSearchParams.toString()}`);
-  }, [timeLeft, searchParams, router]);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [isSubmitted, STORAGE_KEY]);
 
   useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set("q", currentQuestionIndex.toString());
     router.replace(`?${newSearchParams.toString()}`);
   }, [currentQuestionIndex, searchParams, router]);
-
-  useEffect(() => {
-    if (isError) {
-      router.push(`/dashboard/practice/detail/${id}/success`);
-    }
-  }, [isError, error, id, router]);
 
   const handleAnswerSelect = (index: number, option: string) => {
     setSelectedAnswers((prevAnswers) => ({
@@ -142,7 +141,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
       numOfQuestionsNotAnswered,
       questions,
       endDate: new Date().toISOString(),
-      duration: (initialTimeLeft - timeLeft) / 60,
+      duration: (INITIAL_TIME - timeLeft) / 60,
     };
 
     submitExam(
@@ -169,12 +168,32 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const progressPercentage =
     (Object.keys(selectedAnswers).length / (examData?.data.length || 1)) * 100;
 
-  if (isLoading || !examData) {
+  if (isLoading) {
     return (
       <div className="w-full h-full overflow-auto flex md:items-center md:justify-center">
         <div className="w-full max-w-[635px] mx-auto">
           <div className="w-full min-h-40 lg:min-h-80 bg-gray-300 animate-pulse" />
         </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="w-full flex flex-col items-center justify-center h-full">
+        <Card className="w-full max-w-[635px] min-h-28 mx-auto px-3 py-4 border-grey-500 space-y-3 flex flex-col items-start justify-start">
+          <p className="text-red-500 text-sm font-normal">
+            Error loading exam analysis data.{" "}
+            {formatAxiosErrorMessage(error as AxiosError)}
+          </p>
+          <Button
+            variant={"unstyled"}
+            className="bg-primary-400 text-white w-fit px-6 h-9 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+            onClick={() => router.replace("/dashboard/practice")}
+          >
+            Go to practice
+          </Button>
+        </Card>
       </div>
     );
   }
