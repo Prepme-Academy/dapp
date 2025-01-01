@@ -7,21 +7,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { usePrivy } from "@privy-io/react-auth";
-import { redirect } from "next/navigation";
 import { SkeletonHeaderLoader } from "../DashboardHeader";
 import { dummyAddress, formatWalletAddress } from "@/hooks/useAddress";
 
-const DashboardMobileHeader: React.FC = () => {
-  const { user, ready, authenticated, logout } = usePrivy();
+interface DashboardMobileHeaderProps {
+  handleLogout: () => Promise<void>;
+}
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      redirect("/login");
-    } catch (error) {
-      console.log("🚀 ~ handleLogout ~ error:", error);
-    }
-  };
+const DashboardMobileHeader: React.FC<DashboardMobileHeaderProps> = ({
+  handleLogout,
+}) => {
+  const { user, ready, authenticated } = usePrivy();
 
   const disableLogout = !ready || (ready && !authenticated);
 

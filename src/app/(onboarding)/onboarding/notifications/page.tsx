@@ -25,7 +25,7 @@ export default function NotificationPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const RegisterUser: CreateUserPayload = {
-    email: user?.email?.address || "",
+    email: user?.email?.address || undefined,
     walletAddress: user?.wallet?.address || wallets[0]?.address || "",
     authId: user?.id || "",
   };
@@ -41,20 +41,15 @@ export default function NotificationPage() {
     setIsSubmitting(true);
     try {
       const userResponse = await createUser(RegisterUser);
-      console.log("🚀 ~ handleUserActions ~ userResponse:", userResponse)
 
       // Ensure authId is available
       const authId = RegisterUser.authId;
-      console.log("🚀 ~ handleUserActions ~ authId:", authId)
 
       // Onboard user with the correct authId
       const onboardResponse = await onboardUser({
         payload: OnBoardingUser,
         authId: authId,
       });
-      
-      // Log the result
-      console.log("🚀 ~ handleUserActions ~ onboardResponse:", onboardResponse)
 
       Cookies.set("onboarded", "true");
       setFirstVisit(true);

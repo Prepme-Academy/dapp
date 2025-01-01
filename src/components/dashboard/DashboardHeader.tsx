@@ -27,6 +27,7 @@ const DashboardHeader: React.FC = () => {
     try {
       await logout();
       router.replace("/login");
+      window.location.reload();
     } catch (error) {
       console.log("🚀 ~ handleLogout ~ error:", error);
     }
@@ -50,7 +51,7 @@ const DashboardHeader: React.FC = () => {
           className="w-28 sm:w-36"
         />
       </Link>
-      <DashboardMobileHeader />
+      <DashboardMobileHeader handleLogout={handleLogout} />
       <nav className="hidden lg:flex items-center justify-end lg:justify-between gap-x-5 flex-grow pl-6 py-4">
         <div className="relative w-[356px]">
           <input

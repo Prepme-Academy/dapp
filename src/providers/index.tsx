@@ -46,6 +46,7 @@ const Providers: React.FC<ProvidersProps> = ({ children }) => {
             "telegram",
             "wallet",
           ],
+          
         }}
       >
         {children}
