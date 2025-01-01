@@ -33,13 +33,23 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
   const router = useRouter();
   const authUserId = user?.id;
 
-  const { data: analysisData, isLoading } = useExamAnalysis(
-    Number(id),
-    authUserId || ""
-  );
+  const {
+    data: analysisData,
+    isLoading,
+    isError,
+    error,
+  } = useExamAnalysis(Number(id), authUserId || "");
 
   if (isLoading || !analysisData) {
     return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="text-red-500">
+        Error loading exam analysis: {error.message}
+      </div>
+    );
   }
 
   const { correct, incorrect, unanswered, examTest, userAnswers, createdAt } =
@@ -119,7 +129,7 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
                 </svg>
 
                 <span className="text-xs font-normal text-muted-400">
-                {examTest.duration} mins
+                  {examTest.duration} mins
                 </span>
               </div>
               <div className="flex items-center justify-start gap-2">
@@ -153,7 +163,7 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
                 </svg>
 
                 <span className="text-xs font-normal text-muted-400">
-                {examTest.noOfQuestions} questions
+                  {examTest.noOfQuestions} questions
                 </span>
               </div>
             </div>
@@ -221,7 +231,7 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
               </span>
             </div>
             <h2 className="text-base text-center font-medium text-muted-500">
-            {examTest.noOfQuestions}
+              {examTest.noOfQuestions}
             </h2>
           </Card>
           <Card className="w-full p-3 min-h-14 border-[#77C93E] shadow-[0px_1px_0px_0px_#77C93E] shadow-successshadow space-y-3 flex flex-col items-center justify-center">
@@ -260,7 +270,7 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
               </span>
             </div>
             <h2 className="text-base text-center font-medium text-muted-500">
-            {correct}
+              {correct}
             </h2>
           </Card>
           <Card className="w-full p-3 min-h-14 border-[#FE646F] shadow-[0px_1px_0px_0px_#FE646F] space-y-3 flex flex-col items-center justify-center">
@@ -299,7 +309,7 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
               </span>
             </div>
             <h2 className="text-base text-center font-medium text-muted-500">
-            {incorrect}
+              {incorrect}
             </h2>
           </Card>
           <Card className="w-full p-3 min-h-14 border-[#E6C729] shadow-[0px_1px_0px_0px_#E6C729] space-y-3 flex flex-col items-center justify-center">
@@ -338,7 +348,7 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
               </span>
             </div>
             <h2 className="text-base text-center font-medium text-muted-500">
-            {unanswered}
+              {unanswered}
             </h2>
           </Card>
         </CardContent>
@@ -354,7 +364,7 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
           <span> Question route</span>
         </h3>
         <div className="grid grid-cols-6 xxl:grid-cols-10 gap-2 w-full">
-        {userAnswers.map((answer, i) => (
+          {userAnswers.map((answer, i) => (
             <button
               key={i}
               className={`p-2 text-center border rounded-md ${

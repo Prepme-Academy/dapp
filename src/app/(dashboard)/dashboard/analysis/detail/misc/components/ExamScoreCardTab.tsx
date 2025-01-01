@@ -111,25 +111,7 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({ id }) => {
               }}
             />
             <div className="space-y-2 w-full">
-              <span className="text-sm font-normal text-muted-500 flex items-center space-x-3 p-3 rounded-lg relative bg-[#DEFFC8] border-2 border-[#63B42B]">
-                {userAnswers[selectedQuestion].correct_option.label}{" "}
-                {userAnswers[selectedQuestion].correct_option.value} correct
-                answer
-              </span>
-
-              <span
-                className={cn(
-                  "text-sm font-normal text-muted-500 flex items-center space-x-3 p-3 rounded-lg relative",
-                  userAnswers[selectedQuestion].correct_option.value ===
-                    userAnswers[selectedQuestion].userOption?.value
-                    ? "bg-[#DEFFC8] border-2 border-[#63B42B]"
-                    : "bg-[#FFD1D1] border-2 border-[#E6485D]"
-                )}
-              >
-                {userAnswers[selectedQuestion].userOption?.label}{" "}
-                {userAnswers[selectedQuestion].userOption?.value} your answer
-              </span>
-              {/* {userAnswers[selectedQuestion].question.options.map(
+              {userAnswers[selectedQuestion].question.options.map(
                 (option, index) => (
                   <label
                     key={index}
@@ -161,7 +143,7 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({ id }) => {
                     )}
                   </label>
                 )
-              )} */}
+              )}
             </div>
             <h1 className="text-sm font-medium text-muted-500">
               Answer Explanation:

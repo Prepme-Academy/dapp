@@ -53,15 +53,7 @@ const ExamOptionSelect: React.FC = () => {
   if (error) {
     return (
       <div className="text-red-500">
-        Error loading exam types: {error.message}{" "}
-        {/* <button
-          onClick={() => {
-            setSelectedOption("JAMB");
-            handleExamSelect();
-          }}
-        >
-          JAMB
-        </button> */}
+        Error loading exam types: {error.message}
       </div>
     );
   }

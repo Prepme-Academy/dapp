@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import { PracticeModal } from "../practice";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { examQuestions } from "@/utils/constant";
 import { useRouter } from "next/navigation";
 import { usePrivy } from "@privy-io/react-auth";
 import { useEffect, useState } from "react";
@@ -23,7 +22,12 @@ const CurrentAnalysis: React.FC = () => {
   }, [user]);
 
   // Fetch exams based on query parameters
-  const { data: examsData, isLoading: isLoadingExams } = useExams({
+  const {
+    data: examsData,
+    isLoading: isLoadingExams,
+    isError,
+    error,
+  } = useExams({
     type: "JAMB",
     subject: "English Language",
     year: "2022",
@@ -38,6 +42,14 @@ const CurrentAnalysis: React.FC = () => {
         <div className="w-3/4 h-6 rounded-lg bg-gray-400" />
         <div className="w-1/2 h-6 rounded-lg bg-gray-300" />
         <div className="w-full h-6 rounded-lg bg-gray-200" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="text-red-500">
+        Error loading exam analysis: {error.message}
       </div>
     );
   }
@@ -209,7 +221,7 @@ const CurrentAnalysis: React.FC = () => {
             </Button>
           </div>
         </Card>
-        {examQuestions && <PracticeModal examDetail={examDetail} />}
+        {examDetail && <PracticeModal examDetail={examDetail} />}
       </Dialog>
     );
 };
