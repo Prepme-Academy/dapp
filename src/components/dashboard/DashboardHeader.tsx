@@ -12,10 +12,16 @@ import {
 } from "@/components/ui/popover";
 import { dummyAddress, formatWalletAddress } from "@/hooks/useAddress";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const DashboardHeader: React.FC = () => {
   const { user, ready, authenticated, logout } = usePrivy();
   const router = useRouter();
+
+  useEffect(() => {
+    console.log("🚀 ~ user:", user)
+  }, [user])
+  
 
   const handleLogout = async () => {
     try {

@@ -123,3 +123,22 @@ select {
     transform: translateY(0);
   }
 }
+
+
+:fullscreen {
+  background-image: url('/background/authbg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+:-webkit-full-screen {
+  background-image: url('/background/authbg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+}

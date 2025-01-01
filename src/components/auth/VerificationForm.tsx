@@ -9,7 +9,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
 
-
 interface VerificationFormProps {
   email: string;
 }
@@ -113,6 +112,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
 
   // Handle resend OTP
   const handleResendOTP = async () => {
+    setOtp([]);
     try {
       await sendCode({ email });
       setSuccess("Code resent successfully!");
