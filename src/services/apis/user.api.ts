@@ -1,11 +1,18 @@
 import axios from "axios";
 import {
+  CheckUsernameResponse,
   CreateUserPayload,
   OnboardUserPayload,
   OnboardUserResponse,
   UserResponse,
 } from "@/types";
 import { BASE_URL } from "..";
+
+
+export const checkUsername = async (username: string): Promise<CheckUsernameResponse> => {
+  const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/check-username`, { username });
+  return response.data;
+};
 
 export const createUser = async (
   payload: CreateUserPayload
