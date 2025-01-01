@@ -143,8 +143,8 @@ const AuthOptions: React.FC = () => {
           <span className="text-sm font-normal">
             Connect <span className="font-medium">OC-ID</span>
           </span>
-          <span className="absolute bottom-0 right-0 text-[10px] bg-red-400 text-white p-2 rounded-lg">Coming soon</span>
         </Button>
+          <span className="text-[10px] -translate-y-3">Coming soon</span>
       </div>
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         <h2 className="col-span-3 text-base font-medium text-muted-500">
