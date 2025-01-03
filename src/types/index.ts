@@ -288,3 +288,22 @@ export interface ExamAnalysisResponse {
     }[];
   };
 }
+
+export interface UserInfo {
+  id: string;
+  email: string;
+  authId: string;
+  walletAddress: string;
+  username: string;
+  dailyDuration: number;
+  notificationEnabled: boolean;
+  onboarded: boolean;
+  googleId: string | null;
+  discordId: string | null;
+  appleId: string | null;
+  twitterId: string | null;
+  facebookId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  preferredExam: string | null;
+}

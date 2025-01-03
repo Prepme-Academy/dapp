@@ -16,6 +16,7 @@ interface PracticeModalProps {
 }
 
 const PracticeModal: React.FC<PracticeModalProps> = ({ examDetail }) => {
+  console.log("🚀 ~ examDetail:", examDetail);
   const router = useRouter();
 
   return (
@@ -48,7 +49,9 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ examDetail }) => {
                     priority
                     className="!h-auto !w-fit"
                   />
-                  <span>{examDetail.noOfAttempts} people have attempted this</span>
+                  <span>
+                    {examDetail.noOfAttempts} people have attempted this
+                  </span>
                 </div>
               </div>
             </div>

@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 export default async function ReadyScreenPage({ params }: { params: Params }) {
   const { id } = await params;
 
-  return <ReadyCard slug={id} />;
+  return <ReadyCard id={id} />;
 }
