@@ -61,7 +61,7 @@ const AuthOptions: React.FC = () => {
 
   useEffect(() => {
     if (user && userInfo && !userInfoLoading) {
-      setFirstVisit(!userInfo.onboarded);
+      setFirstVisit(userInfo.onboarded);
       setUserInfo(userInfo);
     }
   }, [userInfo, setFirstVisit, setUserInfo, user, userInfoLoading]);
