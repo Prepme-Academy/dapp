@@ -9,6 +9,7 @@ import {
 import { usePrivy } from "@privy-io/react-auth";
 import { SkeletonHeaderLoader } from "../DashboardHeader";
 import { dummyAddress, formatWalletAddress } from "@/hooks/useAddress";
+import useClientStore from "@/store/clientStore";
 
 interface DashboardMobileHeaderProps {
   handleLogout: () => Promise<void>;
@@ -18,6 +19,7 @@ const DashboardMobileHeader: React.FC<DashboardMobileHeaderProps> = ({
   handleLogout,
 }) => {
   const { user, ready, authenticated } = usePrivy();
+  const { userInfo } = useClientStore();
 
   const disableLogout = !ready || (ready && !authenticated);
 
@@ -31,7 +33,7 @@ const DashboardMobileHeader: React.FC<DashboardMobileHeaderProps> = ({
             width={26}
             height={26}
           />
-          <span>{user?.google?.name || "username"}</span>
+          <span>{userInfo?.username || "username"}</span>
         </PopoverTrigger>
         {!ready ? (
           <SkeletonHeaderLoader />

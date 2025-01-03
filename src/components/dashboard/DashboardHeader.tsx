@@ -13,15 +13,16 @@ import {
 import { dummyAddress, formatWalletAddress } from "@/hooks/useAddress";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import useClientStore from "@/store/clientStore";
 
 const DashboardHeader: React.FC = () => {
   const { user, ready, authenticated, logout } = usePrivy();
+  const { userInfo } = useClientStore();
   const router = useRouter();
 
   useEffect(() => {
-    console.log("🚀 ~ user:", user)
-  }, [user])
-  
+    console.log("🚀 ~ user:", user);
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -120,7 +121,7 @@ const DashboardHeader: React.FC = () => {
                 width={26}
                 height={26}
               />
-              <span>{user?.google?.name || "username"}</span>
+              <span>{userInfo?.username || "username"}</span>
             </PopoverTrigger>
             {!ready ? (
               <SkeletonHeaderLoader />
