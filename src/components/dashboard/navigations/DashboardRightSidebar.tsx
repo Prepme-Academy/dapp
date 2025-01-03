@@ -9,6 +9,7 @@ import AdsComponent from "./AdsComponent";
 import { leaderboardData } from "@/utils/constant";
 import { usePathname } from "next/navigation";
 import { EditProfile } from "../profile";
+import Link from "next/link";
 
 const DashboardRightSidebar: React.FC = () => {
   const pathname = usePathname();
@@ -50,12 +51,18 @@ const DashboardRightSidebar: React.FC = () => {
             </p>
           </div>
         </div>
-        <Button
-          variant={"unstyled"}
-          className="bg-secondary text-primary-400 hover:bg-secondary/80 w-fit h-8 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+        <Link
+          href="https://t.me/prepmeacademy"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          Join
-        </Button>
+          <Button
+            variant={"unstyled"}
+            className="bg-secondary text-primary-400 hover:bg-secondary/80 w-fit h-8 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+          >
+            Join
+          </Button>
+        </Link>
       </Card>
       {pathname !== "/dashboard/profile" && <AdsComponent />}
     </aside>
