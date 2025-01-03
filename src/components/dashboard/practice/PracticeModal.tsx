@@ -165,7 +165,7 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ examDetail }) => {
           </div>
         </DialogTitle>
       </DialogHeader>
-      <DialogFooter className="w-full pt-4 border-t border-grey-500 space-x-4">
+      <DialogFooter className="w-full pt-4 border-t border-grey-500 space-x-4 !flex-row">
         <DialogClose asChild>
           <Button
             type="button"

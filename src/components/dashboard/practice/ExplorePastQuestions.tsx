@@ -48,17 +48,22 @@ const ExplorePastQuestions: React.FC = () => {
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newSortOption = event.target.value;
     setSortOption(newSortOption);
-
-    // Update the query parameters in the URL
-    const query = {
-      type: type || "",
-      subject: subject || "",
-      year: year || "",
-      sort: newSortOption,
-    };
-
-    const queryString =  new URLSearchParams(query).toString();
-    router.push(`/dashboard/practice?${queryString}`);
+  
+    // Create new URLSearchParams from existing params
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    
+    // Update or add the sort parameter
+    newSearchParams.set('sort', newSortOption);
+  
+    // Keep the URL clean by removing empty parameters
+    for (const [key, value] of newSearchParams.entries()) {
+      if (!value) {
+        newSearchParams.delete(key);
+      }
+    }
+  
+    // Update URL with new parameters
+    router.push(`?${newSearchParams.toString()}`);
     refetch();
   };
 

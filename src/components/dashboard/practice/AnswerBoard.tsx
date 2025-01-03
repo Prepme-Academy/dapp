@@ -363,7 +363,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
             </div>
           </DialogTitle>
         </DialogHeader>
-        <DialogFooter className="w-full pt-4 border-t border-grey-500 space-x-4">
+        <DialogFooter className="w-full !flex-row pt-4 border-t border-grey-500 space-x-4">
           <DialogClose asChild>
             <Button
               type="button"
