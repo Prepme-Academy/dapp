@@ -13,14 +13,18 @@ const ExamOptionSelect: React.FC = () => {
   const { setUser } = useUserStore();
   const router = useRouter();
   const { data, error, isLoading } = useExamTypes();
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleExamSelect = () => {
-    if (selectedOption) {
-      setUser({
-        examType: selectedOption,
-      });
-      router.push("/onboarding/practice-duration");
-    }
+  const handleExamSelect = (examName: string) => {
+    if (isProcessing) return; // Prevent multiple clicks
+
+    setIsProcessing(true);
+    setSelectedOption(examName);
+
+    setUser({
+      examType: examName,
+    });
+    router.push("/onboarding/practice-duration");
   };
 
   if (isLoading) {
@@ -67,17 +71,16 @@ const ExamOptionSelect: React.FC = () => {
           <Button
             key={option.id}
             variant={"unstyled"}
+            disabled={isProcessing}
             className={cn(
               "w-[calc(25%-12px)] min-h-[141px] p-4 rounded-lg flex flex-col items-center justify-center gap-4 bg-white border",
               selectedOption === option.name
                 ? "border-primary-500"
                 : "border-secondary-100",
-              index === 4 ? "ml-[calc(129px/2)]" : ""
+              index === 4 ? "ml-[calc(129px/2)]" : "",
+              isProcessing ? "cursor-not-allowed opacity-50" : ""
             )}
-            onClick={() => {
-              handleExamSelect();
-              setSelectedOption(option.name);
-            }}
+            onClick={() => handleExamSelect(option.name)}
           >
             <Image
               src={option.logo}
@@ -97,16 +100,15 @@ const ExamOptionSelect: React.FC = () => {
           <Button
             key={option.id}
             variant={"unstyled"}
+            disabled={isProcessing}
             className={cn(
               "w-full min-h-[141px] p-4 rounded-lg flex flex-col items-center justify-center gap-4 bg-white border",
               selectedOption === option.name
                 ? "border-primary-500"
-                : "border-secondary-100"
+                : "border-secondary-100",
+              isProcessing ? "cursor-not-allowed opacity-50" : ""
             )}
-            onClick={() => {
-              handleExamSelect();
-              setSelectedOption(option.name);
-            }}
+            onClick={() => handleExamSelect(option.name)}
           >
             <Image
               src={option.logo}

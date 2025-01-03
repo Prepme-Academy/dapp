@@ -14,15 +14,14 @@ import { dummyAddress, formatWalletAddress } from "@/hooks/useAddress";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import useClientStore from "@/store/clientStore";
+import { cn } from "@/lib/utils";
 
 const DashboardHeader: React.FC = () => {
   const { user, ready, authenticated, logout } = usePrivy();
   const { userInfo } = useClientStore();
   const router = useRouter();
 
-  useEffect(() => {
-    console.log("🚀 ~ user:", user);
-  }, [user]);
+  useEffect(() => {}, [user]);
 
   const handleLogout = async () => {
     try {
@@ -88,6 +87,7 @@ const DashboardHeader: React.FC = () => {
           <Button
             variant={"outline"}
             className="text-sm font-normal border-muted-100"
+            onClick={() => router.push(`/dashboard/streak/${userInfo?.id}`)}
           >
             <Image
               src="/icons/dashboard/fire.svg"
@@ -95,7 +95,7 @@ const DashboardHeader: React.FC = () => {
               width={18}
               height={18}
             />
-            <span>1</span>
+            <span>0</span>
           </Button>
           <Button
             variant={"outline"}
@@ -115,12 +115,24 @@ const DashboardHeader: React.FC = () => {
 
           <Popover>
             <PopoverTrigger className="text-sm font-normal border h-10 px-4 py-2 border-muted-100 text-muted-500 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
-              <Image
+              {/* <Image
                 src="/icons/dashboard/avatar.svg"
                 alt="avatar icon"
                 width={26}
                 height={26}
-              />
+              /> */}
+              <div
+                className={cn(
+                  "w-[26px] h-[26px] rounded-full",
+                  "flex items-center justify-center",
+                  "bg-primary-500 text-white",
+                  "text-sm font-medium"
+                )}
+              >
+                <span className="uppercase">
+                  {userInfo?.username ? userInfo.username[0] : "u"}
+                </span>
+              </div>
               <span>{userInfo?.username || "username"}</span>
             </PopoverTrigger>
             {!ready ? (
@@ -129,16 +141,28 @@ const DashboardHeader: React.FC = () => {
               <PopoverContent>
                 <div className="w-full flex flex-col items-start justify-start gap-6">
                   <div className="flex items-start justify-start gap-2">
-                    <Image
+                    {/* <Image
                       src="/icons/dashboard/avatar.svg"
                       alt="user profile avatar"
                       width={36}
                       height={36}
                       priority
-                    />
+                    /> */}
+                    <div
+                      className={cn(
+                        "w-[36px] h-[36px] rounded-full",
+                        "flex items-center justify-center",
+                        "bg-primary-500 text-white",
+                        "text-lg font-medium"
+                      )}
+                    >
+                      <span className="uppercase">
+                        {userInfo?.username ? userInfo.username[0] : "u"}
+                      </span>
+                    </div>
                     <div className="flex flex-col items-start justify-start gap-1">
                       <h3 className="text-sm font-normal text-muted-500">
-                        {user?.email?.address}
+                        {userInfo?.email ? userInfo?.email : userInfo?.username}
                       </h3>
                       <p className="text-sm font-normal text-muted-400">
                         {formatWalletAddress(

@@ -10,6 +10,7 @@ import { usePrivy } from "@privy-io/react-auth";
 import { SkeletonHeaderLoader } from "../DashboardHeader";
 import { dummyAddress, formatWalletAddress } from "@/hooks/useAddress";
 import useClientStore from "@/store/clientStore";
+import { cn } from "@/lib/utils";
 
 interface DashboardMobileHeaderProps {
   handleLogout: () => Promise<void>;
@@ -41,13 +42,18 @@ const DashboardMobileHeader: React.FC<DashboardMobileHeaderProps> = ({
           <PopoverContent>
             <div className="w-full flex flex-col items-start justify-start gap-6">
               <div className="flex items-start justify-start gap-2">
-                <Image
-                  src="/icons/dashboard/avatar.svg"
-                  alt="user profile avatar"
-                  width={36}
-                  height={36}
-                  priority
-                />
+                <div
+                  className={cn(
+                    "w-[26px] h-[26px] rounded-full",
+                    "flex items-center justify-center",
+                    "bg-primary-500 text-white",
+                    "text-sm font-medium"
+                  )}
+                >
+                  <span className="uppercase">
+                    {userInfo?.username ? userInfo.username[0] : "u"}
+                  </span>
+                </div>
                 <div className="flex flex-col items-start justify-start gap-1">
                   <h3 className="text-sm font-normal text-muted-500">
                     {user?.email?.address}

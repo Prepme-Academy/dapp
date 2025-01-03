@@ -16,21 +16,22 @@ const UsernameForm: React.FC = () => {
   const router = useRouter();
   const { mutate, isLoading, isError, error } = useCheckUsername();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const handleUserNameSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSuccessMessage(null);
-    setErrorMessage(null);
+    setApiError(null);
 
     mutate(username, {
       onSuccess: (data) => {
         if (data.success) {
           setUser({ username });
-          router.push("/onboarding/exam-option");
           setSuccessMessage(data.message);
+          router.push("/onboarding/exam-option");
+        } else {
+          setApiError(data.message);
         }
-        setErrorMessage(data.message);
       },
     });
   };
@@ -40,9 +41,9 @@ const UsernameForm: React.FC = () => {
       onSubmit={handleUserNameSubmit}
       className="w-full flex flex-col items-start justify-start gap-8"
     >
-      {errorMessage && (
+      {apiError && (
         <Alert variant="destructive" className="w-full">
-          <AlertDescription>{errorMessage}</AlertDescription>
+          <AlertDescription>{apiError}</AlertDescription>
         </Alert>
       )}
       {isError && (

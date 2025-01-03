@@ -4,7 +4,6 @@ import ExploreExamType from "./ExploreExamType";
 import ExplorePastQuestions from "./ExplorePastQuestions";
 import PracticeModal from "./PracticeModal";
 import ReadyCard from "./ReadyCard";
-import RenderExamLogo from "./RenderExamLogo";
 import StartPracticeSearch from "./StartPracticeSearch";
 
 
@@ -15,6 +14,5 @@ export {
   ExplorePastQuestions,
   PracticeModal,
   ReadyCard,
-  RenderExamLogo,
   StartPracticeSearch,
 };

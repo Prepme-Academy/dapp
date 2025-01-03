@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
-const useFullscreen = () => {
+const useFullscreen = (onExitSubmit?: () => void) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const toggleFullscreen = useCallback(() => {
@@ -17,15 +17,21 @@ const useFullscreen = () => {
 
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      const isInFullscreen = !!document.fullscreenElement;
+      setIsFullscreen(isInFullscreen);
+
+      // If exiting fullscreen and callback exists, trigger submission
+      if (!isInFullscreen && onExitSubmit) {
+        onExitSubmit();
+      }
     };
 
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
 
     return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
-  }, []);
+  }, [onExitSubmit]);
 
   return { isFullscreen, toggleFullscreen };
 };

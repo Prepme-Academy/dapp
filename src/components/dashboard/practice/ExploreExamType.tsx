@@ -5,36 +5,23 @@ import { useExamTypes } from "@/lib/actions/exam.action";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const ExploreExamType: React.FC = () => {
   const searchParams = useSearchParams();
-  const exam = searchParams.get("exam_type");
-  const [selectedExam, setSelectedExam] = useState<string>("");
   const { data, error, isLoading } = useExamTypes();
   const router = useRouter();
-
-  useEffect(() => {
-    if (exam) {
-      setSelectedExam(exam as string);
-    } else {
-      setSelectedExam("");
-    }
-  }, [exam]);
+  
+  const currentType = searchParams.get("type") || "";
 
   const handleExamTypeChange = (type: string) => {
-    const newTypeSelect = type;
-    setSelectedExam(newTypeSelect);
+    if (currentType === type) return;
 
-    // Update the query parameters in the URL
-    const query = {
-      type: newTypeSelect,
-    };
-
-    const queryString = new URLSearchParams(query).toString();
-    router.push(`/dashboard/practice?${queryString}`);
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    
+    newSearchParams.set("type", type);
+    
+    router.push(`/dashboard/practice?${newSearchParams.toString()}`);
   };
-
   if (isLoading) {
     return (
       <div className="w-full">
@@ -72,7 +59,7 @@ const ExploreExamType: React.FC = () => {
             key={option.id}
             className={cn(
               "w-full min-h-[105px] rounded-lg bg-grey-400 flex flex-col items-center justify-center gap-4 p-3 cursor-pointer",
-              selectedExam === option.name ? "border-2 border-primary-500" : ""
+              currentType === option.name ? "border-2 border-primary-500" : ""
             )}
             onClick={() => handleExamTypeChange(option.name)}
           >

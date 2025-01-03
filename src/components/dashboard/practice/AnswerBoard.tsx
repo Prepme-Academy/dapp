@@ -45,7 +45,9 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
 
   const [currentQuestionIndex, setCurrentQuestionIndex] =
     useState(initialQuestionIndex);
-    const { toggleFullscreen } = useFullscreen();
+  const { toggleFullscreen } = useFullscreen(() => {
+    handleSubmit();
+  });
 
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string;
@@ -150,7 +152,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
       numOfQuestionsNotAnswered,
       questions,
       endDate: new Date().toISOString(),
-      duration: (INITIAL_TIME - timeLeft) / 60,
+      duration: Math.floor((INITIAL_TIME - timeLeft) / 60),
     };
 
     submitExam(
@@ -161,7 +163,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
           setIsSubmitted(true);
           localStorage.removeItem(STORAGE_KEY);
           localStorage.removeItem(ANSWERS_STORAGE_KEY);
-          toggleFullscreen()
+          toggleFullscreen();
           router.push(`/dashboard/practice/detail/${id}/success`);
         },
         onError: (error) => {
@@ -192,9 +194,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
 
   if (isError) {
     return (
-      <div
-        className="w-full flex flex-col items-center justify-center h-full"
-      >
+      <div className="w-full flex flex-col items-center justify-center h-full">
         <Card className="w-full max-w-[635px] min-h-28 mx-auto px-3 py-4 border-grey-500 space-y-3 flex flex-col items-start justify-start">
           <p className="text-red-500 text-sm font-normal">
             Error loading exam analysis data.{" "}
@@ -271,9 +271,15 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
                       handleAnswerSelect(currentQuestionIndex, option.value)
                     }
                   />
-                  <span className="text-gray-700">
-                    {String.fromCharCode(65 + index)}. {option.value}
-                  </span>
+                  <div className="text-gray-700">
+                    {String.fromCharCode(65 + index)}.{" "}
+                    <div
+                      className="inline"
+                      dangerouslySetInnerHTML={{
+                        __html: option.value,
+                      }}
+                    />
+                  </div>
                 </label>
               )
             )}
