@@ -82,7 +82,7 @@ const StartPracticeSearch: React.FC = () => {
 
   const handleSearch = () => {
     const query = {
-      exam_type: selectedExam?.value || "",
+      type: selectedExam?.value || "",
       subject: selectedSubject?.value || "",
       year: selectedYear?.value || "",
     };

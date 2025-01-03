@@ -14,7 +14,7 @@ import { useState } from "react";
 
 interface ExamScoreCardTabProps {
   id: string | string[] | undefined;
-  analysisData: ExamAnalysisResponse['data'];
+  analysisData: ExamAnalysisResponse["data"];
 }
 
 const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
@@ -61,9 +61,12 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
                   </CardHeader>
                   <div className="flex items-center justify-start gap-1 text-xs">
                     <span className="font-normal text-[10px]">Answer: </span>
-                    <span className="font-medium">
-                      {answer.userOption?.value}
-                    </span>
+                    <span
+                      className="font-medium"
+                      dangerouslySetInnerHTML={{
+                        __html: answer.userOption?.value || "",
+                      }}
+                    />
                   </div>
                 </Card>
               </DialogTrigger>
@@ -125,7 +128,12 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
                     )}
                   >
                     <span className="text-gray-700">
-                      {String.fromCharCode(65 + index)}. {option.value}
+                      {String.fromCharCode(65 + index)}.{" "}
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: option.value,
+                        }}
+                      />
                     </span>
                     {userAnswers[selectedQuestion].correct_option.value ===
                       option.value && (

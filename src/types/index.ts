@@ -253,6 +253,15 @@ export interface ExamAnalysisResponse {
       marks: number;
       xp: number;
       year: number;
+      exam: {
+        id: number;
+        name: string;
+        created_at: string;
+        code: string | undefined;
+        logo: string;
+        createdAt: string;
+        updatedAt: string;
+      };
     };
     userAnswers: {
       id: number;

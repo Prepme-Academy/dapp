@@ -53,7 +53,7 @@ const DashboardSidebar: React.FC = () => {
       </Button>
       <aside
         className={cn(
-          "fixed inset-0 bg-gray-800 bg-opacity-50 z-40 lg:static lg:bg-transparent lg:z-auto transition-transform transform",
+          "fixed inset-0 bg-gray-800 bg-opacity-50 z-40 lg:static lg:bg-transparent lg:z-auto transition-transform transform lg:h-dvh lg:overglow-auto",
           showMenu ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >

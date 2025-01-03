@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const socials = [
-  { name: "telegram", icon: telegram, href: "http://t.me/prepmeacademy" },
+  { name: "telegram", icon: telegram, href: "https://t.me/prepmeacademy" },
   {
     name: "x",
     icon: x,

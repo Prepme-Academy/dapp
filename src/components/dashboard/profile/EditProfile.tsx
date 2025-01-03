@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import useClientStore from "@/store/clientStore";
-import Image from "next/image";
+// import Image from "next/image";
 import { useState } from "react";
 
 const EditProfile: React.FC = () => {
@@ -21,13 +22,25 @@ const EditProfile: React.FC = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center gap-4">
       <div className="flex flex-col items-center justify-center gap-3">
-        <Image
+        {/* <Image
           src="/icons/dashboard/avatar.svg"
           alt="user profile avatar"
           width={80}
           height={80}
           priority
-        />
+        /> */}
+        <div
+          className={cn(
+            "w-20 h-20 rounded-full",
+            "flex items-center justify-center",
+            "bg-primary-500 text-white",
+            "text-3xl font-medium"
+          )}
+        >
+          <span className="uppercase">
+            {userInfo?.username ? userInfo.username[0] : "u"}
+          </span>
+        </div>
         <div>
           <h2 className="text-lg font-medium text-muted-500">
             {userInfo.username}
