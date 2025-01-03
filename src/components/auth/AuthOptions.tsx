@@ -7,6 +7,7 @@ import { usePrivy, useWallets } from "@privy-io/react-auth";
 import useClientStore from "@/store/clientStore";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
+import { useUserInfo } from "@/lib/actions";
 
 type methods =
   | "wallet"
@@ -46,7 +47,10 @@ const AuthOptions: React.FC = () => {
   const router = useRouter();
   const { user, login, connectWallet, authenticated, ready } = usePrivy();
   const { wallets } = useWallets();
-  const { isFirstVisit } = useClientStore();
+  const { isFirstVisit, setFirstVisit, setUserInfo } = useClientStore();
+  const authUserId = user?.id || "";
+  const { data: userInfo, isLoading: userInfoLoading } =
+    useUserInfo(authUserId);
 
   useEffect(() => {
     console.log("🚀 ~ wallet:", wallets[0]);
@@ -56,7 +60,14 @@ const AuthOptions: React.FC = () => {
   }, [user, ready, authenticated, wallets]);
 
   useEffect(() => {
-    if (user && authenticated && ready) {
+    if (user && userInfo && !userInfoLoading) {
+      setFirstVisit(!userInfo.onboarded);
+      setUserInfo(userInfo);
+    }
+  }, [userInfo, setFirstVisit, setUserInfo, user, userInfoLoading]);
+
+  useEffect(() => {
+    if (user && authenticated && ready && userInfo) {
       if (isFirstVisit === false) {
         router.push("/onboarding/username");
       } else {
@@ -64,7 +75,7 @@ const AuthOptions: React.FC = () => {
         router.push("/dashboard/practice");
       }
     }
-  }, [authenticated, ready, isFirstVisit, router, wallets, user]);
+  }, [authenticated, ready, isFirstVisit, router, wallets, user, userInfo]);
 
   useEffect(() => {
     if (!authenticated && !user && ready && wallets?.[0]?.address) {

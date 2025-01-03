@@ -5,7 +5,7 @@ import useFullscreen from "@/hooks/useFullScreen";
 import { useRouter } from "next/navigation";
 
 interface ActionButtonProps {
-  id: string;
+  id: string | number;
 }
 
 const ActionButton: React.FC<ActionButtonProps> = ({ id }) => {

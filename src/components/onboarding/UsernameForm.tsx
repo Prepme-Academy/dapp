@@ -16,10 +16,12 @@ const UsernameForm: React.FC = () => {
   const router = useRouter();
   const { mutate, isLoading, isError, error } = useCheckUsername();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleUserNameSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSuccessMessage(null);
+    setErrorMessage(null);
 
     mutate(username, {
       onSuccess: (data) => {
@@ -28,6 +30,7 @@ const UsernameForm: React.FC = () => {
           router.push("/onboarding/exam-option");
           setSuccessMessage(data.message);
         }
+        setErrorMessage(data.message);
       },
     });
   };
@@ -37,6 +40,11 @@ const UsernameForm: React.FC = () => {
       onSubmit={handleUserNameSubmit}
       className="w-full flex flex-col items-start justify-start gap-8"
     >
+      {errorMessage && (
+        <Alert variant="destructive" className="w-full">
+          <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
+      )}
       {isError && (
         <Alert variant="destructive" className="w-full">
           <AlertDescription>

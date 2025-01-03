@@ -17,10 +17,10 @@ const ExplorePastQuestions: React.FC = () => {
   const searchParams = useSearchParams();
 
   // Extract query parameters from the URL
-  const type = searchParams.get("type") || "JAMB";
-  const subject = searchParams.get("subject") || "English Language";
-  const year = searchParams.get("year") || "2022";
-  const sort = searchParams.get("sort") || "popularity";
+  const type = searchParams.get("type");
+  const subject = searchParams.get("subject");
+  const year = searchParams.get("year");
+  const sort = searchParams.get("sort");
   const [examDetail, setExamDetail] = useState<Exam | null>(null);
   const [sortOption, setSortOption] = useState<string>("popularity");
 
@@ -38,10 +38,10 @@ const ExplorePastQuestions: React.FC = () => {
     error,
     refetch,
   } = useExams({
-    type,
-    subject,
-    year,
-    sort,
+    type: type || "",
+    subject: subject || "",
+    year: year || "",
+    sort: sort || "",
     authUserId: authUserId || "",
   });
 
@@ -51,13 +51,13 @@ const ExplorePastQuestions: React.FC = () => {
 
     // Update the query parameters in the URL
     const query = {
-      type,
-      subject,
-      year,
+      type: type || "",
+      subject: subject || "",
+      year: year || "",
       sort: newSortOption,
     };
 
-    const queryString = new URLSearchParams(query).toString();
+    const queryString =  new URLSearchParams(query).toString();
     router.push(`/dashboard/practice?${queryString}`);
     refetch();
   };
@@ -246,7 +246,7 @@ const ExplorePastQuestions: React.FC = () => {
                     onClick={() => {
                       setExamDetail(option);
                     }}
-                    className="lg:translate-x-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
+                    className="md:translate-x-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300"
                   >
                     <DialogTrigger className="bg-primary-400 text-white w-fit h-9 px-6 rounded-lg gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
                       Practice

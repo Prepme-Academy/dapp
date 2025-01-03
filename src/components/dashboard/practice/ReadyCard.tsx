@@ -10,16 +10,15 @@ import { useEffect, useState } from "react";
 import { StartExamResponse } from "@/types";
 
 interface ReadyCardProps {
-  slug: string;
+  id: string;
 }
 
-const ReadyCard: React.FC<ReadyCardProps> = ({ slug }) => {
+const ReadyCard: React.FC<ReadyCardProps> = ({ id }) => {
   const { user } = usePrivy();
   const authUserId = user?.id;
   const [examInfo, setExamInfo] = useState<StartExamResponse["data"] | null>(
     null
   );
-  
 
   const { mutate: startExam, isLoading: isStartingExam } = useStartExam();
 
@@ -27,7 +26,7 @@ const ReadyCard: React.FC<ReadyCardProps> = ({ slug }) => {
     if (!authUserId) return;
 
     startExam(
-      { examId: parseInt(slug), authUserId },
+      { examId: parseInt(id), authUserId },
       {
         onSuccess: (data) => {
           setExamInfo(data.data);
@@ -37,7 +36,7 @@ const ReadyCard: React.FC<ReadyCardProps> = ({ slug }) => {
         },
       }
     );
-  }, [authUserId, slug, startExam]);
+  }, [authUserId, id, startExam]);
 
   if (isStartingExam || !examInfo) {
     return (
@@ -56,7 +55,7 @@ const ReadyCard: React.FC<ReadyCardProps> = ({ slug }) => {
     );
   }
 
-  const { examTest, noOfQuestions } = examInfo;
+  const { examTest, noOfQuestions, id: attempId } = examInfo;
 
   return (
     <div className="w-full h-full overflow-auto flex md:items-center md:justify-center">
@@ -242,7 +241,7 @@ const ReadyCard: React.FC<ReadyCardProps> = ({ slug }) => {
               </ul>
             </Card>
           </div>
-          <ActionButton id={slug} />
+          <ActionButton id={attempId} />
         </Card>
       </div>
     </div>
