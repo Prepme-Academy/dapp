@@ -45,9 +45,9 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
 
   const [currentQuestionIndex, setCurrentQuestionIndex] =
     useState(initialQuestionIndex);
-    const { toggleFullscreen } = useFullscreen(() => {
-      handleSubmit(); 
-    });
+  const { toggleFullscreen } = useFullscreen(() => {
+    handleSubmit();
+  });
 
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string;
@@ -152,7 +152,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
       numOfQuestionsNotAnswered,
       questions,
       endDate: new Date().toISOString(),
-      duration: (INITIAL_TIME - timeLeft) / 60,
+      duration: Math.floor((INITIAL_TIME - timeLeft) / 60),
     };
 
     submitExam(
