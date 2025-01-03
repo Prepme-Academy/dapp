@@ -1,9 +1,10 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useExamTypes } from "@/lib/actions/exam.action";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const ExploreExamType: React.FC = () => {
@@ -11,6 +12,7 @@ const ExploreExamType: React.FC = () => {
   const exam = searchParams.get("exam_type");
   const [selectedExam, setSelectedExam] = useState<string>("");
   const { data, error, isLoading } = useExamTypes();
+  const router = useRouter();
 
   useEffect(() => {
     if (exam) {
@@ -19,6 +21,19 @@ const ExploreExamType: React.FC = () => {
       setSelectedExam("");
     }
   }, [exam]);
+
+  const handleExamTypeChange = (type: string) => {
+    const newTypeSelect = type;
+    setSelectedExam(newTypeSelect);
+
+    // Update the query parameters in the URL
+    const query = {
+      type: newTypeSelect,
+    };
+
+    const queryString = new URLSearchParams(query).toString();
+    router.push(`/dashboard/practice?${queryString}`);
+  };
 
   if (isLoading) {
     return (
@@ -52,12 +67,14 @@ const ExploreExamType: React.FC = () => {
       <h2 className="text-xl font-medium text-muted-500">Explore Exam Types</h2>
       <div className="w-full grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
         {examOptions.map((option) => (
-          <div
+          <Button
+            variant={"unstyled"}
             key={option.id}
             className={cn(
               "w-full min-h-[105px] rounded-lg bg-grey-400 flex flex-col items-center justify-center gap-4 p-3 cursor-pointer",
               selectedExam === option.name ? "border-2 border-primary-500" : ""
             )}
+            onClick={() => handleExamTypeChange(option.name)}
           >
             <Image
               src={option.logo}
@@ -67,7 +84,7 @@ const ExploreExamType: React.FC = () => {
               className="!h-auto"
             />
             <h4 className="text-sm font-normal">{option.name}</h4>
-          </div>
+          </Button>
         ))}
       </div>
     </div>
