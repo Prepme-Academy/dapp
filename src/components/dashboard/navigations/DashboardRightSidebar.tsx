@@ -6,7 +6,7 @@ import { QuestCard } from "../quests";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import AdsComponent from "./AdsComponent";
-import { leaderboardData, questsData } from "@/utils/constant";
+import { questsData } from "@/utils/constant";
 import { usePathname } from "next/navigation";
 import { EditProfile } from "../profile";
 import Link from "next/link";
@@ -26,14 +26,14 @@ const DashboardRightSidebar: React.FC = () => {
       {pathname === "/dashboard/profile" && <EditProfile />}
       {pathname !== "/dashboard/quests" &&
         pathname !== "/dashboard/profile" && (
-          <QuestCard showAllLink={true} quests={questsData.slice(0, 1)} />
+          <QuestCard showAllLink={true} quests={questsData.slice(0, 2)} />
         )}
       {pathname !== "/dashboard/leaderboard" &&
         pathname !== "/dashboard/profile" && (
           <LeaderboardCard
             showTitle={false}
             className="border border-primary-200"
-            data={leaderboardData.slice(0, 4)}
+            data={[]}
           />
         )}
       <Card className="w-full p-3 border-gray-200 space-y-3 flex items-center justify-between">

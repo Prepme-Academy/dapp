@@ -56,7 +56,13 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
                       }}
                     />
                     <RenderScoreIcon
-                      status={answer.correct ? "Correct" : "Incorrect"}
+                      status={
+                        answer.correct
+                          ? "Correct"
+                          : answer.correct === false
+                          ? "Incorrect"
+                          : "Unanswerd"
+                      }
                     />
                   </CardHeader>
                   <div className="flex items-center justify-start gap-1 text-xs">
@@ -92,13 +98,17 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
                     status={
                       userAnswers[selectedQuestion].correct
                         ? "Correct"
-                        : "Incorrect"
+                        : userAnswers[selectedQuestion].correct === false
+                        ? "Incorrect"
+                        : "Unanswerd"
                     }
                   />
                   <span>
                     {userAnswers[selectedQuestion].correct
                       ? "Correct"
-                      : "Incorrect"}
+                      : !userAnswers[selectedQuestion].correct
+                      ? "Incorrect"
+                      : "Unanswerd"}
                   </span>
                 </div>
               </div>
@@ -197,15 +207,15 @@ const RenderScoreIcon = ({ status }: { status: string }) => {
   } else if (status === "Incorrect") {
     return (
       <svg
-        width="25"
+        width="24"
         height="24"
-        viewBox="0 0 25 24"
+        viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M12.75 2C7.24 2 2.75 6.49 2.75 12C2.75 17.51 7.24 22 12.75 22C18.26 22 22.75 17.51 22.75 12C22.75 6.49 18.26 2 12.75 2ZM16.67 12.75H8.67C8.26 12.75 7.92 12.41 7.92 12C7.92 11.59 8.26 11.25 8.67 11.25H16.67C17.08 11.25 17.42 11.59 17.42 12C17.42 12.41 17.09 12.75 16.67 12.75Z"
-          fill="#FFCF4D"
+          d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z"
+          fill="#FF5876"
         />
       </svg>
     );
@@ -213,15 +223,15 @@ const RenderScoreIcon = ({ status }: { status: string }) => {
 
   return (
     <svg
-      width="24"
+      width="25"
       height="24"
-      viewBox="0 0 24 24"
+      viewBox="0 0 25 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z"
-        fill="#FF5876"
+        d="M12.75 2C7.24 2 2.75 6.49 2.75 12C2.75 17.51 7.24 22 12.75 22C18.26 22 22.75 17.51 22.75 12C22.75 6.49 18.26 2 12.75 2ZM16.67 12.75H8.67C8.26 12.75 7.92 12.41 7.92 12C7.92 11.59 8.26 11.25 8.67 11.25H16.67C17.08 11.25 17.42 11.59 17.42 12C17.42 12.41 17.09 12.75 16.67 12.75Z"
+        fill="#FFCF4D"
       />
     </svg>
   );

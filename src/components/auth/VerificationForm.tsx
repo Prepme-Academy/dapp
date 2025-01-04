@@ -4,17 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import useClientStore from "@/store/clientStore";
-import { useLoginWithEmail } from "@privy-io/react-auth";
+import { useLoginWithEmail, usePrivy } from "@privy-io/react-auth";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
+import { useUserInfo } from "@/lib/actions";
 
 interface VerificationFormProps {
   email: string;
 }
 
 const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
-  const { isFirstVisit } = useClientStore();
+  const { user } = usePrivy();
+  const { isFirstVisit, setUserInfo, setFirstVisit } = useClientStore();
   const [resendEnabled, setResendEnabled] = useState(false);
   const [resendCountdown, setResendCountdown] = useState(60);
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
@@ -22,6 +24,16 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const router = useRouter();
   const { loginWithCode, sendCode, state } = useLoginWithEmail();
+  const authUserId = user?.id || "";
+  const { data: userInfo, isLoading: userInfoLoading } =
+    useUserInfo(authUserId);
+
+  useEffect(() => {
+    if (user && userInfo && !userInfoLoading) {
+      setFirstVisit(userInfo.onboarded);
+      setUserInfo(userInfo);
+    }
+  }, [userInfo, setFirstVisit, setUserInfo, user, userInfoLoading]);
 
   // Handle countdown timer
   useEffect(() => {

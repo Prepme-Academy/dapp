@@ -14,7 +14,7 @@ const DailyStreak = ({ id }: { id: string }) => {
   const router = useRouter();
   const { user } = usePrivy();
   const authUserId = user?.id || "";
-
+  
   const { 
     data, 
     isLoading, 
