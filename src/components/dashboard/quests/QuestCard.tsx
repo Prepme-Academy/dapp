@@ -41,43 +41,52 @@ const QuestCard: React.FC<QuestCardProps> = ({ showAllLink, quests }) => {
           </Link>
         )}
       </CardHeader>
-      <CardContent className="p-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start justify-start gap-3">
+      <CardContent
+        className={cn(
+          "p-0 grid grid-cols-1 items-start justify-start gap-3",
+          showAllLink ? "" : "md:grid-cols-2 xl:grid-cols-3"
+        )}
+      >
         {quests.map((quest) => (
           <Link
             key={quest.id}
             href="/dashboard/quests"
             className="block w-full"
+            aria-disabled={
+              quest.isActive === false && quest.isCompleted === false
+            }
           >
             <Card
               className={cn(
-                "w-full px-3 py-3 flex flex-col items-start justify-start gap-3 border-primary-200",
+                "w-full px-3 py-3 flex flex-col",
                 quest.isActive === false && quest.isCompleted === false
                   ? "opacity-100 cursor-auto"
                   : "grayscale-0 opacity-100",
-                showAllLink ? "lg:flex-row" : "lg:min-h-52"
+                showAllLink ? "lg:flex-row items-center justify-center" : "lg:min-h-52 items-start justify-start gap-3 border-primary-200"
               )}
             >
               <Image
                 src={quest.image}
                 alt="quest icon"
-                width={showAllLink ? 32 : 68}
-                height={showAllLink ? 32 : 68}
+                width={68}
+                height={68}
                 className={`rounded-full ${
                   quest.isActive === false && quest.isCompleted === false
                     ? "grayscale opacity-30"
                     : "grayscale-0 opacity-100"
                 }`}
               />
-              <div className="flex flex-col items-start justify-start gap-2 flex-grow">
-                <div className="flex items-center justify-between w-full">
-                  <h4 className="text-sm md:text-base font-medium text-muted-800">
-                    {quest.title}
-                  </h4>
-                </div>
-                <p className="text-xs md:text-sm text-muted-500">
-                  {quest.description}
-                </p>
-                {/* <div className="w-full flex items-center gap-2">
+              {!showAllLink && (
+                <div className="flex flex-col items-start justify-start gap-2 flex-grow">
+                  <div className="flex items-center justify-between w-full">
+                    <h4 className="text-sm md:text-base font-medium text-muted-800">
+                      {quest.title}
+                    </h4>
+                  </div>
+                  <p className="text-xs md:text-sm text-muted-500">
+                    {quest.description}
+                  </p>
+                  {/* <div className="w-full flex items-center gap-2">
                 <div className="w-full h-2 bg-gray-200 rounded-full relative overflow-hidden">
                   <div
                     className="h-full bg-green-600 absolute"
@@ -88,7 +97,8 @@ const QuestCard: React.FC<QuestCardProps> = ({ showAllLink, quests }) => {
                   {quest.percentage}%
                 </span>
               </div> */}
-              </div>
+                </div>
+              )}
             </Card>
           </Link>
         ))}
