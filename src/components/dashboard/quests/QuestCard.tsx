@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Badge } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,6 +11,7 @@ export interface QuestsType {
   isCompleted: boolean;
   percentage: number;
   category: string;
+  image: string;
 }
 
 interface QuestCardProps {
@@ -46,45 +46,38 @@ const QuestCard: React.FC<QuestCardProps> = ({ showAllLink, quests }) => {
           <Card
             key={quest.id}
             className={cn(
-              "w-full px-3 py-1 flex items-start justify-start gap-x-3 border-primary-200",
+              "w-full px-3 py-1 flex flex-col lg:flex-row items-start justify-start gap-3 border-primary-200",
               quest.isActive === false && quest.isCompleted === false
-                ? "opacity-50 cursor-not-allowed"
-                : "opacity-100 cursor-auto"
+                ? "opacity-100 cursor-auto"
+                : "grayscale-0 opacity-100"
             )}
           >
             <Image
-              src="/icons/dashboard/box.svg"
+              src={quest.image}
               alt="quest box"
               width={32}
               height={32}
+              className={`${
+                quest.isActive === false && quest.isCompleted === false
+                  ? "grayscale opacity-30"
+                  : "grayscale-0 opacity-100"
+              }`}
             />
-            <div className="flex flex-col items-start justify-start gap-2  w-full">
+            <div className="flex flex-col items-start justify-start gap-2 flex-grow">
               <div className="flex items-center justify-between w-full">
-                <h4 className="text-sm font-medium text-muted-800">
+                <h4 className="text-sm md:text-base font-medium text-muted-800">
                   {quest.title}
                 </h4>
-                <div className="flex gap-2">
-                  {quest.isActive && <Badge className="text-blue-500" />}
-                  {quest.isCompleted && (
-                    <Image
-                      src="/icons/dashboard/badge.png"
-                      alt="badge icon"
-                      width={18}
-                      height={18}
-                      priority
-                      className="object-contain"
-                    />
-                  )}
-                </div>
               </div>
+              <p className="text-xs md:text-sm text-muted-500">
+                {quest.description}
+              </p>
               <div className="w-full flex items-center gap-2">
                 <div className="w-full h-2 bg-gray-200 rounded-full relative overflow-hidden">
                   <div
                     className="h-full bg-green-600 absolute"
                     style={{ width: `${quest.percentage}%` }}
-                  >
-                    <div className="h-0.5 bg-green-300 absolute top-1/2 left-0 w-full transform -translate-y-1/2"></div>
-                  </div>
+                  ></div>
                 </div>
                 <span className="text-sm font-normal text-muted-500">
                   {quest.percentage}%

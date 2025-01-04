@@ -68,6 +68,7 @@ export const questsData = [
     isCompleted: true,
     percentage: 100,
     category: "onboarding",
+    image: "/images/dashboard/badge1.png",
   },
   {
     id: "first-exam",
@@ -78,6 +79,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "practice",
+    image: "/images/dashboard/badge2.png",
   },
   {
     id: "focused-learner",
@@ -87,6 +89,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "streak",
+    image: "/images/dashboard/badge3.png",
   },
   {
     id: "relentless-scholar",
@@ -96,6 +99,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "streak",
+    image: "/images/dashboard/badge4.png",
   },
   {
     id: "master-of-persistence",
@@ -105,6 +109,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "streak",
+    image: "/images/dashboard/badge5.png",
   },
   {
     id: "steadfast-achiever",
@@ -114,6 +119,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "streak",
+    image: "/images/dashboard/badge6.png",
   },
   {
     id: "study-buddy",
@@ -123,6 +129,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "social",
+    image: "/images/dashboard/badge7.png",
   },
   {
     id: "math-prodigy",
@@ -132,6 +139,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "subject",
+    image: "/images/dashboard/badge8.png",
   },
   {
     id: "history-buff",
@@ -141,6 +149,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "subject",
+    image: "/images/dashboard/badge9.png",
   },
   {
     id: "physics-genius",
@@ -150,6 +159,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "subject",
+    image: "/images/dashboard/badge10.png",
   },
   {
     id: "biology-expert",
@@ -159,6 +169,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "subject",
+    image: "/images/dashboard/badge11.png",
   },
   {
     id: "english-maven",
@@ -168,6 +179,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "subject",
+    image: "/images/dashboard/badge12.png",
   },
   {
     id: "civic-champion",
@@ -177,6 +189,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "subject",
+    image: "/images/dashboard/badge13.png",
   },
   {
     id: "chemistry-wizard",
@@ -186,6 +199,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "subject",
+    image: "/images/dashboard/badge14.png",
   },
   {
     id: "crs-luminary",
@@ -195,6 +209,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "subject",
+    image: "/images/dashboard/badge15.png",
   },
   {
     id: "science-star",
@@ -205,6 +220,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "achievement",
+    image: "/images/dashboard/badge16.png",
   },
   {
     id: "humanities-hero",
@@ -215,6 +231,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "achievement",
+    image: "/images/dashboard/badge17.png",
   },
   {
     id: "grammar-guru",
@@ -225,6 +242,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "achievement",
+    image: "/images/dashboard/badge18.png",
   },
   {
     id: "formula-master",
@@ -235,6 +253,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "achievement",
+    image: "/images/dashboard/badge19.png",
   },
   {
     id: "ecosystem-explorer",
@@ -245,6 +264,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "achievement",
+    image: "/images/dashboard/badge20.png",
   },
   {
     id: "the-alchemist",
@@ -255,6 +275,7 @@ export const questsData = [
     isCompleted: false,
     percentage: 0,
     category: "achievement",
+    image: "/images/dashboard/badge21.png",
   },
 ];
 
