@@ -18,7 +18,7 @@ import useExamStore from "@/store/examStore";
 import { useUserInfo } from "@/lib/actions";
 
 const DashboardHeader: React.FC = () => {
-  const { ready, authenticated, logout, user, unlinkWallet } = usePrivy();
+  const { ready, authenticated, logout, user } = usePrivy();
   const { userInfo, resetState } = useClientStore();
   const { resetExamData, clearExamHistory } = useExamStore();
   const router = useRouter();
@@ -27,7 +27,6 @@ const DashboardHeader: React.FC = () => {
     useUserInfo(authUserId);
 
   const handleLogout = async () => {
-    unlinkWallet(user?.wallet?.address || "");
     try {
       resetState();
       resetExamData();
