@@ -5,10 +5,15 @@ import { Card } from "@/components/ui/card";
 import { Info } from "lucide-react";
 import Image from "next/image";
 import TransactionHistory from "./TransactionHistory";
-import useClientStore from "@/store/clientStore";
+import { usePrivy } from "@privy-io/react-auth";
+import { useUserInfo } from "@/lib/actions";
 
 const MyEarningTab: React.FC = () => {
-  const { userInfo } = useClientStore();
+  const { user } = usePrivy();
+  const authUserId = user?.id || "";
+  const { data: fetchedUserInfo, isLoading: userInfoLoading } =
+    useUserInfo(authUserId);
+
   return (
     <div className="w-full space-y-4">
       <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4 align-top">
@@ -74,7 +79,11 @@ const MyEarningTab: React.FC = () => {
               Total XP
             </h6>
             <h3 className="text-lg md:text-xl font-medium text-muted-500">
-              {userInfo?.totalXp ? userInfo?.totalXp : 0}
+              {userInfoLoading ? (
+                <div className="w-6 aspect-auto bg-gray-300 animatin-pulse" />
+              ) : (
+                fetchedUserInfo?.totalXp || 0
+              )}
             </h3>
           </div>
         </Card>

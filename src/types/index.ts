@@ -242,6 +242,7 @@ export interface ExamAnalysisResponse {
     percentage: number;
     completed: boolean;
     createdAt: string;
+    xpEarned: string;
     examTest: {
       id: number;
       noOfQuestions: number;
@@ -318,7 +319,6 @@ export interface UserInfo {
   updatedAt: string;
   preferredExam: string | null;
 }
-
 
 export interface WeekDay {
   day: string;

@@ -106,8 +106,15 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
     );
   }
 
-  const { correct, incorrect, unanswered, score, percentage, examTest } =
-    analysisData.data;
+  const {
+    correct,
+    incorrect,
+    unanswered,
+    score,
+    percentage,
+    examTest,
+    xpEarned,
+  } = analysisData.data;
 
   return (
     <Card className="w-full max-w-[483px] mx-auto p-4 border-grey-500 space-y-6 flex flex-col items-center justify-center relative">
@@ -149,7 +156,7 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
             <span>XP</span>
           </h4>
           <h2 className="text-2xl md:text-3xl font-medium text-muted-500 text-center">
-            {examTest.xp}
+            {xpEarned}
           </h2>
         </div>
       </div>
