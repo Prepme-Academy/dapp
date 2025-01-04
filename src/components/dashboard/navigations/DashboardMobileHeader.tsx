@@ -19,7 +19,7 @@ interface DashboardMobileHeaderProps {
 const DashboardMobileHeader: React.FC<DashboardMobileHeaderProps> = ({
   handleLogout,
 }) => {
-  const { user, ready, authenticated } = usePrivy();
+  const { ready, authenticated } = usePrivy();
   const { userInfo } = useClientStore();
 
   const disableLogout = !ready || (ready && !authenticated);
@@ -56,10 +56,12 @@ const DashboardMobileHeader: React.FC<DashboardMobileHeaderProps> = ({
                 </div>
                 <div className="flex flex-col items-start justify-start gap-1">
                   <h3 className="text-sm font-normal text-muted-500">
-                    {user?.email?.address}
+                    {userInfo?.email ? userInfo?.email : userInfo?.username}
                   </h3>
                   <p className="text-sm font-normal text-muted-400">
-                    {formatWalletAddress(user?.wallet?.address || dummyAddress)}
+                    {formatWalletAddress(
+                      userInfo?.walletAddress || dummyAddress
+                    )}
                   </p>
                 </div>
               </div>

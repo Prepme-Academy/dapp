@@ -303,6 +303,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
                   selectedAnswers[i] ? "bg-[#77C93E] text-white" : "bg-gray-100"
                 }`}
                 onClick={() => handleNavigation(i)}
+                disabled={timeLeft === 0}
               >
                 {i + 1}
               </button>
@@ -315,7 +316,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
             variant={"unstyled"}
             onClick={handlePrevious}
             className="bg-secondary text-primary-400 hover:bg-secondary/80 w-fit h-9 px-9 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:pointer-events-auto disabled:!cursor-not-allowed transition-all duration-300"
-            disabled={currentQuestionIndex === 0}
+            disabled={currentQuestionIndex === 0 || timeLeft === 0}
           >
             Previous
           </Button>
@@ -352,27 +353,40 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
                 priority
               />
               <h2 className="text-lg md:text-xl text-center text-muted-500">
-                Are you ready?
+                {timeLeft === 0 ? "Time's Up!" : "Are you ready?"}
               </h2>
-              <p className="text-sm font-normal text-[#475467] text-center max-w-[405px]">
-                You have <strong>{totalAttemptedQuestions}</strong> unattempted
-                questions left. By clicking{" "}
-                <span className="text-primary-400">“Yes I’m done”</span>, the
-                test will end.
-              </p>
+              {timeLeft === 0 ? (
+                <p className="text-sm font-normal text-[#475467] text-center max-w-[405px]">
+                  Your test session has ended. You completed{" "}
+                  <strong>{totalAttemptedQuestions}</strong> questions. Click{" "}
+                  <span className="text-primary-400">
+                    &quot;Submit Test&quot;
+                  </span>{" "}
+                  to see your results.
+                </p>
+              ) : (
+                <p className="text-sm font-normal text-[#475467] text-center max-w-[405px]">
+                  You have <strong>{totalAttemptedQuestions}</strong>{" "}
+                  unattempted questions left. By clicking{" "}
+                  <span className="text-primary-400">“Yes I’m done”</span>, the
+                  test will end.
+                </p>
+              )}
             </div>
           </DialogTitle>
         </DialogHeader>
         <DialogFooter className="w-full !flex-row pt-4 border-t border-grey-500 space-x-4">
-          <DialogClose asChild>
-            <Button
-              type="button"
-              variant={"unstyled"}
-              className="bg-secondary text-primary-400 hover:bg-secondary/80 w-fit h-9 px-9 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-            >
-              Go back
-            </Button>
-          </DialogClose>
+          {timeLeft === 0 ? null : (
+            <DialogClose asChild>
+              <Button
+                type="button"
+                variant={"unstyled"}
+                className="bg-secondary text-primary-400 hover:bg-secondary/80 w-fit h-9 px-9 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+              >
+                Go back
+              </Button>
+            </DialogClose>
+          )}
           <Button
             variant={"unstyled"}
             onClick={handleSubmit}
@@ -384,6 +398,8 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Submitting...
               </>
+            ) : timeLeft === 0 ? (
+              "Submit Test"
             ) : (
               "Yes I'm done"
             )}

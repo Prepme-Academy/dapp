@@ -9,8 +9,10 @@ import {
 } from "@/components/ui/card";
 import { useExamAnalysis } from "@/lib/actions/exam.action";
 import useExamStore from "@/store/examStore";
+import { formatAxiosErrorMessage } from "@/utils/errors";
 import { usePrivy } from "@privy-io/react-auth";
-import { X } from "lucide-react";
+import { AxiosError } from "axios";
+import { Loader2, X } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -20,10 +22,10 @@ const tabData = [
     name: "Success",
     path: "success",
   },
-  {
-    name: "Quest",
-    path: "quest",
-  },
+  // {
+  //   name: "Quest",
+  //   path: "quest",
+  // },
   {
     name: "Nft",
     path: "nft",
@@ -62,10 +64,12 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
   const authUserId = user?.id;
   const { setExamData, addToExamHistory } = useExamStore();
 
-  const { data: analysisData, isLoading } = useExamAnalysis(
-    Number(id),
-    authUserId || ""
-  );
+  const {
+    data: analysisData,
+    isLoading,
+    isError,
+    error,
+  } = useExamAnalysis(Number(id), authUserId || "");
 
   useEffect(() => {
     if (analysisData?.data) {
@@ -74,8 +78,32 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
     }
   }, [analysisData, setExamData, addToExamHistory]);
 
-  if (isLoading || !analysisData) {
-    return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="text-white flex items-center">
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading...
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="w-full flex flex-col items-center justify-center h-full">
+        <Card className="w-full max-w-[635px] min-h-28 mx-auto px-3 py-4 border-grey-500 space-y-3 flex flex-col items-start justify-start">
+          <p className="text-red-500 text-sm font-normal">
+            Error loading exam score data.{" "}
+            {formatAxiosErrorMessage(error as AxiosError)}
+          </p>
+          <Button
+            variant={"unstyled"}
+            className="bg-primary-400 text-white w-fit px-6 h-9 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+            onClick={() => window.location.reload()}
+          >
+            Retry
+          </Button>
+        </Card>
+      </div>
+    );
   }
 
   const { correct, incorrect, unanswered, score, percentage, examTest } =
@@ -432,9 +460,9 @@ const NftTab = ({ id }: { id: string | string[] | undefined }) => {
         <Button
           variant={"unstyled"}
           className="bg-primary-400 text-white w-fit px-6 lg:px-9 h-9 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-          onClick={() => router.push(`/dashboard/streak/${id}`)}
+          onClick={() => router.push(`/dashboard/practice`)}
         >
-          Continue
+          Done
         </Button>
       </CardFooter>
     </Card>

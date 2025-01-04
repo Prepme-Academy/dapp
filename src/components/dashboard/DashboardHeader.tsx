@@ -12,16 +12,13 @@ import {
 } from "@/components/ui/popover";
 import { dummyAddress, formatWalletAddress } from "@/hooks/useAddress";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import useClientStore from "@/store/clientStore";
 import { cn } from "@/lib/utils";
 
 const DashboardHeader: React.FC = () => {
-  const { user, ready, authenticated, logout } = usePrivy();
+  const { ready, authenticated, logout } = usePrivy();
   const { userInfo } = useClientStore();
   const router = useRouter();
-
-  useEffect(() => {}, [user]);
 
   const handleLogout = async () => {
     try {
@@ -166,7 +163,7 @@ const DashboardHeader: React.FC = () => {
                       </h3>
                       <p className="text-sm font-normal text-muted-400">
                         {formatWalletAddress(
-                          user?.wallet?.address || dummyAddress
+                          userInfo?.walletAddress || dummyAddress
                         )}
                       </p>
                     </div>
