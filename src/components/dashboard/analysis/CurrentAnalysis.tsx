@@ -190,7 +190,7 @@ const CurrentAnalysis: React.FC = () => {
           variant={"unstyled"}
           className="bg-secondary text-secondary-foreground hover:bg-secondary/80 w-fit h-10 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
           onClick={() =>
-            router.push(`/dashboard/practice/detail/${examData.id}/ready`)
+            router.push(`/dashboard/practice/detail/${examTest.id}/ready`)
           }
         >
           Practice again

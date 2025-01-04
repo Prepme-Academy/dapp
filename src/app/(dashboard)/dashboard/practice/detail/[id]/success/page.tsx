@@ -12,7 +12,7 @@ import useExamStore from "@/store/examStore";
 import { formatAxiosErrorMessage } from "@/utils/errors";
 import { usePrivy } from "@privy-io/react-auth";
 import { AxiosError } from "axios";
-import { Loader2, X } from "lucide-react";
+import {  X } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -80,9 +80,36 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
 
   if (isLoading) {
     return (
-      <div className="text-white flex items-center">
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading...
-      </div>
+      <Card className="w-full max-w-[483px] mx-auto p-4 border-grey-500 flex flex-col items-center justify-center relative animate-pulse">
+        <div className="absolute right-3 top-3 w-10 h-10 bg-gray-200 rounded-full" />
+
+        <div className="flex flex-col items-center justify-center gap-2 mt-6 relative">
+          {/* Fire icon placeholder */}
+          <div className="w-[99px] h-[99px] bg-gray-200 rounded-full" />
+          {/* Streak number placeholder */}
+          <div className="h-24 w-24 bg-gray-200 rounded-lg mt-2" />
+          {/* "day streak" text placeholder */}
+          <div className="h-6 w-24 bg-gray-200 rounded mt-2" />
+        </div>
+
+        <Card className="w-full p-3 bg-transparent border-[#DFE2E6] mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+            {Array(2)
+              .fill(null)
+              .map((_, index) => (
+                <div key={index} className="flex flex-col items-center gap-2">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full" />
+                  <div className="w-8 h-4 bg-gray-200 rounded" />
+                </div>
+              ))}
+          </div>
+
+          <Card className="w-full mt-3 py-4 px-8 border-grey-500">
+            <div className="h-4 w-full bg-gray-200 rounded mb-2" />
+            <div className="h-4 w-3/4 bg-gray-200 rounded mx-auto" />
+          </Card>
+        </Card>
+      </Card>
     );
   }
 
@@ -110,7 +137,7 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
     correct,
     incorrect,
     unanswered,
-    score,
+    noOfQuestions,
     percentage,
     examTest,
     xpEarned,
@@ -141,7 +168,7 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
         <div className="w-full flex flex-col items-center justify-center gap-2">
           <h4 className="text-xs font-normal text-muted-400">You scored</h4>
           <h2 className="text-2xl md:text-3xl font-medium text-muted-500 text-center">
-            {score}/{examTest.marks}
+            {correct}/{noOfQuestions}
           </h2>
         </div>
         <div className="w-full flex flex-col items-center justify-center gap-2">
