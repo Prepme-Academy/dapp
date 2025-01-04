@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useUserInfo } from "@/lib/actions";
 import useExamStore from "@/store/examStore";
+import { Loader2 } from "lucide-react";
 
 type methods =
   | "wallet"
@@ -124,6 +125,14 @@ const AuthOptions: React.FC = () => {
       console.error("Login failed:", error);
     }
   };
+
+  if (userInfoLoading) {
+    return (
+      <div className="text-white flex items-center">
+        <Loader2 className="mr-2 h-10 w-10 animate-spin" /> Redirecting...
+      </div>
+    );
+  }
 
   return (
     <section className="w-full grid grid-cols-1 gap-6">
