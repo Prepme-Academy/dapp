@@ -63,12 +63,12 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
       <Card className="w-full p-3 border-grey-500 space-y-3 flex flex-col items-start justify-start group hover:cursor-pointer">
         <CardHeader className="px-0 py-0 items-start justify-start flex-row gap-3 space-y-0 w-full">
           <div className="w-12 h-12 bg-grey-600 rounded-full flex items-center justify-center">
-            {/* <Image
+            <Image
               src={examTest.exam.logo}
               alt={`${examTest.exam.name} logo`}
               width={37}
               height={37}
-            /> */}
+            />
           </div>
           <div className="flex flex-col items-start justify-start gap-2 flex-grow">
             <h5 className="text-xs font-normal text-secondary-300 uppercase">

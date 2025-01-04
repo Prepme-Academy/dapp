@@ -305,6 +305,8 @@ export interface UserInfo {
   walletAddress: string;
   username: string;
   dailyDuration: number;
+  totalStreaks: number;
+  totalXp: number;
   notificationEnabled: boolean;
   onboarded: boolean;
   googleId: string | null;
@@ -315,4 +317,16 @@ export interface UserInfo {
   createdAt: string;
   updatedAt: string;
   preferredExam: string | null;
+}
+
+
+export interface WeekDay {
+  day: string;
+  date: string;
+  isComplete: boolean;
+}
+
+export interface StreakResponse {
+  currentDay: string;
+  weekDays: WeekDay[];
 }
