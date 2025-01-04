@@ -47,7 +47,7 @@ const CurrentAnalysis: React.FC = () => {
     );
   }
 
-  const { score, examTest } = examData;
+  const { correct, noOfQuestions, examTest } = examData;
 
   return (
     <Card className="w-full p-3 border-grey-500 flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-start lg:justify-between">
@@ -64,9 +64,7 @@ const CurrentAnalysis: React.FC = () => {
           <h5 className="text-xs font-normal text-secondary-300 uppercase">
             {examTest.exam.name}
           </h5>
-          <h3 className="text-sm font-normal text-muted-500">
-            {examTest.year} {examTest.exam.name}
-          </h3>
+          <h3 className="text-sm font-normal text-muted-500">{examTest.title}</h3>
         </div>
       </div>
       <div className="grid grid-cols-2 align-top gap-4">
@@ -147,7 +145,7 @@ const CurrentAnalysis: React.FC = () => {
           </svg>
 
           <span className="text-xs font-normal text-muted-400">
-            {score}/{examTest.marks}
+            {correct}/{noOfQuestions}
           </span>
         </div>
         <div className="flex items-center justify-start gap-2">

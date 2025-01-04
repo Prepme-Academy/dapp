@@ -72,7 +72,7 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
           </div>
           <div className="flex flex-col items-start justify-start gap-2 flex-grow">
             <h5 className="text-xs font-normal text-secondary-300 uppercase">
-              {examTest.title}
+              {examTest.exam.name}
             </h5>
             <h3 className="text-sm font-normal text-muted-500">
               {examTest.title}
@@ -191,7 +191,7 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
           <Button
             variant={"unstyled"}
             onClick={() =>
-              router.push(`/dashboard/practice/detail/${id}/ready`)
+              router.push(`/dashboard/practice/detail/${examTest.id}/ready`)
             }
             className="bg-primary-400 text-white w-fit h-9 px-6 rounded-lg gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
           >
@@ -376,7 +376,7 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
                   ? "bg-[#77C93E] border-[#9EE071] text-white"
                   : answer.correct === false
                   ? "bg-[#FF5876] border-[#FF97A9] text-white"
-                  : "bg-gray-100"
+                  : "bg-[#FAC600] border-[#FFCF4D] text-white"
               }`}
             >
               {i + 1}

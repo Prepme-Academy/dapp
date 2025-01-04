@@ -263,6 +263,12 @@ export interface ExamAnalysisResponse {
         createdAt: string;
         updatedAt: string;
       };
+      subject: {
+        id: number;
+        name: string;
+        code: string | null;
+        years: string[];
+      };
     };
     userAnswers: {
       id: number;
