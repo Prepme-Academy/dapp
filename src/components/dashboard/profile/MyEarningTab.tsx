@@ -69,9 +69,7 @@ const MyEarningTab: React.FC = () => {
             <h6 className="text-start text-xs font-normal text-muted-400">
               Total XP
             </h6>
-            <h3 className="text-lg md:text-xl font-medium text-muted-500">
-              5,000
-            </h3>
+            <h3 className="text-lg md:text-xl font-medium text-muted-500">0</h3>
           </div>
         </Card>
         <Card className="min-h-20 p-3 shadow-cardshadow border-gray-200 space-x-3 flex items-start justify-start gap-2">
@@ -155,13 +153,15 @@ const MyEarningTab: React.FC = () => {
         <div className="w-full flex flex-col items-center justify-center gap-3">
           <Button
             variant={"secondary"}
-            className="white-gradient-border text-primary-400 w-full h-8 white-gradient-border text-center shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+            className="white-gradient-border text-primary-400 w-full h-8 white-gradient-border text-center shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 !pointer-events-auto"
+            disabled
           >
             Convert
           </Button>
           <Button
             variant={"unstyled"}
-            className="bg-primary-400 text-white w-full h-8 gradient-border shadow-buttonshadow outline-none text-sm text-center font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+            className="bg-primary-400 text-white w-full h-8 gradient-border shadow-buttonshadow outline-none text-sm text-center font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 !pointer-events-auto"
+            disabled
           >
             Withdraw
           </Button>

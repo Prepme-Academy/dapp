@@ -1,14 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Card, CardFooter } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import Image from "next/image";
 
 const DailyStreak = ({ id }: { id: string }) => {
+  console.log("🚀 ~ DailyStreak ~ id:", id);
   const router = useRouter();
-  const currentDayIndex = new Date().getDay();
 
   return (
     <Card className="w-full max-w-[483px] mx-auto p-4 border-grey-500 flex flex-col items-center justify-center relative">
@@ -35,7 +35,7 @@ const DailyStreak = ({ id }: { id: string }) => {
             fontWeight: "bold",
           }}
         >
-          {currentDayIndex + 1}
+          {1}
         </h2>
         <h3 className="text-lg font-medium text-muted-400">day streak</h3>
       </div>
@@ -53,7 +53,7 @@ const DailyStreak = ({ id }: { id: string }) => {
                   width={40}
                   height={40}
                   className={`${
-                    index === currentDayIndex
+                    index === 0
                       ? "grayscale-0 opacity-100"
                       : "grayscale opacity-30"
                   }`}
@@ -75,24 +75,6 @@ const DailyStreak = ({ id }: { id: string }) => {
           </span>
         </Card>
       </Card>
-      <CardFooter className="border-t border-grey-200 pt-5 px-0 pb-0 space-x-4 justify-end w-full">
-        <Button
-          type="button"
-          variant={"unstyled"}
-          className="bg-secondary text-primary-400 hover:bg-secondary/80 w-fit h-9 px-9 lg:px-9 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-          onClick={() => router.push(`/dashboard/analysis/detail/${id}`)}
-        >
-          Review testscore
-        </Button>
-
-        <Button
-          variant={"unstyled"}
-          className="bg-primary-400 text-white w-fit px-6 lg:px-9 h-9 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-          onClick={() => router.back()}
-        >
-          Done
-        </Button>
-      </CardFooter>
     </Card>
   );
 };

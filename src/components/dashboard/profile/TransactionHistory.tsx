@@ -1,55 +1,81 @@
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { transactionHistory } from "@/utils/constant";
+import { Receipt, XCircle } from "lucide-react";
 
 const TransactionHistory: React.FC = () => {
+  const transactionHistoryData = [];
+
   return (
     <Card className="min-h-20 p-3 md:p-5 shadow-cardshadow border-gray-200 flex flex-col items-start justify-start gap-6">
       <h2 className="textLg font-medium text-muted-500">Transaction history</h2>
       <div className="w-full flex flex-col items-start justify-start gap-4">
-        {transactionHistory.map((history) => (
-          <div
-            className="w-full flex flex-col items-start justify-start gap-3"
-            key={history.id}
-          >
-            <h3 className="text-sm font-medium text-muted-500">
-              {history.date}
-            </h3>
-            <ul className="w-full flex flex-col items-start justify-start gap-3">
-              {history.transactions.map((transaction) => (
-                <li
-                  key={transaction.id}
-                  className="w-full  border border-grey-200 rounded-lg py-2 px-4 flex gap-6 items-center justify-between"
-                >
-                  <div className="flex items-start justify-start gap-2">
-                    <RenderTransactionIcon status={transaction.status} />
+        {transactionHistoryData.length > 0 ? (
+          transactionHistory.map((history) => (
+            <div
+              className="w-full flex flex-col items-start justify-start gap-3"
+              key={history.id}
+            >
+              <h3 className="text-sm font-medium text-muted-500">
+                {history.date}
+              </h3>
+              <ul className="w-full flex flex-col items-start justify-start gap-3">
+                {history.transactions.map((transaction) => (
+                  <li
+                    key={transaction.id}
+                    className="w-full  border border-grey-200 rounded-lg py-2 px-4 flex gap-6 items-center justify-between"
+                  >
+                    <div className="flex items-start justify-start gap-2">
+                      <RenderTransactionIcon status={transaction.status} />
+                      <div className="space-y-2">
+                        <h3 className="text-sm font-normal text-muted-500">
+                          {transaction.transationInfo.title}
+                        </h3>
+                        <p
+                          className={cn(
+                            "text-xs font-normal",
+                            statusColor(transaction.status)
+                          )}
+                        >
+                          {transaction.status}
+                        </p>
+                      </div>
+                    </div>
                     <div className="space-y-2">
-                      <h3 className="text-sm font-normal text-muted-500">
-                        {transaction.transationInfo.title}
+                      <h3 className="text-sm font-normal text-muted-500 text-right">
+                        {transaction.transationInfo.info}
                       </h3>
                       <p
                         className={cn(
-                          "text-xs font-normal",
-                          statusColor(transaction.status)
+                          "text-xs font-normal text-right text-[#8F959E]"
                         )}
                       >
-                        {transaction.status}
+                        {transaction.transationInfo.debit}
                       </p>
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-normal text-muted-500 text-right">
-                      {transaction.transationInfo.info}
-                    </h3>
-                    <p className={cn("text-xs font-normal text-right text-[#8F959E]")}>
-                      {transaction.transationInfo.debit}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        ) : (
+          <div className="w-full flex flex-col items-center justify-center py-8 px-4">
+            <div className="relative flex items-center justify-center w-16 h-16 bg-gray-50 rounded-full">
+              <Receipt className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
+              <XCircle
+                className="w-6 h-6 text-gray-400 absolute -bottom-1 -right-1"
+                strokeWidth={1.5}
+              />
+            </div>
+            <h3 className="mt-4 text-lg font-medium text-muted-500">
+              No transactions yet
+            </h3>
+            <p className="mt-2 text-sm text-[#8F959E] text-center max-w-[280px]">
+              When you make transactions, they will appear here for you to
+              track.
+            </p>
           </div>
-        ))}
+        )}
       </div>
     </Card>
   );

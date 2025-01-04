@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default async function StreakPage({ params }: { params: Params }) {
   const { id } = await params;
   return (
-    <section className="w-full h-full flex items-center justify-center bg-[#0E1824F7]">
+    <section className="w-full h-full flex items-center justify-center bg-[#0E1824F7] fixed inset-0 z-40">
       <DailyStreak id={id} />
     </section>
   );
