@@ -1,10 +1,14 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Info } from "lucide-react";
 import Image from "next/image";
 import TransactionHistory from "./TransactionHistory";
+import useClientStore from "@/store/clientStore";
 
 const MyEarningTab: React.FC = () => {
+  const { userInfo } = useClientStore();
   return (
     <div className="w-full space-y-4">
       <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4 align-top">
@@ -69,7 +73,9 @@ const MyEarningTab: React.FC = () => {
             <h6 className="text-start text-xs font-normal text-muted-400">
               Total XP
             </h6>
-            <h3 className="text-lg md:text-xl font-medium text-muted-500">0</h3>
+            <h3 className="text-lg md:text-xl font-medium text-muted-500">
+              {userInfo?.totalXp ? userInfo?.totalXp : 0}
+            </h3>
           </div>
         </Card>
         <Card className="min-h-20 p-3 shadow-cardshadow border-gray-200 space-x-3 flex items-start justify-start gap-2">

@@ -1,13 +1,25 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { questsData } from "@/utils/constant";
+import { cn } from "@/lib/utils";
+import { Badge } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-interface QuestCardProps {
-  showAllLink: boolean;
+export interface QuestsType {
+  id: string;
+  title: string;
+  description: string;
+  isActive: boolean;
+  isCompleted: boolean;
+  percentage: number;
+  category: string;
 }
 
-const QuestCard: React.FC<QuestCardProps> = ({ showAllLink }) => {
+interface QuestCardProps {
+  showAllLink: boolean;
+  quests: QuestsType[];
+}
+
+const QuestCard: React.FC<QuestCardProps> = ({ showAllLink, quests }) => {
   return (
     <Card className="w-full p-3 shadow-cardshadow border-none space-y-3">
       <CardHeader className="px-0 py-0 items-center justify-between flex-row space-y-0">
@@ -18,7 +30,7 @@ const QuestCard: React.FC<QuestCardProps> = ({ showAllLink }) => {
             width={20}
             height={20}
           />
-          <h3 className="text-lg font-medium text-muted-500">Daily Quests</h3>
+          <h3 className="text-lg font-medium text-muted-500">Achievements</h3>
         </div>
         {showAllLink && (
           <Link
@@ -30,10 +42,15 @@ const QuestCard: React.FC<QuestCardProps> = ({ showAllLink }) => {
         )}
       </CardHeader>
       <CardContent className="p-0 flex flex-col items-start justify-start gap-y-3">
-        {questsData.map((quest) => (
+        {quests.map((quest) => (
           <Card
             key={quest.id}
-            className="w-full px-3 py-1 flex items-start justify-start gap-x-3 border-primary-200"
+            className={cn(
+              "w-full px-3 py-1 flex items-start justify-start gap-x-3 border-primary-200",
+              quest.isActive === false && quest.isCompleted === false
+                ? "opacity-50 cursor-not-allowed"
+                : "opacity-100 cursor-auto"
+            )}
           >
             <Image
               src="/icons/dashboard/box.svg"
@@ -42,9 +59,24 @@ const QuestCard: React.FC<QuestCardProps> = ({ showAllLink }) => {
               height={32}
             />
             <div className="flex flex-col items-start justify-start gap-2  w-full">
-              <h4 className="text-sm font-normal text-muted-500">
-                {quest.title}
-              </h4>
+              <div className="flex items-center justify-between w-full">
+                <h4 className="text-sm font-medium text-muted-800">
+                  {quest.title}
+                </h4>
+                <div className="flex gap-2">
+                  {quest.isActive && <Badge className="text-blue-500" />}
+                  {quest.isCompleted && (
+                    <Image
+                      src="/icons/dashboard/badge.png"
+                      alt="badge icon"
+                      width={18}
+                      height={18}
+                      priority
+                      className="object-contain"
+                    />
+                  )}
+                </div>
+              </div>
               <div className="w-full flex items-center gap-2">
                 <div className="w-full h-2 bg-gray-200 rounded-full relative overflow-hidden">
                   <div

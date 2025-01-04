@@ -14,15 +14,20 @@ import { dummyAddress, formatWalletAddress } from "@/hooks/useAddress";
 import { useRouter } from "next/navigation";
 import useClientStore from "@/store/clientStore";
 import { cn } from "@/lib/utils";
+import useExamStore from "@/store/examStore";
 
 const DashboardHeader: React.FC = () => {
   const { ready, authenticated, logout } = usePrivy();
-  const { userInfo } = useClientStore();
+  const { userInfo, resetState } = useClientStore();
+  const { resetExamData, clearExamHistory } = useExamStore();
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
       await logout();
+      resetState();
+      resetExamData();
+      clearExamHistory();
       router.replace("/login");
       window.location.reload();
     } catch (error) {
@@ -92,7 +97,7 @@ const DashboardHeader: React.FC = () => {
               width={18}
               height={18}
             />
-            <span>0</span>
+            <span>{userInfo?.totalStreaks ? userInfo?.totalStreaks : 0}</span>
           </Button>
           <Button
             variant={"outline"}
@@ -105,7 +110,9 @@ const DashboardHeader: React.FC = () => {
               height={18}
             />
             <span>
-              <span className="text-secondary-300">0 </span>
+              <span className="text-secondary-300">
+                {userInfo?.totalXp ? userInfo?.totalXp : 0}{" "}
+              </span>
               <span> XP</span>
             </span>
           </Button>
