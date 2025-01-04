@@ -58,11 +58,11 @@ const QuestCard: React.FC<QuestCardProps> = ({ showAllLink, quests }) => {
           >
             <Card
               className={cn(
-                "w-full px-3 py-3 flex flex-col border-primary-200",
+                "w-full px-3 py-3 flex flex-col",
                 quest.isActive === false && quest.isCompleted === false
                   ? "opacity-100 cursor-auto"
                   : "grayscale-0 opacity-100",
-                showAllLink ? "lg:flex-row items-center justify-center" : "lg:min-h-52 items-start justify-start gap-3 "
+                showAllLink ? "lg:flex-row items-center justify-center" : "lg:min-h-52 items-start justify-start gap-3 border-primary-200"
               )}
             >
               <Image
