@@ -26,7 +26,7 @@ const DashboardRightSidebar: React.FC = () => {
       {pathname === "/dashboard/profile" && <EditProfile />}
       {pathname !== "/dashboard/quests" &&
         pathname !== "/dashboard/profile" && (
-          <QuestCard showAllLink={true} quests={questsData.slice(0, 2)} />
+          <QuestCard showAllLink={true} quests={questsData.slice(0, 1)} />
         )}
       {pathname !== "/dashboard/leaderboard" &&
         pathname !== "/dashboard/profile" && (
