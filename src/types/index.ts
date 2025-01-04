@@ -130,6 +130,21 @@ export interface StartExamResponse {
       year: number;
       createdAt: string;
       updatedAt: string;
+      exam: {
+        id: number;
+        name: string;
+        created_at: string;
+        code: string | undefined;
+        logo: string;
+        createdAt: string;
+        updatedAt: string;
+      };
+      subject: {
+        id: number;
+        name: string;
+        code: string | null;
+        years: string[];
+      };
     };
     noOfQuestions: number;
     completed: boolean;
