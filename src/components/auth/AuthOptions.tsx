@@ -126,14 +126,6 @@ const AuthOptions: React.FC = () => {
     }
   };
 
-  if (userInfoLoading) {
-    return (
-      <div className="text-white flex items-center">
-        <Loader2 className="mr-2 h-10 w-10 animate-spin" /> Redirecting...
-      </div>
-    );
-  }
-
   return (
     <section className="w-full grid grid-cols-1 gap-6">
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -155,7 +147,7 @@ const AuthOptions: React.FC = () => {
         </Button>
         <Button
           variant={"outline"}
-          className="flex items-center justify-start gap-2"
+   "flex items-center justify-start gap-2"
           onClick={() => handleWalletLogin("rainbow")}
         >
           <Image
