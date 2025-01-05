@@ -2,19 +2,23 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useUserInfo } from "@/lib/actions";
 import { cn } from "@/lib/utils";
-import useClientStore from "@/store/clientStore";
+import { usePrivy } from "@privy-io/react-auth";
 // import Image from "next/image";
 import { useState } from "react";
 
 const EditProfile: React.FC = () => {
   const [copied, setCopied] = useState(false);
-  const { userInfo } = useClientStore();
+  const { user } = usePrivy();
+  const authUserId = user?.id || "";
+  const { data: fetchedUserInfo, isLoading: userInfoLoading } =
+    useUserInfo(authUserId);
 
-  if (!userInfo) return "Loading user info....";
+  if (!userInfoLoading && !fetchedUserInfo) return "Loading user info....";
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(userInfo.walletAddress);
+    navigator.clipboard.writeText(fetchedUserInfo?.walletAddress || "");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -38,12 +42,12 @@ const EditProfile: React.FC = () => {
           )}
         >
           <span className="uppercase">
-            {userInfo?.username ? userInfo.username[0] : "u"}
+            {fetchedUserInfo?.username ? fetchedUserInfo.username[0] : "u"}
           </span>
         </div>
         <div>
           <h2 className="text-lg font-medium text-muted-500">
-            {userInfo.username}
+            {fetchedUserInfo?.username}
           </h2>
           <Button
             variant={"unstyled"}
@@ -64,7 +68,7 @@ const EditProfile: React.FC = () => {
             id="email"
             className="w-full outline-none border border-muted-200 h-9 pr-12 pl-4 focus:border-primary-300 rounded-lg text-sm font-normal placeholder:text-secondary-300"
             placeholder="Email address"
-            value={userInfo.email || "example@gmail.com"}
+            value={fetchedUserInfo?.email || ""}
             readOnly
           />
           <label className="absolute right-2 top-2 text-xs font-normal text-primary-500 cursor-pointer lowercase">
@@ -85,7 +89,7 @@ const EditProfile: React.FC = () => {
             id="wallet_address"
             className="w-full outline-none border border-muted-200 h-9 pr-12 pl-4 focus:border-primary-300 rounded-lg text-sm font-normal placeholder:text-secondary-300"
             placeholder="Wallet address"
-            value={userInfo.walletAddress}
+            value={fetchedUserInfo?.walletAddress}
             readOnly
           />
           <label
