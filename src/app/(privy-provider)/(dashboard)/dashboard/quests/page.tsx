@@ -1,7 +1,9 @@
 import { QuestCard } from "@/components/dashboard/quests";
 import { Button } from "@/components/ui/button";
+import { questsData } from "@/utils/constant";
 import { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Quests",
@@ -76,12 +78,14 @@ export default function QuestsPage() {
             <p className="text-sm font-normal text-white">
               Practice more exams and complete quests to mint unique NFTs
             </p>
-            <Button
-              variant={"unstyled"}
-              className="bg-primary-400 text-white w-fit h-10 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 mt-4"
-            >
-              Practice an exam now
-            </Button>
+            <Link href="/dashboard/practice">
+              <Button
+                variant={"unstyled"}
+                className="bg-primary-400 text-white w-fit h-10 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 mt-4"
+              >
+                Practice an exam now
+              </Button>
+            </Link>
           </div>
         </div>
         <Image
@@ -93,7 +97,7 @@ export default function QuestsPage() {
           className="pt-8 md:pt-0"
         />
       </section>
-      <QuestCard showAllLink={false} />
+      <QuestCard showAllLink={false} quests={questsData} />
     </section>
   );
 }

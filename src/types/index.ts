@@ -130,6 +130,21 @@ export interface StartExamResponse {
       year: number;
       createdAt: string;
       updatedAt: string;
+      exam: {
+        id: number;
+        name: string;
+        created_at: string;
+        code: string | undefined;
+        logo: string;
+        createdAt: string;
+        updatedAt: string;
+      };
+      subject: {
+        id: number;
+        name: string;
+        code: string | null;
+        years: string[];
+      };
     };
     noOfQuestions: number;
     completed: boolean;
@@ -242,6 +257,7 @@ export interface ExamAnalysisResponse {
     percentage: number;
     completed: boolean;
     createdAt: string;
+    xpEarned: string;
     examTest: {
       id: number;
       noOfQuestions: number;
@@ -261,6 +277,12 @@ export interface ExamAnalysisResponse {
         logo: string;
         createdAt: string;
         updatedAt: string;
+      };
+      subject: {
+        id: number;
+        name: string;
+        code: string | null;
+        years: string[];
       };
     };
     userAnswers: {
@@ -305,6 +327,8 @@ export interface UserInfo {
   walletAddress: string;
   username: string;
   dailyDuration: number;
+  totalStreaks: number;
+  totalXp: number;
   notificationEnabled: boolean;
   onboarded: boolean;
   googleId: string | null;
@@ -315,4 +339,15 @@ export interface UserInfo {
   createdAt: string;
   updatedAt: string;
   preferredExam: string | null;
+}
+
+export interface WeekDay {
+  day: string;
+  date: string;
+  isComplete: boolean;
+}
+
+export interface StreakResponse {
+  currentDay: string;
+  weekDays: WeekDay[];
 }

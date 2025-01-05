@@ -45,7 +45,7 @@ const CurrentAnalysis: React.FC = () => {
     );
   }
 
-  const { score, examTest } = examData;
+  const { correct, noOfQuestions, examTest } = examData;
 
   return (
     <Card className="w-full p-3 border-grey-500 flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-start lg:justify-between">
@@ -62,9 +62,7 @@ const CurrentAnalysis: React.FC = () => {
           <h5 className="text-xs font-normal text-secondary-300 uppercase">
             {examTest.exam.name}
           </h5>
-          <h3 className="text-sm font-normal text-muted-500">
-            {examTest.year} {examTest.exam.name}
-          </h3>
+          <h3 className="text-sm font-normal text-muted-500">{examTest.title}</h3>
         </div>
       </div>
       <div className="grid grid-cols-2 align-top gap-4">
@@ -145,7 +143,7 @@ const CurrentAnalysis: React.FC = () => {
           </svg>
 
           <span className="text-xs font-normal text-muted-400">
-            {score}/{examTest.marks}
+            {correct}/{noOfQuestions}
           </span>
         </div>
         <div className="flex items-center justify-start gap-2">
@@ -188,7 +186,7 @@ const CurrentAnalysis: React.FC = () => {
           variant={"unstyled"}
           className="bg-secondary text-secondary-foreground hover:bg-secondary/80 w-fit h-10 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
           onClick={() =>
-            router.push(`/dashboard/practice/detail/${examData.id}/ready`)
+            router.push(`/dashboard/practice/detail/${examTest.id}/ready`)
           }
         >
           Practice again

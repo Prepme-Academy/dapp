@@ -14,14 +14,23 @@ import { dummyAddress, formatWalletAddress } from "@/hooks/useAddress";
 import { useRouter } from "next/navigation";
 import useClientStore from "@/store/clientStore";
 import { cn } from "@/lib/utils";
+import useExamStore from "@/store/examStore";
+import { useUserInfo } from "@/lib/actions";
 
 const DashboardHeader: React.FC = () => {
-  const { ready, authenticated, logout } = usePrivy();
-  const { userInfo } = useClientStore();
+  const { ready, authenticated, logout, user } = usePrivy();
+  const { userInfo, resetState } = useClientStore();
+  const { resetExamData, clearExamHistory } = useExamStore();
   const router = useRouter();
+  const authUserId = user?.id || "";
+  const { data: fetchedUserInfo, isLoading: userInfoLoading } =
+    useUserInfo(authUserId);
 
   const handleLogout = async () => {
     try {
+      resetState();
+      resetExamData();
+      clearExamHistory();
       await logout();
       router.replace("/login");
       window.location.reload();
@@ -90,7 +99,15 @@ const DashboardHeader: React.FC = () => {
               width={18}
               height={18}
             />
-            <span>0</span>
+            {userInfoLoading ? (
+              <div className="w-6 aspect-auto bg-gray-300 animatin-pulse" />
+            ) : (
+              <span>
+                {fetchedUserInfo?.totalStreaks
+                  ? fetchedUserInfo?.totalStreaks
+                  : 0}
+              </span>
+            )}
           </Button>
           <Button
             variant={"outline"}
@@ -103,7 +120,19 @@ const DashboardHeader: React.FC = () => {
               height={18}
             />
             <span>
-              <span className="text-secondary-300">0 </span>
+              {userInfoLoading ? (
+                <div className="w-6 aspect-auto bg-gray-300 animatin-pulse" />
+              ) : (
+                <span
+                  className={cn(
+                    fetchedUserInfo?.totalXp === 0
+                      ? "text-secondary-300"
+                      : "text-muted-500"
+                  )}
+                >
+                  {fetchedUserInfo?.totalXp ? fetchedUserInfo?.totalXp : 0}{" "}
+                </span>
+              )}
               <span> XP</span>
             </span>
           </Button>

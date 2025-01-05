@@ -366,7 +366,8 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
                 </p>
               ) : (
                 <p className="text-sm font-normal text-[#475467] text-center max-w-[405px]">
-                  You have <strong>{totalAttemptedQuestions}</strong>{" "}
+                  You have{" "}
+                  <strong>{totalQuestions - totalAttemptedQuestions}</strong>{" "}
                   unattempted questions left. By clicking{" "}
                   <span className="text-primary-400">“Yes I’m done”</span>, the
                   test will end.

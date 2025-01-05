@@ -8,6 +8,7 @@ import useClientStore from "@/store/clientStore";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useUserInfo } from "@/lib/actions";
+import useExamStore from "@/store/examStore";
 
 type methods =
   | "wallet"
@@ -48,6 +49,7 @@ const AuthOptions: React.FC = () => {
   const { user, login, connectWallet, authenticated, ready } = usePrivy();
   const { wallets } = useWallets();
   const { isFirstVisit, setFirstVisit, setUserInfo } = useClientStore();
+  const { resetExamData, clearExamHistory } = useExamStore();
   const authUserId = user?.id || "";
   const { data: userInfo, isLoading: userInfoLoading } =
     useUserInfo(authUserId);
@@ -61,6 +63,8 @@ const AuthOptions: React.FC = () => {
 
   useEffect(() => {
     if (user && authenticated && ready && userInfo) {
+      clearExamHistory();
+      resetExamData();
       if (isFirstVisit === false) {
         router.push("/onboarding/username");
       } else {
@@ -68,7 +72,17 @@ const AuthOptions: React.FC = () => {
         router.push("/dashboard/practice");
       }
     }
-  }, [authenticated, ready, isFirstVisit, router, wallets, user, userInfo]);
+  }, [
+    authenticated,
+    ready,
+    isFirstVisit,
+    router,
+    wallets,
+    user,
+    userInfo,
+    resetExamData,
+    clearExamHistory,
+  ]);
 
   useEffect(() => {
     if (!authenticated && !user && ready && wallets?.[0]?.address) {
@@ -184,8 +198,9 @@ const AuthOptions: React.FC = () => {
         </h2>
         <Button
           variant={"outline"}
-          className="flex items-center justify-start gap-2 col-span-2 md:col-span-1"
+          className="flex items-center justify-start gap-2 col-span-2 md:col-span-1 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:pointer-events-auto"
           onClick={() => router.push("/login/email")}
+          disabled
         >
           <Image
             src="/icons/email.svg"

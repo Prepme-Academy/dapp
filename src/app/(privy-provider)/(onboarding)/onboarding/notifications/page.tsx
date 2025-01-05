@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCreateUser, useOnboardUser } from "@/lib/actions";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 import useUserStore from "@/store/userStore";
 import { CreateUserPayload, OnboardUserPayload } from "@/types";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -21,11 +21,17 @@ export default function NotificationPage() {
   const { username, examType, dailyDuration, resetState } = useUserStore();
   const { setFirstVisit, userInfo } = useClientStore();
   const { user } = usePrivy();
+  const { wallets } = useWallets();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  console.log("🚀 ~ NotificationPage ~ user:", user);
 
   const RegisterUser: CreateUserPayload = {
     email: user?.email?.address || undefined,
-    walletAddress: user?.wallet?.address || userInfo?.walletAddress || "",
+    walletAddress:
+      user?.wallet?.address ||
+      userInfo?.walletAddress ||
+      wallets[0]?.address ||
+      "",
     authId: user?.id || "",
   };
 

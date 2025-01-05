@@ -1,13 +1,25 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { questsData } from "@/utils/constant";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-interface QuestCardProps {
-  showAllLink: boolean;
+export interface QuestsType {
+  id: string;
+  title: string;
+  description: string;
+  isActive: boolean;
+  isCompleted: boolean;
+  percentage: number;
+  category: string;
+  image: string;
 }
 
-const QuestCard: React.FC<QuestCardProps> = ({ showAllLink }) => {
+interface QuestCardProps {
+  showAllLink: boolean;
+  quests: QuestsType[];
+}
+
+const QuestCard: React.FC<QuestCardProps> = ({ showAllLink, quests }) => {
   return (
     <Card className="w-full p-3 shadow-cardshadow border-none space-y-3">
       <CardHeader className="px-0 py-0 items-center justify-between flex-row space-y-0">
@@ -18,7 +30,7 @@ const QuestCard: React.FC<QuestCardProps> = ({ showAllLink }) => {
             width={20}
             height={20}
           />
-          <h3 className="text-lg font-medium text-muted-500">Daily Quests</h3>
+          <h3 className="text-lg font-medium text-muted-500">Achievements</h3>
         </div>
         {showAllLink && (
           <Link
@@ -29,37 +41,66 @@ const QuestCard: React.FC<QuestCardProps> = ({ showAllLink }) => {
           </Link>
         )}
       </CardHeader>
-      <CardContent className="p-0 flex flex-col items-start justify-start gap-y-3">
-        {questsData.map((quest) => (
-          <Card
+      <CardContent
+        className={cn(
+          "p-0 grid grid-cols-1 items-start justify-start gap-3",
+          showAllLink ? "" : "md:grid-cols-2 xl:grid-cols-3"
+        )}
+      >
+        {quests.map((quest) => (
+          <Link
             key={quest.id}
-            className="w-full px-3 py-1 flex items-start justify-start gap-x-3 border-primary-200"
+            href="/dashboard/quests"
+            className="block w-full"
+            aria-disabled={
+              quest.isActive === false && quest.isCompleted === false
+            }
           >
-            <Image
-              src="/icons/dashboard/box.svg"
-              alt="quest box"
-              width={32}
-              height={32}
-            />
-            <div className="flex flex-col items-start justify-start gap-2  w-full">
-              <h4 className="text-sm font-normal text-muted-500">
-                {quest.title}
-              </h4>
-              <div className="w-full flex items-center gap-2">
+            <Card
+              className={cn(
+                "w-full px-3 py-3 flex flex-col",
+                quest.isActive === false && quest.isCompleted === false
+                  ? "opacity-100 cursor-auto"
+                  : "grayscale-0 opacity-100",
+                showAllLink ? "lg:flex-row items-center justify-center" : "lg:min-h-52 items-start justify-start gap-3 border-primary-200"
+              )}
+            >
+              <Image
+                src={quest.image}
+                alt="quest icon"
+                width={68}
+                height={68}
+                className={`rounded-full ${
+                  quest.isActive === false && quest.isCompleted === false
+                    ? "grayscale opacity-30"
+                    : "grayscale-0 opacity-100"
+                }`}
+              />
+              {!showAllLink && (
+                <div className="flex flex-col items-start justify-start gap-2 flex-grow">
+                  <div className="flex items-center justify-between w-full">
+                    <h4 className="text-sm md:text-base font-medium text-muted-800">
+                      {quest.title}
+                    </h4>
+                  </div>
+                  <p className="text-xs md:text-sm text-muted-500">
+                    {quest.description}
+                  </p>
+                  {/* <div className="w-full flex items-center gap-2">
                 <div className="w-full h-2 bg-gray-200 rounded-full relative overflow-hidden">
                   <div
                     className="h-full bg-green-600 absolute"
                     style={{ width: `${quest.percentage}%` }}
-                  >
-                    <div className="h-0.5 bg-green-300 absolute top-1/2 left-0 w-full transform -translate-y-1/2"></div>
-                  </div>
+                  ></div>
                 </div>
                 <span className="text-sm font-normal text-muted-500">
                   {quest.percentage}%
                 </span>
-              </div>
-            </div>
-          </Card>
+              </div> */}
+                </div>
+              )}
+            </Card>
+          </Link>
         ))}
       </CardContent>
     </Card>

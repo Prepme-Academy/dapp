@@ -80,7 +80,7 @@ const ReadyCard: React.FC<ReadyCardProps> = ({ id }) => {
                   Exam Type:
                 </h3>
                 <h2 className="text-sm font-normal text-muted-500 uppercase text-end">
-                  {examTest.title}
+                  {examTest.exam.name}
                 </h2>
               </div>
               <div className="w-full flex items-center justify-between gap-3">
@@ -88,7 +88,7 @@ const ReadyCard: React.FC<ReadyCardProps> = ({ id }) => {
                   Exam Subject:
                 </h3>
                 <h2 className="text-sm font-normal text-muted-500">
-                  {examTest.title.split(" ")[2]}
+                  {examTest.subject.name}
                 </h2>
               </div>
               <div className="w-full flex items-center justify-between gap-3">
