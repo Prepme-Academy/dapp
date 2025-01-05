@@ -9,7 +9,6 @@ import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useUserInfo } from "@/lib/actions";
 import useExamStore from "@/store/examStore";
-import { Loader2 } from "lucide-react";
 
 type methods =
   | "wallet"
