@@ -30,8 +30,8 @@ const useClientStore = create<UseStore>()(
     }),
     {
       name: "prepme-academy-client-store",
-      onRehydrateStorage: () => (state) => {
-        console.log("Rehydrated State:", state);
+      onRehydrateStorage: () => () => {
+        // console.log("Rehydrated State:", state);
       },
     } as PersistOptions<UseStore>
   )

@@ -2,11 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function HeroSection() {
-  const router = useRouter();
-
   return (
     <section
       data-label="hero"
@@ -41,6 +39,7 @@ export default function HeroSection() {
             width={1115}
             height={448}
             className="object-contain max-w-full"
+            loading="eager"
           />
         </span>
         <span className="md:hidden flex items-center justify-center absolute -z-10 left-0 top-10 w-full h-full">
@@ -50,6 +49,7 @@ export default function HeroSection() {
             width={306.63}
             height={504.87}
             className="object-cover max-w-full"
+            loading="eager"
           />
         </span>
         <div className="pt-[7.5rem] lg:pt-[5.5625rem] text-center relative isolate">
@@ -61,20 +61,20 @@ export default function HeroSection() {
             Turn Practice into Progress, Progress into Rewards
           </p>
           <Button
+            asChild
             variant="secondary"
             className="!py-3 h-auto px-5 text-sm lg:text-base !max-w-[15.125rem] block w-full mx-auto white-gradient-border shadow-buttonshadow"
-            onClick={() => router.push("/login")}
           >
-            Get Started
+            <Link href="/login">Get Started</Link>
           </Button>
-          <div className="flex items-center mt-[2.1875rem] lg:mt-3 text-[0.625rem] lg:text-xs mx-auto w-fit space-x-2">
+          <div className="flex items-center mt-[2.1875rem] lg:mt-3 text-xs mx-auto w-fit space-x-2">
             <span>Powered by</span>
             <Image
               src="/icons/logo-oc.svg"
               width={36.86}
               height={35.6}
               alt="Open Campus Logo"
-              // placeholder="blur"
+              loading="eager"
             />
             <span className="font-bold text-[0.948125rem] lg:text-[1.29375rem]">
               Open Campus
@@ -87,6 +87,7 @@ export default function HeroSection() {
           width={1535}
           height={65.92}
           className="absolute -bottom-16 left-0 w-full object-cover h-[4.12rem]"
+          loading="eager"
         />
       </div>
       <Image
@@ -95,6 +96,7 @@ export default function HeroSection() {
         alt="hero image"
         width={1255}
         height={720}
+        loading="eager"
       />
     </section>
   );

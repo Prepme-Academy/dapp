@@ -16,7 +16,6 @@ interface PracticeModalProps {
 }
 
 const PracticeModal: React.FC<PracticeModalProps> = ({ examDetail }) => {
-  console.log("🚀 ~ examDetail:", examDetail);
   const router = useRouter();
 
   return (

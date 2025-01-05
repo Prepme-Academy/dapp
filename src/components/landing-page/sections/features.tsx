@@ -2,12 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import four from "../assets/features/four.svg";
 import one from "../assets/features/one.svg";
 import three from "../assets/features/three.svg";
 import two from "../assets/features/two.svg";
 import Feature from "../Feature";
+import Link from "next/link";
 
 const features = [
   {
@@ -37,7 +37,6 @@ const features = [
 ];
 
 export default function FeatureSection() {
-  const router = useRouter();
   return (
     <section
       data-label="features"
@@ -56,9 +55,9 @@ export default function FeatureSection() {
       </div>
       <Button
         className="!max-w-[14.0625rem] !h-auto !w-full !px-4 !py-[0.625rem] block lg:text-[1.091875rem] text-sm bg-primary-400 text-white gradient-border shadow-buttonshadow outline-none"
-        onClick={() => router.push("/login")}
+        asChild
       >
-        Start practicing
+        <Link href="/login">Start practicing</Link>
       </Button>
     </section>
   );

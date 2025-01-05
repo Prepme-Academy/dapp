@@ -9,9 +9,7 @@ import { LineChart } from "lucide-react";
 
 const CurrentAnalysis: React.FC = () => {
   const router = useRouter();
-  const { examData, examHistory } = useExamStore();
-  console.log("🚀 ~ examHistory:", examHistory);
-  console.log("🚀 ~ examData:", examData);
+  const { examData } = useExamStore();
 
   if (!examData) {
     return (

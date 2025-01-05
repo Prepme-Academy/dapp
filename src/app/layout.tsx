@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Fredoka } from "next/font/google";
 import "./globals.css";
-import Providers from "@/providers";
 
 const fredokaSans = Fredoka({
   variable: "--font-fredoka",
@@ -40,9 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${fredokaSans.variable} antialiased`}>
-        <Providers>{children}</Providers>
-      </body>
+      <body className={`${fredokaSans.variable} antialiased`}>{children}</body>
     </html>
   );
 }
