@@ -1,7 +1,7 @@
-import one from "../assets/info/one.svg";
-import two from "../assets/info/two.svg";
-import three from "../assets/info/three.svg";
 import four from "../assets/info/four.svg";
+import one from "../assets/info/one.svg";
+import three from "../assets/info/three.svg";
+import two from "../assets/info/two.svg";
 import InfoCard, { InfoCardProps } from "../InfoCard";
 
 const cards: InfoCardProps[] = [
@@ -56,11 +56,12 @@ export default function InfoSection() {
     <section
       data-label="features"
       aria-label="features"
-      className="px-5 md:p-10 space-y-20 my-20"
+      className="px-4 pt-[2rem] lg:pt-[4.4375rem]"
     >
-      <h1 className="text-3xl md:text-4xl font-semibold text-center">
+      <h1 className="text-[2rem] leading-[2.42rem] lg:text-[3rem] lg:leading-[3.63rem] text-shark mb-[3.8125rem] lg:mb-[6.375rem] font-semibold text-center">
         Your go-to app to ace your exams
       </h1>
+
       {cards.map((details, index) => (
         <InfoCard {...details} key={index} />
       ))}

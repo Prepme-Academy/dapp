@@ -1,7 +1,7 @@
-import x from "../assets/icons/x.svg";
-import telegram from "../assets/icons/telegram.svg";
 import Image from "next/image";
 import Link from "next/link";
+import telegram from "../assets/icons/telegram.svg";
+import x from "../assets/icons/x.svg";
 
 const socials = [
   { name: "telegram", icon: telegram, href: "https://t.me/prepmeacademy" },
@@ -13,15 +13,18 @@ const socials = [
 ];
 
 export default function Footer() {
+  const year = new Date().getFullYear();
   return (
     <footer
       data-label="footer"
       aria-label="footer"
       className=" bg-neutral-100 px-4 py-10 md:px-10"
     >
-      <div className="hidden md:flex items-center justify-between w-full">
-        <span className="text-muted-foreground">© Copyright 2024 - Prepme</span>
-        <div className="space-x-2.5 flex items-center">
+      <div className="max-w-[77.5rem] mx-auto hidden md:flex items-center justify-between w-full">
+        <span className="text-base text-boulder">
+          &copy; Copyright {year} - Prepme
+        </span>
+        <div className="space-x-4 flex items-center">
           {socials.map((platform, index) => (
             <Link href={platform.href} target="_blank" key={index}>
               <Image
@@ -34,7 +37,7 @@ export default function Footer() {
             </Link>
           ))}
         </div>
-        <p className="text-muted-foreground">
+        <p className="text-boulder text-base">
           <Link href="/legal/privacy-policy.html" className="underline">
             Privacy Policy
           </Link>{" "}
@@ -44,8 +47,8 @@ export default function Footer() {
           </Link>
         </p>
       </div>
-      <div className="flex flex-col md:hidden items-start w-full space-y-5">
-        <div className="space-x-2.5 flex items-center">
+      <div className="flex flex-col md:hidden items-start w-full">
+        <div className="space-x-4 flex items-center mb-5">
           {socials.map((platform, index) => (
             <Link href={platform.href} target="_blank" key={index}>
               <Image
@@ -58,7 +61,7 @@ export default function Footer() {
             </Link>
           ))}
         </div>
-        <p className="text-muted-foreground">
+        <p className="text-boulder mb-3">
           <Link href="/" className="underline">
             Privacy Policy
           </Link>{" "}
@@ -67,7 +70,7 @@ export default function Footer() {
             Terms of Service
           </Link>
         </p>
-        <span className="text-muted-foreground">© Copyright 2024 - Prepme</span>
+        <span className="text-boulder">&copy; Copyright {year} - Prepme</span>
       </div>
     </footer>
   );
