@@ -1,17 +1,17 @@
 import {
-  HeroSection,
-  ExamSection,
-  InfoSection,
-  FeatureSection,
-  TestimonialSection,
-  FAQSection,
   CTASection,
+  ExamSection,
+  FAQSection,
+  FeatureSection,
   Footer,
+  HeroSection,
+  InfoSection,
+  TestimonialSection,
 } from "@/components/landing-page/sections";
 
 export default function Home() {
   return (
-    <main className="flex flex-col">
+    <main>
       <HeroSection />
       <ExamSection />
       <InfoSection />
