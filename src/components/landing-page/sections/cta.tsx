@@ -1,10 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function CTASection() {
-  const router = useRouter();
   return (
     <section
       data-label="get-started"
@@ -23,9 +22,9 @@ export default function CTASection() {
         <Button
           variant="secondary"
           className="white-gradient-border shadow-buttonshadow"
-          onClick={() => router.push("/login")}
+          asChild
         >
-          Start practicing for free
+          <Link href="/login"> Start practicing for free</Link>
         </Button>
         <Image
           src="/background/svg/paper-cut-2.svg"

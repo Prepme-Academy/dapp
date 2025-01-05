@@ -1,9 +1,9 @@
 "use client";
 
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { PrivyProvider } from "@privy-io/react-auth";
-import { useEffect, useState } from "react";
 import useClientStore from "@/store/clientStore";
+import { PrivyProvider } from "@privy-io/react-auth";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 const client = new QueryClient();
 
@@ -19,7 +19,7 @@ const Providers: React.FC<ProvidersProps> = ({ children }) => {
 
   useEffect(() => {
     setIsClient(true);
-    console.log("App loaded:", initializingState);
+    // console.log("App loaded:", initializingState);
     setinitializingState(true);
   }, [initializingState, setinitializingState]);
 
@@ -46,7 +46,6 @@ const Providers: React.FC<ProvidersProps> = ({ children }) => {
             "telegram",
             "wallet",
           ],
-          
         }}
       >
         {children}

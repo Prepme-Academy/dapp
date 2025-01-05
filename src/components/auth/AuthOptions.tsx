@@ -53,13 +53,6 @@ const AuthOptions: React.FC = () => {
     useUserInfo(authUserId);
 
   useEffect(() => {
-    console.log("🚀 ~ wallet:", wallets[0]);
-    console.log("🚀 ~ user:", user);
-    console.log("🚀 ~ authenticated:", authenticated);
-    console.log("🚀 ~ ready:", ready);
-  }, [user, ready, authenticated, wallets]);
-
-  useEffect(() => {
     if (user && userInfo && !userInfoLoading) {
       setFirstVisit(userInfo.onboarded);
       setUserInfo(userInfo);

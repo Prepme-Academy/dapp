@@ -56,7 +56,7 @@ export default function InfoSection() {
     <section
       data-label="features"
       aria-label="features"
-      className="px-4 pt-[2rem] lg:pt-[4.4375rem]"
+      className="px-4 pt-[3.125rem] lg:pt-[4.4375rem]"
     >
       <h1 className="text-[2rem] leading-[2.42rem] lg:text-[3rem] lg:leading-[3.63rem] text-shark mb-[3.8125rem] lg:mb-[6.375rem] font-semibold text-center">
         Your go-to app to ace your exams

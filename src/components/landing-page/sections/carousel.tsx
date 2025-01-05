@@ -50,11 +50,11 @@ export default function ExamSection() {
     <section
       data-label="logo-quilt"
       aria-label="exams-quilt"
-      className="w-full mt-[6.25rem] mb-[4.5625rem]"
+      className="w-full mt-[3rem] lg:mt-[6.25rem] mb-[1.375rem] lg:mb-[4.5625rem]"
     >
       <h1
         className={cn(
-          "text-[1.625rem] leading-[1.815rem] mb-3 lg:mb-[2.25rem] font-semibold text-center text-shark lg:text-[2.5rem] lg:leading-[3.025rem] font-fredoka"
+          "text-[1.5rem] leading-[1.815rem] mb-3 lg:mb-[2.25rem] font-semibold text-center text-shark lg:text-[2.5rem] lg:leading-[3.025rem] font-fredoka"
         )}
       >
         Browse through our exams

@@ -42,8 +42,8 @@ const useUserStore = create<StoreState>()(
     }),
     {
       name: "prepme-academy-user-store",
-      onRehydrateStorage: () => (state) => {
-        console.log("Rehydrated State:", state);
+      onRehydrateStorage: () => () => {
+        // console.log("Rehydrated State:", state);
       },
     } as PersistOptions<StoreState>
   )
