@@ -146,7 +146,7 @@ const AuthOptions: React.FC = () => {
         </Button>
         <Button
           variant={"outline"}
-   "flex items-center justify-start gap-2"
+          className="flex items-center justify-start gap-2"
           onClick={() => handleWalletLogin("rainbow")}
         >
           <Image
@@ -198,8 +198,9 @@ const AuthOptions: React.FC = () => {
         </h2>
         <Button
           variant={"outline"}
-          className="flex items-center justify-start gap-2 col-span-2 md:col-span-1"
+          className="flex items-center justify-start gap-2 col-span-2 md:col-span-1 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:pointer-events-auto"
           onClick={() => router.push("/login/email")}
+          disabled
         >
           <Image
             src="/icons/email.svg"
