@@ -1,6 +1,12 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useUserInfo } from "@/lib/actions";
+import useClientStore from "@/store/clientStore";
+import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const ShopTab: React.FC = () => {
   return (
@@ -249,13 +255,23 @@ const ShopTab: React.FC = () => {
 };
 
 const ShopCollectables = () => {
+  const { user } = usePrivy();
+  const { userInfo } = useClientStore();
+  const router = useRouter();
+  const authUserId = user?.id || "";
+  const { data: fetchedUserInfo, isLoading: userInfoLoading } =
+    useUserInfo(authUserId);
+
   return (
     <div className="w-full flex flex-col items-start justify-start gap-4">
       <h2 className="text-lg md:text-xl font-medium text-muted-500">
         My Collectibles
       </h2>
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        <Card className="min-h-36 p-3 shadow-cardshadow border-gray-200  flex flex-col items-center justify-center gap-4">
+        <Card
+          onClick={() => router.push(`/dashboard/streak/${userInfo?.id}`)}
+          className="min-h-36 p-3 shadow-cardshadow border-gray-200  flex flex-col items-center justify-center gap-4"
+        >
           <Image
             src="/icons/dashboard/fire.svg"
             alt="fire icon"
@@ -267,7 +283,11 @@ const ShopCollectables = () => {
             Streak Freeze
           </h2>
           <h3 className="text-base font-medium text-primary-500 text-center">
-            0
+            {userInfoLoading ? (
+              <div className="w-6 aspect-auto bg-gray-300 animatin-pulse" />
+            ) : (
+              fetchedUserInfo?.totalStreaks || 0
+            )}
           </h3>
         </Card>
         <Card className="min-h-36 p-3 shadow-cardshadow border-gray-200  flex flex-col items-center justify-center gap-4">
@@ -282,7 +302,11 @@ const ShopCollectables = () => {
             xp
           </h2>
           <h3 className="text-base font-medium text-primary-500 text-center">
-            0
+            {userInfoLoading ? (
+              <div className="w-6 aspect-auto bg-gray-300 animatin-pulse" />
+            ) : (
+              fetchedUserInfo?.totalXp || 0
+            )}
           </h3>
         </Card>
         <Card className="min-h-36 p-3 shadow-cardshadow border-gray-200  flex flex-col items-center justify-center gap-4">
