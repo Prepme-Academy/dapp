@@ -63,7 +63,7 @@ export default function HeroSection() {
           <Button
             asChild
             variant="secondary"
-            className="!py-3 h-auto px-5 text-sm lg:text-base !max-w-[15.125rem] block w-full mx-auto white-gradient-border shadow-buttonshadow"
+            className="!py-3 h-auto px-5 text-sm lg:text-base text-center !max-w-[15.125rem] block w-full mx-auto white-gradient-border shadow-buttonshadow"
           >
             <Link href="/login">Get Started</Link>
           </Button>

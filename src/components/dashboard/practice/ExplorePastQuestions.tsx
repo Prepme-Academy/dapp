@@ -1,14 +1,14 @@
 "use client";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { Exam } from "@/types";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import PracticeModal from "./PracticeModal";
-import { useRouter, useSearchParams } from "next/navigation";
-import { usePrivy } from "@privy-io/react-auth";
 import { useExams } from "@/lib/actions/exam.action";
+import { Exam } from "@/types";
+import { usePrivy } from "@privy-io/react-auth";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import PracticeModal from "./PracticeModal";
 
 const ExplorePastQuestions: React.FC = () => {
   const router = useRouter();
@@ -48,20 +48,20 @@ const ExplorePastQuestions: React.FC = () => {
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newSortOption = event.target.value;
     setSortOption(newSortOption);
-  
+
     // Create new URLSearchParams from existing params
     const newSearchParams = new URLSearchParams(searchParams.toString());
-    
+
     // Update or add the sort parameter
-    newSearchParams.set('sort', newSortOption);
-  
+    newSearchParams.set("sort", newSortOption);
+
     // Keep the URL clean by removing empty parameters
     for (const [key, value] of newSearchParams.entries()) {
       if (!value) {
         newSearchParams.delete(key);
       }
     }
-  
+
     // Update URL with new parameters
     router.push(`?${newSearchParams.toString()}`);
     refetch();
@@ -152,7 +152,7 @@ const ExplorePastQuestions: React.FC = () => {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="p-0 flex flex-col md:flex-row items-start md:items-center justify-start md:justify-between gap-y-3">
+                <CardContent className="p-0 pr-6 flex flex-col md:flex-row items-start w-full md:items-center justify-start md:justify-between gap-y-3">
                   <div className="p-0 flex flex-col items-start justify-start gap-y-3">
                     <div className="flex items-center justify-start gap-2">
                       <svg
