@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useNotifications } from "@/hooks/useNotifications";
 import { useCreateUser, useOnboardUser } from "@/lib/actions";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
+import useClientStore from "@/store/clientStore";
 import useUserStore from "@/store/userStore";
 import { CreateUserPayload, OnboardUserPayload } from "@/types";
-import { useNotifications } from "@/hooks/useNotifications";
-import useClientStore from "@/store/clientStore";
-import { Loader2 } from "lucide-react";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 import Cookies from "js-cookie";
+import { Loader2 } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function NotificationPage() {
   const router = useRouter();
@@ -113,8 +113,10 @@ export default function NotificationPage() {
       {isSubmitting && (
         <div className="fixed inset-0 flex items-center justify-center bg-[#0E1824DE]">
           <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-[400px] mx-auto space-y-5">
-            <Loader2 className="mr-2 h-10 w-10 text-primary-400 animate-spin" />
-            <p className="text-lg font-medium">Submitting user data...</p>
+            <Loader2 className="h-10 w-10 mx-auto text-primary-400 animate-spin" />
+            <p className="text-sm md:text-base lg:text-lg font-medium text-center">
+              Submitting user data...
+            </p>
           </div>
         </div>
       )}

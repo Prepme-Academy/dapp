@@ -21,7 +21,7 @@ export default function CTASection() {
         </p>
         <Button
           variant="secondary"
-          className="white-gradient-border shadow-buttonshadow"
+          className="white-gradient-border text-center shadow-buttonshadow"
           asChild
         >
           <Link href="/login"> Start practicing for free</Link>
