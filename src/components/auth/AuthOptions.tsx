@@ -62,7 +62,7 @@ const AuthOptions: React.FC = () => {
   }, [userInfo, setFirstVisit, setUserInfo, user, userInfoLoading]);
 
   useEffect(() => {
-    if (user && authenticated && ready && userInfo) {
+    if (user && authenticated && ready) {
       clearExamHistory();
       resetExamData();
       if (isFirstVisit === false) {
