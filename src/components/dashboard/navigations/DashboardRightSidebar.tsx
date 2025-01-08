@@ -39,10 +39,10 @@ const DashboardRightSidebar: React.FC = () => {
       <Card className="w-full p-3 border-gray-200 space-y-3 flex items-center justify-between">
         <div className="flex items-center justify-start gap-2">
           <Image
-            src="/icons/dashboard/leaderboard.svg"
+            src="/icons/dashboard/community.svg"
             alt="leaderboard icon"
-            width={32}
-            height={32}
+            width={34}
+            height={34}
           />
           <div className="flex flex-col items-start justify-start gap-1">
             <h4 className="text-sm font-medium text-muted-500">

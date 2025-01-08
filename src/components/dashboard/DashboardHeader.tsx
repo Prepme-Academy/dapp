@@ -100,6 +100,8 @@ const DashboardHeader: React.FC = () => {
               alt="fire icon"
               width={18}
               height={18}
+              className={cn("", fetchedUserInfo?.totalStreaks !== 0  ? "grayscale-0 opacity-100"
+                : "grayscale opacity-30")}
             />
             {userInfoLoading ? (
               <div className="w-6 aspect-auto bg-gray-300 animatin-pulse" />

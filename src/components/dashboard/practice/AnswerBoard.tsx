@@ -285,6 +285,8 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
             )}
           </div>
         </Card>
+
+        
         <Card className="w-full max-w-[794px] p-3 bg-grey-200 border-grey-200 space-y-3 flex flex-col items-center justify-center">
           <h3 className="text-sm font-normal text-muted-500 text-center flex items-center justify-center gap-2 w-full">
             <Image
