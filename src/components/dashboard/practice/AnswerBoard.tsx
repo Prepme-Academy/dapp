@@ -22,6 +22,11 @@ import { useExamQuestions, useSubmitExam } from "@/lib/actions/exam.action";
 import { formatAxiosErrorMessage } from "@/utils/errors";
 import { AxiosError } from "axios";
 import useFullscreen from "@/hooks/useFullScreen";
+import {
+  SubmitExamRequest,
+  SubmitExamRequestMainQuestion,
+  SubmitExamRequestSubQuestion,
+} from "@/types";
 
 interface AnswerBoardProps {
   id: string;
@@ -61,7 +66,6 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
 
   const topRef = useRef<HTMLDivElement>(null);
 
-  // Custom hook to fetch exam questions
   const {
     data: examData,
     isLoading,
@@ -70,7 +74,6 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   } = useExamQuestions(Number(id), authUserId || "");
   const { mutate: submitExam, isLoading: isSubmitting } = useSubmitExam();
 
-  // Function to handle scrolling to the top
   const scrollToTop = () => {
     if (topRef.current) {
       topRef.current.scrollIntoView({ behavior: "smooth" });
@@ -134,20 +137,61 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const handleSubmit = () => {
     if (!authUserId || !examData) return;
 
-    const questions = examData.data.map((question, index) => ({
-      id: question.id,
-      answered: !!selectedAnswers[index],
-      answer: selectedAnswers[index]
-        ? question.options.find(
-            (option) => option.value === selectedAnswers[index]
-          ) || null
-        : null,
-    }));
+    // Process questions
+    const questions: SubmitExamRequestMainQuestion[] = examData.data.map(
+      (question) => {
+        if (question.type === 4 && question.subQuestions) {
+          // Handle sub-questions
+          const subQuestions: SubmitExamRequestSubQuestion[] =
+            question.subQuestions.map((sub) => ({
+              id: sub.id,
+              externalId: sub.externalId,
+              bg: sub.bg,
+              bg2: sub.bg2,
+              text: sub.text,
+              number: sub.number,
+              mark: sub.mark,
+              explanation: sub.explanation,
+              type: sub.type,
+              isSub: sub.isSub,
+              difficulty: sub.difficulty,
+              createdAt: sub.createdAt,
+              updatedAt: sub.updatedAt,
+              options: sub.options,
+              answered: !!selectedAnswers[sub.id],
+              answer: selectedAnswers[sub.id]
+                ? sub.options.find(
+                    (option) => option.value === selectedAnswers[sub.id]
+                  ) || null
+                : null,
+            }));
+
+          return {
+            id: question.id,
+            type: question.type,
+            subQuestions,
+            answered: subQuestions.every((sub) => sub.answered),
+          };
+        } else {
+          // Handle regular questions
+          return {
+            id: question.id,
+            type: question.type,
+            answered: !!selectedAnswers[question.id],
+            answer: selectedAnswers[question.id]
+              ? question.options?.find(
+                  (option) => option.value === selectedAnswers[question.id]
+                ) || null
+              : null,
+          };
+        }
+      }
+    );
 
     const numOfQuestionsAnswered = questions.filter((q) => q.answered).length;
     const numOfQuestionsNotAnswered = questions.length - numOfQuestionsAnswered;
 
-    const submitData = {
+    const submitData: SubmitExamRequest = {
       numOfQuestionsAnswered,
       numOfQuestionsNotAnswered,
       questions,
@@ -215,6 +259,9 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const totalQuestions = examData.data.length;
   const totalAttemptedQuestions = Object.keys(selectedAnswers).length;
 
+  const currentQuestion = examData?.data[currentQuestionIndex];
+  const isSubQuestion = currentQuestion?.type === 4;
+
   return (
     <Dialog>
       <div ref={topRef} />
@@ -241,52 +288,109 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
             }/${totalQuestions}`}</span>
           </div>
         </div>
-        <Card className="w-full max-w-[635px] mx-auto px-3 py-4 border-grey-500 space-y-3 flex flex-col items-start justify-start">
-          <h2
-            className="w-full text-center text-lg md:text-xl font-medium text-muted-500"
-            dangerouslySetInnerHTML={{
-              __html: examData.data[currentQuestionIndex].text,
-            }}
-          />
-          <div className="space-y-2 w-full">
-            {examData.data[currentQuestionIndex].options.map(
-              (option, index) => (
-                <label
-                  key={index}
-                  className={cn(
-                    "flex items-center space-x-3 border p-3 rounded-lg cursor-pointer",
-                    selectedAnswers[currentQuestionIndex] === option.value
-                      ? "bg-blue-100"
-                      : "hover:bg-gray-100"
-                  )}
-                >
-                  <input
-                    type="radio"
-                    name={`answer-${currentQuestionIndex}`}
-                    className="form-radio h-5 w-5 text-blue-600"
-                    checked={
-                      selectedAnswers[currentQuestionIndex] === option.value
-                    }
-                    onChange={() =>
-                      handleAnswerSelect(currentQuestionIndex, option.value)
-                    }
-                  />
-                  <div className="text-gray-700">
-                    {String.fromCharCode(65 + index)}.{" "}
-                    <div
-                      className="inline"
-                      dangerouslySetInnerHTML={{
-                        __html: option.value,
-                      }}
-                    />
-                  </div>
-                </label>
-              )
-            )}
-          </div>
-        </Card>
+        {isSubQuestion ? (
+          <Card className="w-full max-w-[1051px] grid grid-col-1 lg:grid-cols-[635px_1fr] mx-auto border-grey-500 items-start justify-start">
+            <div className="w-full p-4 lg:border-r-2 lg:border-[#F0F0F0] h-full overflow-auto">
+              <h2
+                className="w-full text-center text-lg md:text-xl font-medium text-muted-500"
+                dangerouslySetInnerHTML={{
+                  __html: currentQuestion.text,
+                }}
+              />
+            </div>
+            <div className="space-y-2 w-full p-4">
+              {currentQuestion.subQuestions.map((subQuestion, subIndex) => (
+                <div key={subQuestion.id}>
+                  <h3 className="text-lg font-medium">{`Question ${
+                    subIndex + 1
+                  }`}</h3>
+                  {subQuestion.options.map((option, index) => (
+                    <label
+                      key={index}
+                      className={cn(
+                        "flex items-center space-x-3 border p-3 rounded-lg cursor-pointer",
+                        selectedAnswers[subQuestion.id] === option.value
+                          ? "bg-blue-100"
+                          : "hover:bg-gray-100"
+                      )}
+                    >
+                      <input
+                        type="radio"
+                        name={`answer-${subQuestion.id}`}
+                        className="form-radio h-5 w-5 text-blue-600"
+                        checked={
+                          selectedAnswers[subQuestion.id] === option.value
+                        }
+                        onChange={() =>
+                          handleAnswerSelect(subQuestion.id, option.value)
+                        }
+                      />
+                      <div className="text-gray-700">
+                        {String.fromCharCode(65 + index)}.{" "}
+                        <div
+                          className="inline"
+                          dangerouslySetInnerHTML={{
+                            __html: option.value,
+                          }}
+                        />
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </Card>
+        ) : (
+          examData &&
+          examData.data &&
+          examData.data[currentQuestionIndex] && (
+            <Card className="w-full max-w-[635px] mx-auto px-3 py-4 border-grey-500 space-y-3 flex flex-col items-start justify-start">
+              <h2
+                className="w-full text-center text-lg md:text-xl font-medium text-muted-500"
+                dangerouslySetInnerHTML={{
+                  __html: examData.data[currentQuestionIndex].text,
+                }}
+              />
+              <div className="space-y-2 w-full">
+                {examData.data[currentQuestionIndex].options?.map(
+                  (option, index) => (
+                    <label
+                      key={index}
+                      className={cn(
+                        "flex items-center space-x-3 border p-3 rounded-lg cursor-pointer",
+                        selectedAnswers[currentQuestionIndex] === option.value
+                          ? "bg-blue-100"
+                          : "hover:bg-gray-100"
+                      )}
+                    >
+                      <input
+                        type="radio"
+                        name={`answer-${currentQuestionIndex}`}
+                        className="form-radio h-5 w-5 text-blue-600"
+                        checked={
+                          selectedAnswers[currentQuestionIndex] === option.value
+                        }
+                        onChange={() =>
+                          handleAnswerSelect(currentQuestionIndex, option.value)
+                        }
+                      />
+                      <div className="text-gray-700">
+                        {String.fromCharCode(65 + index)}.{" "}
+                        <div
+                          className="inline"
+                          dangerouslySetInnerHTML={{
+                            __html: option.value,
+                          }}
+                        />
+                      </div>
+                    </label>
+                  )
+                )}
+              </div>
+            </Card>
+          )
+        )}
 
-        
         <Card className="w-full max-w-[794px] p-3 bg-grey-200 border-grey-200 space-y-3 flex flex-col items-center justify-center">
           <h3 className="text-sm font-normal text-muted-500 text-center flex items-center justify-center gap-2 w-full">
             <Image

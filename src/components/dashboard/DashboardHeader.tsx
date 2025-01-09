@@ -16,6 +16,7 @@ import useClientStore from "@/store/clientStore";
 import { cn } from "@/lib/utils";
 import useExamStore from "@/store/examStore";
 import { useUserInfo } from "@/lib/actions";
+import Cookies from "js-cookie";
 
 const DashboardHeader: React.FC = () => {
   const { ready, authenticated, logout, user } = usePrivy();
@@ -31,6 +32,7 @@ const DashboardHeader: React.FC = () => {
       resetState();
       resetExamData();
       clearExamHistory();
+      Cookies.remove("onboarded");
       await logout();
       router.replace("/login");
       window.location.reload();
