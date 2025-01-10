@@ -16,6 +16,7 @@ import useClientStore from "@/store/clientStore";
 import { cn } from "@/lib/utils";
 import useExamStore from "@/store/examStore";
 import { useUserInfo } from "@/lib/actions";
+import Cookies from "js-cookie";
 
 const DashboardHeader: React.FC = () => {
   const { ready, authenticated, logout, user } = usePrivy();
@@ -31,6 +32,7 @@ const DashboardHeader: React.FC = () => {
       resetState();
       resetExamData();
       clearExamHistory();
+      Cookies.remove("onboarded");
       await logout();
       router.replace("/login");
       window.location.reload();
@@ -98,6 +100,8 @@ const DashboardHeader: React.FC = () => {
               alt="fire icon"
               width={18}
               height={18}
+              className={cn("", fetchedUserInfo?.totalStreaks !== 0  ? "grayscale-0 opacity-100"
+                : "grayscale opacity-30")}
             />
             {userInfoLoading ? (
               <div className="w-6 aspect-auto bg-gray-300 animatin-pulse" />

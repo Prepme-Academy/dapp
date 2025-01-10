@@ -142,3 +142,18 @@ select {
   height: 100vh;
   overflow-y: auto;
 }
+
+
+.type::-webkit-scrollbar {
+  height: 8px; 
+}
+
+.type::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5); 
+  border-radius: 10px; 
+}
+
+.type::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1); 
+  border-radius: 10px; 
+}

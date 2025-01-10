@@ -171,7 +171,30 @@ export interface StartExamResponse {
   };
 }
 
-export interface ExamQuestion {
+export interface Option {
+  id: number;
+  label: string;
+  value: string;
+}
+
+export interface SubQuestion {
+  id: number;
+  externalId: number;
+  bg: string;
+  bg2: string;
+  text: string;
+  number: number | null;
+  mark: number | null;
+  explanation: string | null;
+  type: number;
+  isSub: boolean;
+  difficulty: number;
+  createdAt: string;
+  updatedAt: string;
+  options: Option[];
+}
+
+export interface MainQuestion {
   id: number;
   externalId: number;
   bg: string;
@@ -179,34 +202,52 @@ export interface ExamQuestion {
   text: string;
   number: number | null;
   mark: number;
-  explanation: string;
+  explanation: string | null;
+  type: number;
+  isSub: boolean;
   difficulty: number;
   createdAt: string;
   updatedAt: string;
-  options: {
-    id: number;
-    label: string;
-    value: string;
-  }[];
+  subQuestions: SubQuestion[];
+  options?: Option[];
 }
 
 export interface ExamQuestionsResponse {
   success: boolean;
-  data: ExamQuestion[];
+  data: MainQuestion[];
+}
+
+export interface SubmitExamRequestSubQuestion {
+  id: number;
+  externalId: number;
+  bg: string;
+  bg2: string;
+  text: string;
+  number: number | null;
+  mark: number | null;
+  explanation: string | null;
+  type: number;
+  isSub: boolean;
+  difficulty: number;
+  createdAt: string;
+  updatedAt: string;
+  options: Option[];
+  answered: boolean;
+  answer: Option | null;
+}
+
+export interface SubmitExamRequestMainQuestion {
+  id: number;
+  type: number;
+  subQuestions?: SubQuestion[];
+  answered: boolean;
+  answer?: Option | null;
 }
 
 export interface SubmitExamRequest {
   numOfQuestionsAnswered: number;
   numOfQuestionsNotAnswered: number;
-  questions: {
-    id: number;
-    answered: boolean;
-    answer: {
-      id: number;
-      label: string;
-      value: string;
-    } | null;
-  }[];
+  questions: SubmitExamRequestMainQuestion[];
   endDate: string;
   duration: number;
 }
