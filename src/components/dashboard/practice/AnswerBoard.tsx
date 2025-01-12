@@ -353,7 +353,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
           <Card className="w-full max-w-[1051px] h-[1056px] overflow-hidden grid grid-col-1 lg:grid-cols-[635px_1fr] mx-auto border-grey-500 items-start justify-start">
             <div className="w-full p-4 lg:border-r-2 lg:border-[#F0F0F0] h-full overflow-auto">
               <h2
-                className="w-full text-center text-lg md:text-xl font-medium text-muted-500"
+                className="w-full text-start text-lg md:text-xl text-muted-500"
                 dangerouslySetInnerHTML={{
                   __html: currentQuestion.text,
                 }}
@@ -365,6 +365,12 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
                   <h3 className="text-lg font-medium">{`Question ${
                     subIndex + 1
                   }`}</h3>
+                  <h4
+                    className="w-full text-base font-normal text-muted-500"
+                    dangerouslySetInnerHTML={{
+                      __html: subQuestion.text,
+                    }}
+                  />
                   {subQuestion.options.map((option, index) => (
                     <label
                       key={index}

@@ -61,15 +61,19 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
                       />
                       <RenderScoreIcon status={status} />
                     </CardHeader>
-                    <div className="flex items-center justify-start gap-1 text-xs">
-                      <span className="font-normal text-[10px]">Answer: </span>
-                      <span
-                        className="font-medium"
-                        dangerouslySetInnerHTML={{
-                          __html: answer.userOption?.value || "",
-                        }}
-                      />
-                    </div>
+                    {!answer.subAnswers && (
+                      <div className="flex items-center justify-start gap-1 text-xs">
+                        <span className="font-normal text-[10px]">
+                          Answer:{" "}
+                        </span>
+                        <span
+                          className="font-medium"
+                          dangerouslySetInnerHTML={{
+                            __html: answer.userOption?.value || "",
+                          }}
+                        />
+                      </div>
+                    )}
                   </Card>
                 </DialogTrigger>
               </li>
