@@ -34,6 +34,7 @@ export default function NotificationPage() {
       "",
     authId: user?.id || "",
   };
+  console.log("🚀 ~ NotificationPage ~ RegisterUser:", RegisterUser);
 
   const OnBoardingUser: OnboardUserPayload = {
     username: username,

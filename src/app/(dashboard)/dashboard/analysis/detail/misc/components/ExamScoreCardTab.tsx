@@ -11,6 +11,8 @@ import {
 import { cn } from "@/lib/utils";
 import { ExamAnalysisResponse } from "@/types";
 import { useState } from "react";
+import SubQuestionAnalysis from "./SubQuestionAnalysis";
+import RegularQuestionAnalysis from "./RegularQuestionAnalysis";
 
 interface ExamScoreCardTabProps {
   id: string | string[] | undefined;
@@ -50,7 +52,7 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
                 >
                   <CardHeader className="px-0 py-0 items-start justify-between flex-row gap-3 space-y-0 w-full">
                     <h4
-                      className="w-32 text-sm font-medium truncate"
+                      className="w-32 h-32 text-sm font-medium truncate"
                       dangerouslySetInnerHTML={{
                         __html: answer.question.text,
                       }}
@@ -114,65 +116,15 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
               </div>
             </DialogTitle>
           </DialogHeader>
-          <div className="w-full space-y-3">
-            <h2
-              className="text-sm font-medium text-muted-500"
-              dangerouslySetInnerHTML={{
-                __html: userAnswers[selectedQuestion].question.text,
-              }}
+          {userAnswers[selectedQuestion].question.hasSub &&
+          userAnswers[selectedQuestion].subAnswers ? (
+            <SubQuestionAnalysis
+              question={userAnswers[selectedQuestion]}
+              subAnswers={userAnswers[selectedQuestion].subAnswers}
             />
-            <div className="space-y-2 w-full">
-              {userAnswers[selectedQuestion].question.options.map(
-                (option, index) => (
-                  <label
-                    key={index}
-                    className={cn(
-                      "flex items-center space-x-3 border p-3 rounded-lg relative",
-                      userAnswers[selectedQuestion].correct_option.value ===
-                        option.value
-                        ? "bg-[#DEFFC8] border-2 border-[#63B42B]"
-                        : userAnswers[selectedQuestion].userOption?.value ===
-                          option.value
-                        ? "bg-[#FFD1D1] border-2 border-[#E6485D]"
-                        : ""
-                    )}
-                  >
-                    <span className="text-gray-700">
-                      {String.fromCharCode(65 + index)}.{" "}
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: option.value,
-                        }}
-                      />
-                    </span>
-                    {userAnswers[selectedQuestion].correct_option.value ===
-                      option.value && (
-                      <span className="text-sm font-normal text-muted-500 absolute right-4 top-3 hidden lg:block">
-                        correct answer
-                      </span>
-                    )}
-                    {userAnswers[selectedQuestion].userOption?.value ===
-                      option.value && (
-                      <span className="text-sm font-normal text-muted-500 absolute right-4 top-3 hidden lg:block">
-                        your answer
-                      </span>
-                    )}
-                  </label>
-                )
-              )}
-            </div>
-            <h1 className="text-sm font-medium text-muted-500">
-              Answer Explanation:
-            </h1>
-            <Card className="w-full p-3 border-grey-200 space-y-3 flex flex-col items-start justify-start">
-              <p
-                className="text-sm font-normal text-[#4E5153]"
-                dangerouslySetInnerHTML={{
-                  __html: userAnswers[selectedQuestion].question.explanation,
-                }}
-              />
-            </Card>
-          </div>
+          ) : (
+            <RegularQuestionAnalysis question={userAnswers[selectedQuestion]} />
+          )}
         </DialogContent>
       )}
     </Dialog>

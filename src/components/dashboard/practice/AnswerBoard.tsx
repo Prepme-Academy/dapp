@@ -50,6 +50,11 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
 
   const [currentQuestionIndex, setCurrentQuestionIndex] =
     useState(initialQuestionIndex);
+
+  const [currentSubQuestionIndex, setCurrentSubQuestionIndex] = useState<
+    number | null
+  >(null);
+
   const { toggleFullscreen } = useFullscreen(() => {
     handleSubmit();
   });
@@ -117,21 +122,62 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     });
   };
 
-  const handleNavigation = (index: number) => {
-    setCurrentQuestionIndex(index);
+  const handleNavigation = (questionIndex: number, subIndex?: number) => {
+    const question = examData?.data[questionIndex];
+    setCurrentQuestionIndex(questionIndex);
+    setCurrentSubQuestionIndex(
+      !question?.subQuestions || subIndex === undefined ? null : subIndex
+    );
     scrollToTop();
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex < (examData?.data.length || 0) - 1) {
-      handleNavigation(currentQuestionIndex + 1);
+    // If there's no exam data or we're at the last question, do nothing
+    if (!examData || currentQuestionIndex >= examData.data.length - 1) return;
+  
+    const currentQuestion = examData.data[currentQuestionIndex];
+    const nextQuestion = examData.data[currentQuestionIndex + 1];
+
+    if (currentQuestion?.subQuestions && currentSubQuestionIndex !== null) {
+      if (currentSubQuestionIndex < currentQuestion.subQuestions.length - 1) {
+        setCurrentSubQuestionIndex(currentSubQuestionIndex + 1);
+      } 
+      else {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setCurrentSubQuestionIndex(nextQuestion?.subQuestions?.length ? 0 : null);
+      }
+    } 
+    else {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setCurrentSubQuestionIndex(nextQuestion?.subQuestions?.length ? 0 : null);
     }
+  
+    scrollToTop();
   };
 
   const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      handleNavigation(currentQuestionIndex - 1);
+    // If we're on a sub-question
+    if (currentSubQuestionIndex !== null) {
+      // If there are previous sub-questions
+      if (currentSubQuestionIndex > 0) {
+        setCurrentSubQuestionIndex(currentSubQuestionIndex - 1);
+      }
+      // If we're at the first sub-question, move to main question
+      else {
+        setCurrentSubQuestionIndex(null);
+      }
     }
+    // If we're on a regular question
+    else if (currentQuestionIndex > 0) {
+      const previousQuestion = examData?.data[currentQuestionIndex - 1];
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      // If previous question has sub-questions, go to last sub-question
+      if (previousQuestion?.subQuestions?.length) {
+        setCurrentSubQuestionIndex(previousQuestion.subQuestions.length - 1);
+      }
+    }
+
+    scrollToTop();
   };
 
   const handleSubmit = () => {
@@ -223,9 +269,6 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
-  const progressPercentage =
-    (Object.keys(selectedAnswers).length / (examData?.data.length || 1)) * 100;
-
   if (isLoading) {
     return (
       <div className="w-full h-full overflow-auto flex md:items-center md:justify-center">
@@ -247,7 +290,10 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
           <Button
             variant={"unstyled"}
             className="bg-primary-400 text-white w-fit px-6 h-9 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-            onClick={() => router.replace("/dashboard/practice")}
+            onClick={() => {
+              router.replace("/dashboard/practice");
+              toggleFullscreen();
+            }}
           >
             Go to practice
           </Button>
@@ -256,8 +302,34 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     );
   }
 
-  const totalQuestions = examData.data.length;
-  const totalAttemptedQuestions = Object.keys(selectedAnswers).length;
+  const totalQuestions =
+    examData?.data.reduce((acc, question) => {
+      if (!question.subQuestions?.length) {
+        return acc + 1;
+      }
+      return acc + question.subQuestions.length;
+    }, 0) || 0;
+
+  const getAttemptedQuestions = () => {
+    return (
+      examData?.data.reduce((acc, question) => {
+        if (!question.subQuestions?.length) {
+          return acc + (selectedAnswers[question.id] ? 1 : 0);
+        }
+        return (
+          acc +
+          question.subQuestions.reduce(
+            (subAcc, subQuestion) =>
+              subAcc + (selectedAnswers[subQuestion.id] ? 1 : 0),
+            0
+          )
+        );
+      }, 0) || 0
+    );
+  };
+
+  const totalAttemptedQuestions = getAttemptedQuestions();
+  const progressPercentage = (totalAttemptedQuestions / totalQuestions) * 100;
 
   const currentQuestion = examData?.data[currentQuestionIndex];
   const isSubQuestion = currentQuestion?.type === 4;
@@ -289,7 +361,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
           </div>
         </div>
         {isSubQuestion ? (
-          <Card className="w-full max-w-[1051px] grid grid-col-1 lg:grid-cols-[635px_1fr] mx-auto border-grey-500 items-start justify-start">
+          <Card className="w-full max-w-[1051px] h-[1056px] overflow-hidden grid grid-col-1 lg:grid-cols-[635px_1fr] mx-auto border-grey-500 items-start justify-start">
             <div className="w-full p-4 lg:border-r-2 lg:border-[#F0F0F0] h-full overflow-auto">
               <h2
                 className="w-full text-center text-lg md:text-xl font-medium text-muted-500"
@@ -298,9 +370,9 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
                 }}
               />
             </div>
-            <div className="space-y-2 w-full p-4">
+            <div className="space-y-2 w-full p-4 h-full overflow-auto">
               {currentQuestion.subQuestions.map((subQuestion, subIndex) => (
-                <div key={subQuestion.id}>
+                <div key={subQuestion.id} className="space-y-3">
                   <h3 className="text-lg font-medium">{`Question ${
                     subIndex + 1
                   }`}</h3>
@@ -402,32 +474,70 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
             <span> Question route</span>
           </h3>
           <div className="grid grid-cols-8 md:grid-cols-10 lg:grid-cols-20 gap-2 justify-items-center">
-            {Array.from({ length: totalQuestions }, (_, i) => (
-              <button
-                key={i}
-                className={`p-2 text-center border rounded-md ${
-                  selectedAnswers[i] ? "bg-[#77C93E] text-white" : "bg-gray-100"
-                }`}
-                onClick={() => handleNavigation(i)}
-                disabled={timeLeft === 0}
-              >
-                {i + 1}
-              </button>
-            ))}
+            {examData?.data.map((question, index) => {
+              // If it's a regular question (no sub-questions)
+              if (!question.subQuestions?.length) {
+                return (
+                  <button
+                    key={question.id}
+                    className={`p-2 text-center border rounded-md ${
+                      selectedAnswers[question.id]
+                        ? "bg-[#77C93E] text-white"
+                        : "bg-gray-100"
+                    }`}
+                    onClick={() => handleNavigation(index)}
+                    disabled={timeLeft === 0}
+                  >
+                    {index + 1}
+                  </button>
+                );
+              }
+
+              // If it's a question with sub-questions
+              return (
+                <button
+                  key={question.id}
+                  className={cn(
+                    "p-2 text-center border rounded-md transition-all duration-200",
+                    question.subQuestions.every(
+                      (sub) => selectedAnswers[sub.id]
+                    )
+                      ? "bg-[#77C93E] text-white border-[#77C93E] hover:bg-[#68b233]"
+                      : question.subQuestions.some(
+                          (sub) => selectedAnswers[sub.id]
+                        )
+                      ? "bg-[#a8e280] text-white border-[#a8e280] hover:bg-[#95c973]"
+                      : "bg-gray-100 hover:bg-gray-200 border-gray-200",
+                    timeLeft === 0 && "opacity-50 cursor-not-allowed"
+                  )}
+                  onClick={() => handleNavigation(index)}
+                  disabled={timeLeft === 0}
+                >
+                  {index + 1}
+                </button>
+              );
+            })}
           </div>
         </Card>
+
         <div className="flex items-center justify-between pt-6 w-full max-w-[794px] border-t border-grey-200">
           <Button
             type="button"
             variant={"unstyled"}
             onClick={handlePrevious}
             className="bg-secondary text-primary-400 hover:bg-secondary/80 w-fit h-9 px-9 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:pointer-events-auto disabled:!cursor-not-allowed transition-all duration-300"
-            disabled={currentQuestionIndex === 0 || timeLeft === 0}
+            disabled={
+              (currentQuestionIndex === 0 &&
+                currentSubQuestionIndex === null) ||
+              timeLeft === 0
+            }
           >
             Previous
           </Button>
 
-          {currentQuestionIndex === totalQuestions - 1 || timeLeft === 0 ? (
+          {(currentQuestionIndex === examData?.data.length - 1 &&
+            currentSubQuestionIndex === null) ||
+          timeLeft === 0 ? (
             <DialogTrigger asChild>
               <Button
                 variant={"unstyled"}

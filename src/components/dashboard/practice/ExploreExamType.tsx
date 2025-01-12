@@ -4,13 +4,12 @@ import { Button } from "@/components/ui/button";
 import { useExamTypes } from "@/lib/actions/exam.action";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const ExploreExamType: React.FC = () => {
   const searchParams = useSearchParams();
   const { data, error, isLoading } = useExamTypes();
   const router = useRouter();
-  const pathname = usePathname();
 
   const currentType = searchParams.get("type") || "";
 
@@ -54,14 +53,11 @@ const ExploreExamType: React.FC = () => {
     <div className="flex flex-col items-start justify-start gap-4">
       <h2 className="text-xl font-medium text-muted-500">Explore Exam Types</h2>
       <div className="w-full overflow-hidden hover:overflow-y-hidden hover:overflow-x-auto type pb-4">
-        <div className="w-max grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+        <div className="w-max grid grid-cols-8 gap-4">
           <Button
             variant={"unstyled"}
             className={cn(
-              "w-full min-h-[105px] rounded-lg bg-grey-400 flex flex-col items-center justify-center gap-4 p-3 cursor-pointer",
-              pathname === "/dashboard/practice"
-                ? "border-2 border-primary-500"
-                : ""
+              "w-full min-h-[105px] rounded-lg bg-grey-400 flex flex-col items-center justify-center gap-4 p-3 cursor-pointer"
             )}
             onClick={() => router.push("/dashboard/practice")}
           >

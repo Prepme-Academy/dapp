@@ -109,7 +109,7 @@ const StartPracticeSearch: React.FC = () => {
           Search
         </Button>
       </CardHeader>
-      <CardContent className="w-full px-0 pb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+      <CardContent className="w-full px-0 pb-0 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
         <div className="flex flex-col items-start justify-start gap-2 w-full">
           <label
             htmlFor="exam_type"
@@ -154,7 +154,7 @@ const StartPracticeSearch: React.FC = () => {
             isDisabled={!selectedExam}
           />
         </div>
-        <div className="flex flex-col items-start justify-start gap-2 w-full">
+        <div className="flex flex-col items-start justify-start gap-2 w-full col-span-2 xl:col-span-1">
           <label htmlFor="year" className="text-sm font-normal text-muted-500">
             Year
           </label>

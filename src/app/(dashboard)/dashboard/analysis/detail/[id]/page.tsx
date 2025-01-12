@@ -38,9 +38,6 @@ export default function AnalysisInfoPage() {
   }
 
   const { currentPage, pageSize, totalCount } = analysisData.data;
-  // console.log("🚀 ~ AnalysisInfoPage ~ totalCount:", totalCount);
-  // console.log("🚀 ~ AnalysisInfoPage ~ pageSize:", pageSize);
-  // console.log("🚀 ~ AnalysisInfoPage ~ currentPage:", currentPage);
 
   const pageContent =
     currentTab === "exam-scorecard" ? (

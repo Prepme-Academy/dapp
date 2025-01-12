@@ -282,6 +282,80 @@ export interface SubmitExamResponse {
   };
 }
 
+export interface Question {
+  id: number;
+  externalId: number;
+  text: string;
+  mark: number;
+  explanation: string;
+  difficulty: number;
+  options: Option[];
+  hasSub: boolean;
+  isSub: boolean;
+}
+
+export interface SubAnswer {
+  id: number;
+  externalId: number;
+  bg: string;
+  bg2: string;
+  text: string;
+  number: number | null;
+  mark: number | null;
+  explanation: string | null;
+  difficulty: number;
+  createdAt: string;
+  updatedAt: string;
+  hasSub: boolean;
+  isSub: boolean;
+  correct: boolean | null;
+  userOption: Option | null;
+  correct_option: Option;
+  question?: Question; 
+}
+
+export interface UserAnswer {
+  id: number;
+  externalId: number;
+  text: string;
+  mark: number;
+  explanation: string;
+  difficulty: number;
+  correct: boolean | null;
+  question: Question;
+  userOption: Option | null;
+  correct_option: Option;
+  subAnswers?: SubAnswer[];
+}
+
+export interface ExamTest {
+  id: number;
+  noOfQuestions: number;
+  noOfAttempts: number;
+  title: string;
+  instructions: string;
+  slug: string;
+  duration: number;
+  marks: number;
+  xp: number;
+  year: number | null;
+  exam: {
+    id: number;
+    name: string;
+    created_at: string;
+    code: string | undefined;
+    logo: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  subject: {
+    id: number;
+    name: string;
+    code: string | null;
+    years: string[];
+  };
+}
+
 export interface ExamAnalysisResponse {
   success: boolean;
   data: {
@@ -299,65 +373,8 @@ export interface ExamAnalysisResponse {
     completed: boolean;
     createdAt: string;
     xpEarned: string;
-    examTest: {
-      id: number;
-      noOfQuestions: number;
-      noOfAttempts: number;
-      title: string;
-      instructions: string;
-      slug: string;
-      duration: number;
-      marks: number;
-      xp: number;
-      year: number;
-      exam: {
-        id: number;
-        name: string;
-        created_at: string;
-        code: string | undefined;
-        logo: string;
-        createdAt: string;
-        updatedAt: string;
-      };
-      subject: {
-        id: number;
-        name: string;
-        code: string | null;
-        years: string[];
-      };
-    };
-    userAnswers: {
-      id: number;
-      externalId: number;
-      text: string;
-      mark: number;
-      explanation: string;
-      difficulty: number;
-      correct: boolean | null;
-      question: {
-        id: number;
-        externalId: number;
-        text: string;
-        mark: number;
-        explanation: string;
-        difficulty: number;
-        options: {
-          id: number;
-          label: string;
-          value: string;
-        }[];
-      };
-      userOption: {
-        id: number;
-        label: string;
-        value: string;
-      } | null;
-      correct_option: {
-        id: number;
-        label: string;
-        value: string;
-      };
-    }[];
+    examTest: ExamTest;
+    userAnswers: UserAnswer[];
   };
 }
 
