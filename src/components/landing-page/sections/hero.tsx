@@ -1,91 +1,103 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useHeroHeightStore } from "../store/hero";
-import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function HeroSection() {
-  const { setHeight } = useHeroHeightStore();
-  const heroImageRef = useRef<HTMLElement | null>(null);
-  const router = useRouter();
-
-  function updateHeight() {
-    if (heroImageRef.current) {
-      setHeight(heroImageRef.current.getBoundingClientRect().height);
-    }
-  }
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver(updateHeight);
-    const currentHeroImageRef = heroImageRef.current;
-
-    if (currentHeroImageRef) {
-      resizeObserver.observe(currentHeroImageRef);
-    }
-
-    return () => {
-      if (currentHeroImageRef) {
-        resizeObserver.unobserve(currentHeroImageRef);
-      }
-    };
-  }, []);
-
   return (
     <section
       data-label="hero"
       aria-label="hero"
-      className="md:min-h-dvh relative w-full text-white flex flex-col items-center px-5 py-5 lg:px-10 pb-40 lg:pb-72 space-y-20 md:space-y-[7rem] bg-[#1877f2] lg:bg-herobg lg:bg-no-repeat lg:bg-center"
+      className="text-white relative overflow-hidden"
     >
-      <div data-label="prepme-logo" aria-label="prepme-logo">
+      <div className="pt-[1.75rem] lg:pt-[2.765625rem] pb-[11.5625rem] lg:pb-[19.3375rem] isolate relative bg-[#1877f2] px-[0.8125rem]">
         <Image
           src="/icons/logo-white.svg"
           alt="Prepme Logo"
-          width={144}
-          height={144}
-          className="w-28 sm:w-36"
+          width={158}
+          height={39.5}
+          data-label="prepme-logo"
+          aria-label="prepme-logo"
+          className="hidden md:block mb-[1.203125rem] mx-auto"
+          priority
         />
-      </div>
-      <div className="flex flex-col items-center text-center space-y-5">
-        <h1 className="text-4xl md:text-5xl xl:text-6xl font-semibold font-fredoka">
-          The Fun way to conquer <br className="hidden sm:block" /> Exams with
-          Confidence
-        </h1>
-        <p className="text-lg">
-          Turn Practice into Progress, Progress into Rewards
-        </p>
-        <Button
-          variant="secondary"
-          className="w-[240px] white-gradient-border shadow-buttonshadow"
-          onClick={() => router.push("/login")}
-        >
-          Get Started
-        </Button>
-        <div className="flex items-center space-x-1">
-          <span>Powered by</span>
-          <Image
-            src="/icons/logo-oc.svg"
-            width={20}
-            height={20}
-            alt="Open Campus Logo"
-          />
-          <span className="font-medium text-lg">Open Campus</span>
-        </div>
-      </div>
-      <aside
-        className="absolute -bottom-[30%] md:-bottom-[67%] lg:-bottom-[90%] left-1/2 transform -translate-x-1/2 -translate-y-1/2  w-[80%] mx-auto"
-        ref={heroImageRef}
-      >
         <Image
-          className="w-full h-full max-w-[1225px] object-contain"
-          src="/background/svg/heroImage.svg"
-          alt="hero image"
-          width={1255}
-          height={720}
+          src="/icons/logo-white.svg"
+          alt="Prepme Logo"
+          width={98}
+          height={25}
+          data-label="prepme-logo"
+          aria-label="prepme-logo"
+          className="md:hidden block mb-[1.1875rem] mx-auto"
+          priority
         />
-      </aside>
+        <span className="hidden md:flex items-center justify-center absolute -z-10 -top-16 left-[4.3rem] w-full h-full">
+          <Image
+            src="/background/svg/pattern.svg"
+            alt="Pattern"
+            width={1115}
+            height={448}
+            className="object-contain max-w-full"
+            loading="eager"
+          />
+        </span>
+        <span className="md:hidden flex items-center justify-center absolute -z-10 left-0 top-10 w-full h-full">
+          <Image
+            src="/background/svg/pattern-mobile.svg"
+            alt="Pattern"
+            width={306.63}
+            height={504.87}
+            className="object-cover max-w-full"
+            loading="eager"
+          />
+        </span>
+        <div className="pt-[7.5rem] lg:pt-[5.5625rem] text-center relative isolate">
+          <h1 className="text-[2.75rem] leading-[3.3275rem] mb-[0.875rem] md:text-5xl lg:text-[3.5rem] xl:text-[4rem] font-semibold font-fredoka">
+            The Fun way to conquer <br className="hidden sm:block" /> Exams with
+            Confidence
+          </h1>
+          <p className="text-base lg:text-xl mb-[2.1875rem]">
+            Turn Practice into Progress, Progress into Rewards
+          </p>
+          <Button
+            asChild
+            variant="secondary"
+            className="!py-3 h-auto px-5 text-sm lg:text-base text-center !max-w-[15.125rem] block w-full mx-auto white-gradient-border shadow-buttonshadow"
+          >
+            <Link href="/login">Get Started</Link>
+          </Button>
+          <div className="flex items-center mt-[2.1875rem] lg:mt-3 text-xs mx-auto w-fit space-x-2">
+            <span>Powered by</span>
+            <Image
+              src="/icons/logo-oc.svg"
+              width={36.86}
+              height={35.6}
+              alt="Open Campus Logo"
+              loading="eager"
+            />
+            <span className="font-bold text-[0.948125rem] lg:text-[1.29375rem]">
+              Open Campus
+            </span>
+          </div>
+        </div>
+        <Image
+          src="/background/svg/paper-cut.svg"
+          alt="Paper cut"
+          width={1535}
+          height={65.92}
+          className="absolute -bottom-16 left-0 w-full object-cover h-[4.12rem]"
+          loading="eager"
+        />
+      </div>
+      <Image
+        className="px-[0.8125rem] sm:mx-auto object-contain max-w-full relative z-50 -mt-[6rem] md:-mt-[8rem] lg:-mt-[12rem]"
+        src="/background/prepme.png"
+        alt="hero image"
+        width={1255}
+        height={720}
+        loading="eager"
+      />
     </section>
   );
 }

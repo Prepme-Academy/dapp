@@ -92,6 +92,17 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        shark: "#28292A",
+        alabaster: "#F8F9FA",
+        "royal-blue": "#1570EF",
+        mercury: "#E1E1E1",
+        "mercury-2": "#E6E6E6",
+        abbey: "#515356",
+        shaft: "#2C2D2E",
+        athens: "#EEEEF0",
+        azure: "#1877F2",
+        "corn-flower-blue": "#63A2F9",
+        boulder: "#7A7C7F",
       },
       keyframes: {
         "accordion-down": {
@@ -133,7 +144,7 @@ export default {
         xxl: "1450px",
       },
       gridTemplateColumns: {
-        '20': 'repeat(20, minmax(0, 1fr))',
+        "20": "repeat(20, minmax(0, 1fr))",
       },
     },
   },

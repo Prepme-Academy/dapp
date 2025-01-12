@@ -1,13 +1,13 @@
 "use client";
 
-import one from "../assets/features/one.svg";
-import two from "../assets/features/two.svg";
-import three from "../assets/features/three.svg";
-import four from "../assets/features/four.svg";
-import { cn } from "@/lib/utils";
-import Feature from "../Feature";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import four from "../assets/features/four.svg";
+import one from "../assets/features/one.svg";
+import three from "../assets/features/three.svg";
+import two from "../assets/features/two.svg";
+import Feature from "../Feature";
 
 const features = [
   {
@@ -37,25 +37,27 @@ const features = [
 ];
 
 export default function FeatureSection() {
-  const router = useRouter();
   return (
     <section
       data-label="features"
       aria-label="features"
       className={cn(
-        "px-4 sm:p-10 bg-neutral-100 space-y-20 py-20 flex flex-col items-center"
+        "px-4 py-[5rem] lg:py-[6.9375rem] bg-alabaster flex flex-col items-center"
       )}
     >
-      <h1 className="text-3xl sm:text-4xl font-semibold text-center">
+      <h1 className="text-[2rem] leading-[2.42rem] lg:text-[3rem] lg:leading-[3.63rem] mb-[2.8125rem] lg:mb-[4.1875rem] text-shark font-semibold text-center">
         Study Smart, <br className="sm:hidden" /> Earn Big
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-10 w-full md:w-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-[3.625rem] w-full md:w-auto max-w-[77.5rem] mx-auto">
         {features.map((details, index) => (
           <Feature {...details} key={index} />
         ))}
       </div>
-      <Button className="w-[225px] bg-primary-400 text-white gradient-border shadow-buttonshadow outline-none" onClick={() => router.push("/login")}>
-        Start practicing
+      <Button
+        className="!max-w-[14.0625rem] !h-auto text-center !w-full !px-4 !py-[0.625rem] block lg:text-[1.091875rem] text-sm bg-primary-400 text-white gradient-border shadow-buttonshadow outline-none"
+        asChild
+      >
+        <Link href="/login">Start practicing</Link>
       </Button>
     </section>
   );

@@ -48,23 +48,25 @@ export default function FAQSection() {
     <section
       data-label="frequently-asked-questions"
       aria-label="frequently-asked-questions"
-      className="w-full"
+      className="w-full lg:pt-[4.25rem] lg:pb-[4.25rem] pt-[3rem] md:pt-[5rem] pb-[5rem] px-4"
     >
-      <h1 className="text-3xl sm:text-4xl font-semibold text-center">
+      <h1 className="text-[2rem] leading-[2.42rem] lg:text-[3rem] lg:leading-[3.63rem] mb-[3.25rem] lg:mb-[3.1875rem] font-semibold text-center">
         Frequently Asked Questions
       </h1>
-      <div className="w-full md:max-w-3xl mx-auto p-5 md:p-10">
-        <Accordion type="single" collapsible className="space-y-5">
+      <div className="w-full max-w-[43.0625rem] mx-auto">
+        <Accordion type="single" collapsible className="space-y-4">
           {faqs.map((item, index) => (
             <AccordionItem
               key={index}
               value={`question-${index + 1}`}
-              className="border py-2 px-5 rounded-lg"
+              className="border border-mercury p-6 text-shark rounded-lg"
             >
-              <AccordionTrigger className="font-medium text-start">
+              <AccordionTrigger className="font-medium mb-1 text-base !no-underline text-start">
                 {item.question}
               </AccordionTrigger>
-              <AccordionContent>{item.answer}</AccordionContent>
+              <AccordionContent className="text-sm">
+                {item.answer}
+              </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>

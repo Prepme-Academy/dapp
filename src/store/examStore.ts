@@ -36,8 +36,8 @@ const useExamStore = create<ExamStore>()(
     }),
     {
       name: "prepme-academy-exam-store",
-      onRehydrateStorage: () => (state) => {
-        console.log("Rehydrated Exam State:", state);
+      onRehydrateStorage: () => () => {
+        // console.log("Rehydrated Exam State:", state);
       },
     } as PersistOptions<ExamStore>
   )

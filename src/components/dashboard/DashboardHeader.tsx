@@ -46,9 +46,7 @@ const DashboardHeader: React.FC = () => {
       await logout();
       router.replace("/login");
       window.location.reload();
-    } catch (error) {
-      console.log("🚀 ~ handleLogout ~ error:", error);
-    }
+    } catch {}
   };
 
   const disableLogout = !ready || (ready && !authenticated);

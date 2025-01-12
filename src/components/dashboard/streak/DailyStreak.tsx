@@ -9,8 +9,7 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useWeeklyStreak } from "@/lib/actions/activities.action";
 import ErrorDisplay from "@/components/ui/ErrorDisplay";
 
-const DailyStreak = ({ id }: { id: string }) => {
-  console.log("🚀 ~ DailyStreak ~ id:", id);
+const DailyStreak = ({}: { id: string }) => {
   const router = useRouter();
   const { user } = usePrivy();
   const authUserId = user?.id || "";

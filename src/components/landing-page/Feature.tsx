@@ -8,10 +8,10 @@ interface FeatureProps {
 
 const Feature: React.FC<FeatureProps> = ({ title, description, icon }) => {
   return (
-    <div className="bg-white rounded-2xl space-y-5 flex flex-col p-5 w-full">
+    <div className="bg-white rounded-3xl flex flex-col px-6 py-[2.5rem] w-full">
       <Image width={70} height={70} src={icon} alt={`${title} icon`} />
-      <h4 className="text-xl font-semibold">{title}</h4>
-      <p className="max-w-[250px] text-muted-foreground">{description}</p>
+      <h2 className="text-2xl mb-3 mt-6 text-shaft font-semibold">{title}</h2>
+      <p className="text-base text-abbey">{description}</p>
     </div>
   );
 };

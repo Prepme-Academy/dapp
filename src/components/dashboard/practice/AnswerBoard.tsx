@@ -248,8 +248,8 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     submitExam(
       { attemptId: Number(id), authUserId, data: submitData },
       {
-        onSuccess: (data) => {
-          console.log("Exam submitted successfully:", data);
+        onSuccess: () => {
+          // console.log("Exam submitted successfully:", data);
           setIsSubmitted(true);
           localStorage.removeItem(STORAGE_KEY);
           localStorage.removeItem(ANSWERS_STORAGE_KEY);
