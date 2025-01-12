@@ -132,24 +132,26 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   };
 
   const handleNext = () => {
-    // If there's no exam data or we're at the last question, do nothing
-    if (!examData || currentQuestionIndex >= examData.data.length - 1) return;
+    if (!examData) return;
   
     const currentQuestion = examData.data[currentQuestionIndex];
-    const nextQuestion = examData.data[currentQuestionIndex + 1];
-
-    if (currentQuestion?.subQuestions && currentSubQuestionIndex !== null) {
+    
+    // If current question has subquestions and we're looking at a subquestion
+    if (currentQuestion.subQuestions?.length && currentSubQuestionIndex !== null) {
+      // If there are more subquestions, go to next subquestion
       if (currentSubQuestionIndex < currentQuestion.subQuestions.length - 1) {
         setCurrentSubQuestionIndex(currentSubQuestionIndex + 1);
       } 
-      else {
+      // Otherwise go to next main question
+      else if (currentQuestionIndex < examData.data.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setCurrentSubQuestionIndex(nextQuestion?.subQuestions?.length ? 0 : null);
+        setCurrentSubQuestionIndex(0);
       }
     } 
-    else {
+    // If we're on a main question, go to next question
+    else if (currentQuestionIndex < examData.data.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setCurrentSubQuestionIndex(nextQuestion?.subQuestions?.length ? 0 : null);
+      setCurrentSubQuestionIndex(0);
     }
   
     scrollToTop();
@@ -333,6 +335,24 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
 
   const currentQuestion = examData?.data[currentQuestionIndex];
   const isSubQuestion = currentQuestion?.type === 4;
+
+  const isLastSubQuestion = () => {
+    if (!examData) return false;
+    
+    // Check if we're on the last main question
+    const isLastQuestion = currentQuestionIndex === examData.data.length - 1;
+    if (!isLastQuestion) return false;
+  
+    const currentQuestion = examData.data[currentQuestionIndex];
+    
+    // If the question has subquestions, check if we're on the last one
+    if (currentQuestion.subQuestions?.length) {
+      return currentSubQuestionIndex === currentQuestion.subQuestions.length - 1;
+    }
+    
+    // If it's a regular question and it's the last one
+    return true;
+  };
 
   return (
     <Dialog>
@@ -535,9 +555,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
             Previous
           </Button>
 
-          {(currentQuestionIndex === examData?.data.length - 1 &&
-            currentSubQuestionIndex === null) ||
-          timeLeft === 0 ? (
+          {isLastSubQuestion() || timeLeft === 0 ? (
             <DialogTrigger asChild>
               <Button
                 variant={"unstyled"}

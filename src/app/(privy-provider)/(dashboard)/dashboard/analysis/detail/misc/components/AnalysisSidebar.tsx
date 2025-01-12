@@ -6,6 +6,8 @@ import { useExamAnalysis } from "@/lib/actions/exam.action";
 import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { getQuestionStatus, statusColor } from "../helpers";
+import { cn } from "@/lib/utils";
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -368,20 +370,21 @@ const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
           <span> Question route</span>
         </h3>
         <div className="grid grid-cols-6 xxl:grid-cols-10 gap-2 w-full">
-          {userAnswers.map((answer, i) => (
-            <button
-              key={i}
-              className={`p-2 text-center border rounded-md ${
-                answer.correct === true
-                  ? "bg-[#77C93E] border-[#9EE071] text-white"
-                  : answer.correct === false
-                  ? "bg-[#FF5876] border-[#FF97A9] text-white"
-                  : "bg-[#FAC600] border-[#FFCF4D] text-white"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
+          {userAnswers.map((answer, i) => {
+            const status = getQuestionStatus(answer);
+            return (
+              <button
+                key={i}
+                className={cn(
+                  "p-2 text-center border rounded-md",
+                  statusColor(status)
+                )}
+                // title={StatusLabel(status)}
+              >
+                {i + 1}
+              </button>
+            );
+          })}
         </div>
       </Card>
     </div>
