@@ -37,6 +37,8 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const router = useRouter();
   const { user } = usePrivy();
   const authUserId = user?.id;
+
+
   const initialQuestionIndex = Number(searchParams.get("q")) || 0;
   const STORAGE_KEY = `exam-${id}-timer`;
   const ANSWERS_STORAGE_KEY = `exam-${id}-answers`;
@@ -48,12 +50,9 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     return savedTime ? parseInt(savedTime) : INITIAL_TIME;
   });
 
-  const [currentQuestionIndex, setCurrentQuestionIndex] =
-    useState(initialQuestionIndex);
-
-  const [currentSubQuestionIndex, setCurrentSubQuestionIndex] = useState<
-    number | null
-  >(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialQuestionIndex);
+  const [isSubQuestion, setIsSubQuestion] = useState(false);
+  const [currentSubQuestionIndex, setCurrentSubQuestionIndex] = useState(0);
 
   const { toggleFullscreen } = useFullscreen(() => {
     handleSubmit();
@@ -122,64 +121,42 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     });
   };
 
-  const handleNavigation = (questionIndex: number, subIndex?: number) => {
-    const question = examData?.data[questionIndex];
+  const handleNavigation = (questionIndex: number, subQuestionIndex: number = 0) => {
     setCurrentQuestionIndex(questionIndex);
-    setCurrentSubQuestionIndex(
-      !question?.subQuestions || subIndex === undefined ? null : subIndex
-    );
+    setCurrentSubQuestionIndex(subQuestionIndex);
+    setIsSubQuestion(subQuestionIndex > 0);
     scrollToTop();
   };
 
   const handleNext = () => {
-    if (!examData) return;
-  
-    const currentQuestion = examData.data[currentQuestionIndex];
-    
-    // If current question has subquestions and we're looking at a subquestion
-    if (currentQuestion.subQuestions?.length && currentSubQuestionIndex !== null) {
-      // If there are more subquestions, go to next subquestion
-      if (currentSubQuestionIndex < currentQuestion.subQuestions.length - 1) {
+    if (isSubQuestion) {
+      const subQuestions = examData?.data[currentQuestionIndex].subQuestions;
+      if (currentSubQuestionIndex < (subQuestions?.length || 0) - 1) {
         setCurrentSubQuestionIndex(currentSubQuestionIndex + 1);
-      } 
-      // Otherwise go to next main question
-      else if (currentQuestionIndex < examData.data.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setCurrentSubQuestionIndex(0);
+        return;
       }
-    } 
-    // If we're on a main question, go to next question
-    else if (currentQuestionIndex < examData.data.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setIsSubQuestion(false);
       setCurrentSubQuestionIndex(0);
     }
-  
-    scrollToTop();
+    if (currentQuestionIndex < (examData?.data.length || 0) - 1) {
+      handleNavigation(currentQuestionIndex + 1);
+    }
   };
 
   const handlePrevious = () => {
-    // If we're on a sub-question
-    if (currentSubQuestionIndex !== null) {
-      // If there are previous sub-questions
-      if (currentSubQuestionIndex > 0) {
-        setCurrentSubQuestionIndex(currentSubQuestionIndex - 1);
-      }
-      // If we're at the first sub-question, move to main question
-      else {
-        setCurrentSubQuestionIndex(null);
+    if (isSubQuestion && currentSubQuestionIndex > 0) {
+      setCurrentSubQuestionIndex(currentSubQuestionIndex - 1);
+      return;
+    }
+    if (currentQuestionIndex > 0) {
+      const prevQuestionIndex = currentQuestionIndex - 1;
+      const prevQuestionSubQuestions = examData?.data[prevQuestionIndex].subQuestions;
+      if (prevQuestionSubQuestions && prevQuestionSubQuestions.length > 0) {
+        handleNavigation(prevQuestionIndex, prevQuestionSubQuestions.length - 1);
+      } else {
+        handleNavigation(prevQuestionIndex);
       }
     }
-    // If we're on a regular question
-    else if (currentQuestionIndex > 0) {
-      const previousQuestion = examData?.data[currentQuestionIndex - 1];
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-      // If previous question has sub-questions, go to last sub-question
-      if (previousQuestion?.subQuestions?.length) {
-        setCurrentSubQuestionIndex(previousQuestion.subQuestions.length - 1);
-      }
-    }
-
-    scrollToTop();
   };
 
   const handleSubmit = () => {
@@ -334,25 +311,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const progressPercentage = (totalAttemptedQuestions / totalQuestions) * 100;
 
   const currentQuestion = examData?.data[currentQuestionIndex];
-  const isSubQuestion = currentQuestion?.type === 4;
-
-  const isLastSubQuestion = () => {
-    if (!examData) return false;
-    
-    // Check if we're on the last main question
-    const isLastQuestion = currentQuestionIndex === examData.data.length - 1;
-    if (!isLastQuestion) return false;
-  
-    const currentQuestion = examData.data[currentQuestionIndex];
-    
-    // If the question has subquestions, check if we're on the last one
-    if (currentQuestion.subQuestions?.length) {
-      return currentSubQuestionIndex === currentQuestion.subQuestions.length - 1;
-    }
-    
-    // If it's a regular question and it's the last one
-    return true;
-  };
+  const isSubQuestionData = currentQuestion?.type === 4;
 
   return (
     <Dialog>
@@ -380,7 +339,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
             }/${totalQuestions}`}</span>
           </div>
         </div>
-        {isSubQuestion ? (
+        {isSubQuestionData ? (
           <Card className="w-full max-w-[1051px] h-[1056px] overflow-hidden grid grid-col-1 lg:grid-cols-[635px_1fr] mx-auto border-grey-500 items-start justify-start">
             <div className="w-full p-4 lg:border-r-2 lg:border-[#F0F0F0] h-full overflow-auto">
               <h2
@@ -555,7 +514,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
             Previous
           </Button>
 
-          {isLastSubQuestion() || timeLeft === 0 ? (
+          {currentQuestionIndex === totalQuestions - 1 && currentSubQuestionIndex === 0 || timeLeft === 0 ? (
             <DialogTrigger asChild>
               <Button
                 variant={"unstyled"}
