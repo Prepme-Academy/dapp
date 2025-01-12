@@ -8,6 +8,7 @@ import { Info } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { StartExamResponse } from "@/types";
+import ErrorDisplay from "@/components/ui/ErrorDisplay";
 
 interface ReadyCardProps {
   id: string;
@@ -20,7 +21,11 @@ const ReadyCard: React.FC<ReadyCardProps> = ({ id }) => {
     null
   );
 
-  const { mutate: startExam, isLoading: isStartingExam } = useStartExam();
+  const {
+    mutate: startExam,
+    isLoading: isStartingExam,
+    error,
+  } = useStartExam();
 
   useEffect(() => {
     if (!authUserId) return;
@@ -31,14 +36,11 @@ const ReadyCard: React.FC<ReadyCardProps> = ({ id }) => {
         onSuccess: (data) => {
           setExamInfo(data.data);
         },
-        onError: (error) => {
-          console.error("Error starting exam:", error);
-        },
       }
     );
   }, [authUserId, id, startExam]);
 
-  if (isStartingExam || !examInfo) {
+  if (isStartingExam) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <div className="w-full max-w-[635px] mx-auto">
@@ -54,6 +56,16 @@ const ReadyCard: React.FC<ReadyCardProps> = ({ id }) => {
       </div>
     );
   }
+
+  if (error) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <ErrorDisplay error={error} retry={() => window.location.reload()} />
+      </div>
+    );
+  }
+
+  if (!examInfo) return null;
 
   const { examTest, noOfQuestions, id: attempId } = examInfo;
 
