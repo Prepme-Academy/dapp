@@ -38,7 +38,6 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const { user } = usePrivy();
   const authUserId = user?.id;
 
-
   const initialQuestionIndex = Number(searchParams.get("q")) || 0;
   const STORAGE_KEY = `exam-${id}-timer`;
   const ANSWERS_STORAGE_KEY = `exam-${id}-answers`;
@@ -50,9 +49,11 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     return savedTime ? parseInt(savedTime) : INITIAL_TIME;
   });
 
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialQuestionIndex);
-  const [isSubQuestion, setIsSubQuestion] = useState(false);
-  const [currentSubQuestionIndex, setCurrentSubQuestionIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] =
+    useState(initialQuestionIndex);
+
+  const [currentSubQuestionIndex, setCurrentSubQuestionIndex] =
+    useState<number>(0);
 
   const { toggleFullscreen } = useFullscreen(() => {
     handleSubmit();
@@ -121,22 +122,27 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     });
   };
 
-  const handleNavigation = (questionIndex: number, subQuestionIndex: number = 0) => {
+  const handleNavigation = (questionIndex: number, subIndex?: number) => {
+    const question = examData?.data[questionIndex];
     setCurrentQuestionIndex(questionIndex);
-    setCurrentSubQuestionIndex(subQuestionIndex);
-    setIsSubQuestion(subQuestionIndex > 0);
+    setCurrentSubQuestionIndex(
+      !question?.subQuestions || subIndex === undefined ? 0 : subIndex
+    );
+
+    // Update the URL query parameter
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set("q", questionIndex.toString());
+    router.replace(`?${newSearchParams.toString()}`);
+
     scrollToTop();
   };
 
   const handleNext = () => {
-    if (isSubQuestion) {
-      const subQuestions = examData?.data[currentQuestionIndex].subQuestions;
-      if (currentSubQuestionIndex < (subQuestions?.length || 0) - 1) {
-        setCurrentSubQuestionIndex(currentSubQuestionIndex + 1);
-        return;
-      }
-      setIsSubQuestion(false);
-      setCurrentSubQuestionIndex(0);
+    const subQuestions = examData?.data[currentQuestionIndex].subQuestions;
+    if (currentSubQuestionIndex < (subQuestions?.length || 0) - 1) {
+      setCurrentSubQuestionIndex(currentSubQuestionIndex + 1);
+      handleNavigation(currentQuestionIndex + 1);
+      return;
     }
     if (currentQuestionIndex < (examData?.data.length || 0) - 1) {
       handleNavigation(currentQuestionIndex + 1);
@@ -144,15 +150,19 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   };
 
   const handlePrevious = () => {
-    if (isSubQuestion && currentSubQuestionIndex > 0) {
+    if (currentSubQuestionIndex > 0) {
       setCurrentSubQuestionIndex(currentSubQuestionIndex - 1);
       return;
     }
     if (currentQuestionIndex > 0) {
       const prevQuestionIndex = currentQuestionIndex - 1;
-      const prevQuestionSubQuestions = examData?.data[prevQuestionIndex].subQuestions;
+      const prevQuestionSubQuestions =
+        examData?.data[prevQuestionIndex].subQuestions;
       if (prevQuestionSubQuestions && prevQuestionSubQuestions.length > 0) {
-        handleNavigation(prevQuestionIndex, prevQuestionSubQuestions.length - 1);
+        handleNavigation(
+          prevQuestionIndex,
+          prevQuestionSubQuestions.length - 1
+        );
       } else {
         handleNavigation(prevQuestionIndex);
       }
@@ -506,15 +516,16 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
             onClick={handlePrevious}
             className="bg-secondary text-primary-400 hover:bg-secondary/80 w-fit h-9 px-9 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:pointer-events-auto disabled:!cursor-not-allowed transition-all duration-300"
             disabled={
-              (currentQuestionIndex === 0 &&
-                currentSubQuestionIndex === null) ||
+              (currentQuestionIndex === 0 && currentSubQuestionIndex === 0) ||
               timeLeft === 0
             }
           >
             Previous
           </Button>
 
-          {currentQuestionIndex === totalQuestions - 1 && currentSubQuestionIndex === 0 || timeLeft === 0 ? (
+          {currentQuestionIndex === examData?.data.length - 1 ||
+          currentSubQuestionIndex === examData?.data.length - 1 ||
+          timeLeft === 0 ? (
             <DialogTrigger asChild>
               <Button
                 variant={"unstyled"}
