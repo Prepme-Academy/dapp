@@ -37,6 +37,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const router = useRouter();
   const { user } = usePrivy();
   const authUserId = user?.id;
+
   const initialQuestionIndex = Number(searchParams.get("q")) || 0;
   const STORAGE_KEY = `exam-${id}-timer`;
   const ANSWERS_STORAGE_KEY = `exam-${id}-answers`;
@@ -51,9 +52,8 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] =
     useState(initialQuestionIndex);
 
-  const [currentSubQuestionIndex, setCurrentSubQuestionIndex] = useState<
-    number | null
-  >(null);
+  const [currentSubQuestionIndex, setCurrentSubQuestionIndex] =
+    useState<number>(0);
 
   const { toggleFullscreen } = useFullscreen(() => {
     handleSubmit();
@@ -126,58 +126,47 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     const question = examData?.data[questionIndex];
     setCurrentQuestionIndex(questionIndex);
     setCurrentSubQuestionIndex(
-      !question?.subQuestions || subIndex === undefined ? null : subIndex
+      !question?.subQuestions || subIndex === undefined ? 0 : subIndex
     );
+
+    // Update the URL query parameter
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set("q", questionIndex.toString());
+    router.replace(`?${newSearchParams.toString()}`);
+
     scrollToTop();
   };
 
   const handleNext = () => {
-    // If there's no exam data or we're at the last question, do nothing
-    if (!examData || currentQuestionIndex >= examData.data.length - 1) return;
-  
-    const currentQuestion = examData.data[currentQuestionIndex];
-    const nextQuestion = examData.data[currentQuestionIndex + 1];
-
-    if (currentQuestion?.subQuestions && currentSubQuestionIndex !== null) {
-      if (currentSubQuestionIndex < currentQuestion.subQuestions.length - 1) {
-        setCurrentSubQuestionIndex(currentSubQuestionIndex + 1);
-      } 
-      else {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setCurrentSubQuestionIndex(nextQuestion?.subQuestions?.length ? 0 : null);
-      }
-    } 
-    else {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setCurrentSubQuestionIndex(nextQuestion?.subQuestions?.length ? 0 : null);
+    const subQuestions = examData?.data[currentQuestionIndex].subQuestions;
+    if (currentSubQuestionIndex < (subQuestions?.length || 0) - 1) {
+      setCurrentSubQuestionIndex(currentSubQuestionIndex + 1);
+      handleNavigation(currentQuestionIndex + 1);
+      return;
     }
-  
-    scrollToTop();
+    if (currentQuestionIndex < (examData?.data.length || 0) - 1) {
+      handleNavigation(currentQuestionIndex + 1);
+    }
   };
 
   const handlePrevious = () => {
-    // If we're on a sub-question
-    if (currentSubQuestionIndex !== null) {
-      // If there are previous sub-questions
-      if (currentSubQuestionIndex > 0) {
-        setCurrentSubQuestionIndex(currentSubQuestionIndex - 1);
-      }
-      // If we're at the first sub-question, move to main question
-      else {
-        setCurrentSubQuestionIndex(null);
+    if (currentSubQuestionIndex > 0) {
+      setCurrentSubQuestionIndex(currentSubQuestionIndex - 1);
+      return;
+    }
+    if (currentQuestionIndex > 0) {
+      const prevQuestionIndex = currentQuestionIndex - 1;
+      const prevQuestionSubQuestions =
+        examData?.data[prevQuestionIndex].subQuestions;
+      if (prevQuestionSubQuestions && prevQuestionSubQuestions.length > 0) {
+        handleNavigation(
+          prevQuestionIndex,
+          prevQuestionSubQuestions.length - 1
+        );
+      } else {
+        handleNavigation(prevQuestionIndex);
       }
     }
-    // If we're on a regular question
-    else if (currentQuestionIndex > 0) {
-      const previousQuestion = examData?.data[currentQuestionIndex - 1];
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-      // If previous question has sub-questions, go to last sub-question
-      if (previousQuestion?.subQuestions?.length) {
-        setCurrentSubQuestionIndex(previousQuestion.subQuestions.length - 1);
-      }
-    }
-
-    scrollToTop();
   };
 
   const handleSubmit = () => {
@@ -332,7 +321,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const progressPercentage = (totalAttemptedQuestions / totalQuestions) * 100;
 
   const currentQuestion = examData?.data[currentQuestionIndex];
-  const isSubQuestion = currentQuestion?.type === 4;
+  const isSubQuestionData = currentQuestion?.type === 4;
 
   return (
     <Dialog>
@@ -360,11 +349,11 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
             }/${totalQuestions}`}</span>
           </div>
         </div>
-        {isSubQuestion ? (
+        {isSubQuestionData ? (
           <Card className="w-full max-w-[1051px] h-[1056px] overflow-hidden grid grid-col-1 lg:grid-cols-[635px_1fr] mx-auto border-grey-500 items-start justify-start">
             <div className="w-full p-4 lg:border-r-2 lg:border-[#F0F0F0] h-full overflow-auto">
               <h2
-                className="w-full text-center text-lg md:text-xl font-medium text-muted-500"
+                className="w-full text-start text-lg md:text-xl text-muted-500"
                 dangerouslySetInnerHTML={{
                   __html: currentQuestion.text,
                 }}
@@ -376,6 +365,12 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
                   <h3 className="text-lg font-medium">{`Question ${
                     subIndex + 1
                   }`}</h3>
+                  <h4
+                    className="w-full text-base font-normal text-muted-500"
+                    dangerouslySetInnerHTML={{
+                      __html: subQuestion.text,
+                    }}
+                  />
                   {subQuestion.options.map((option, index) => (
                     <label
                       key={index}
@@ -527,16 +522,15 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
             onClick={handlePrevious}
             className="bg-secondary text-primary-400 hover:bg-secondary/80 w-fit h-9 px-9 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:pointer-events-auto disabled:!cursor-not-allowed transition-all duration-300"
             disabled={
-              (currentQuestionIndex === 0 &&
-                currentSubQuestionIndex === null) ||
+              (currentQuestionIndex === 0 && currentSubQuestionIndex === 0) ||
               timeLeft === 0
             }
           >
             Previous
           </Button>
 
-          {(currentQuestionIndex === examData?.data.length - 1 &&
-            currentSubQuestionIndex === null) ||
+          {currentQuestionIndex === examData?.data.length - 1 ||
+          currentSubQuestionIndex === examData?.data.length - 1 ||
           timeLeft === 0 ? (
             <DialogTrigger asChild>
               <Button
