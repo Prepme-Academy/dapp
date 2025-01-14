@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ExamAnalysisResponse, ExamQueryParams, ExamsResponse, ExamTypesResponse, StartExamResponse, SubmitExamRequest, SubmitExamResponse } from "@/types";
+import { Achievement, ExamAnalysisResponse, ExamQueryParams, ExamsResponse, ExamTypesResponse, LeaderboardEntry, StartExamResponse, SubmitExamRequest, SubmitExamResponse } from "@/types";
 import { BASE_URL } from "..";
 
 export const getExamTypes = async (): Promise<ExamTypesResponse> => {
@@ -57,6 +57,28 @@ export const fetchExamAnalysis = async (attemptId: number, authUserId: string): 
   const response = await axios.get(`${BASE_URL}/exam/analysis/${attemptId}`, {
     headers: {
       'auth-user-id': authUserId,
+    },
+  });
+  return response.data;
+};
+
+
+export const fetchWeeklyLeaderboard = async (
+  authUserId: string
+): Promise<LeaderboardEntry[]> => {
+  const response = await axios.get(`${BASE_URL}/leaderboard/weekly`, {
+    headers: {
+      "auth-user-id": authUserId,
+    },
+  });
+  return response.data;
+};
+
+
+export const fetchAchievements = async (authUserId: string): Promise<Achievement[]> => {
+  const response = await axios.get(`${BASE_URL}/achievements/me`, {
+    headers: {
+      "auth-user-id": authUserId,
     },
   });
   return response.data;

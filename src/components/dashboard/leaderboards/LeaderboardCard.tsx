@@ -3,31 +3,29 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { leaderboardData } from "@/utils/constant";
+import { LeaderboardEntry } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface LeaderboardCardProps {
   showTitle: boolean;
   className?: string;
-  data: {
-    id: string;
-    username: string;
-    score: number;
-  }[];
+  data: LeaderboardEntry[];
+  authId: string;
 }
 
 const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
   showTitle,
   className,
   data,
+  authId
 }) => {
-  const [leaderboards, setLeaderboards] = useState(data);
+  const router = useRouter();
 
   return (
     <Card className="w-full p-3 shadow-cardshadow border-gray-100 space-y-3">
-      {leaderboards.length === 0 ? (
+      {data.length === 0 ? (
         <CardContent
           className={cn(
             "w-full px-0 pb-0 flex flex-col items-center justify-center gap-2",
@@ -51,7 +49,7 @@ const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
             <Button
               variant={"unstyled"}
               className="bg-primary-400 text-white w-fit h-10 gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-              onClick={() => setLeaderboards(leaderboardData)}
+              onClick={() => router.push("/dashboard/practice")}
             >
               Practice an exam now
             </Button>
@@ -119,7 +117,7 @@ const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
                     </defs>
                   </svg>
 
-                  <span>5 days</span>
+                  <span>7 days</span>
                 </h4>
               </CardHeader>
               <ul className="mt-4 w-full h-12 px-4 rounded-lg flex items-center justify-between bg-grey-400">
@@ -155,10 +153,15 @@ const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
               className
             )}
           >
-            {leaderboards.map((lead, index) => (
+            {data.map((lead, index) => (
               <div
-                key={lead.id}
-                className="w-full flex items-center justify-between gap-x-3 last:bg-primary-100 last:border last:border-primary-400 rounded py-2 px-2"
+                key={lead.user.id}
+                className={cn(
+                  "w-full flex items-center justify-between gap-x-3 rounded py-2 px-2",
+                  lead.user.id === authId
+                    ? "bg-primary-100 border border-primary-400"
+                    : ""
+                )}
               >
                 <div className="flex items-center justify-start gap-2">
                   <div className="w-8 h-8 bg-grey-100 rounded-full flex items-center justify-center text-sm font-normal text-muted-500">
@@ -286,18 +289,18 @@ const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
                         />
                       </svg>
                     ) : (
-                      index + 1
+                      lead.rank
                     )}
                   </div>
                   <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary-500 text-sm font-normal text-white uppercase">
-                    {lead.username.charAt(0)}
+                    {lead.user.username.charAt(0)}
                   </div>
                   <h4 className="text-xs font-normal text-muted-500">
-                    {lead.username}
+                    {lead.user.username}
                   </h4>
                 </div>
                 <h2 className="text-xs font-normal text-muted-500">
-                  {lead.score} XP
+                  {lead.xpEarned} XP
                 </h2>
               </div>
             ))}

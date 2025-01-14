@@ -1,5 +1,4 @@
-import { LeaderboardCard } from "@/components/dashboard/leaderboards";
-// import { leaderboardData } from "@/utils/constant";
+import { RenderLeaderboard } from "@/components/dashboard/leaderboards";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -20,7 +19,7 @@ export default function LeaderboardPage() {
           </h4>
         </div>
       </div>
-      <LeaderboardCard showTitle={true} data={[]} />
+      <RenderLeaderboard />
     </section>
   );
 }
