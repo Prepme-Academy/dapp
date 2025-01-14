@@ -158,7 +158,7 @@ const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
                 key={lead.user.id}
                 className={cn(
                   "w-full flex items-center justify-between gap-x-3 rounded py-2 px-2",
-                  lead.user.id === authId
+                  lead.user.authId === authId
                     ? "bg-primary-100 border border-primary-400"
                     : ""
                 )}
