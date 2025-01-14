@@ -10,9 +10,18 @@ import { questsData } from "@/utils/constant";
 import { usePathname } from "next/navigation";
 import { EditProfile } from "../profile";
 import Link from "next/link";
+import { usePrivy } from "@privy-io/react-auth";
+import { useWeeklyLeaderboard } from "@/lib/actions/exam.action";
+import { LeaderboardSkeleton } from "../leaderboards/RenderLeaderboard";
+import ErrorDisplay from "@/components/ui/ErrorDisplay";
 
 const DashboardRightSidebar: React.FC = () => {
   const pathname = usePathname();
+  const { user } = usePrivy();
+  const authUserId = user?.id;
+  const { data, isLoading, isError, error, refetch } = useWeeklyLeaderboard(
+    authUserId || ""
+  );
   const shouldHideSidebar = /^\/dashboard\/analysis\/detail\/[^/]+$/.test(
     pathname
   );
@@ -30,11 +39,49 @@ const DashboardRightSidebar: React.FC = () => {
         )}
       {pathname !== "/dashboard/leaderboard" &&
         pathname !== "/dashboard/profile" && (
-          <LeaderboardCard
-            showTitle={false}
-            className="border border-primary-200"
-            data={[]}
-          />
+          <>
+            {isLoading ? (
+              <LeaderboardSkeleton
+                showTitle={false}
+                className="border border-primary-200"
+                length={3}
+              />
+            ) : isError ? (
+              <ErrorDisplay error={error} retry={() => refetch()} />
+            ) : (
+              <>
+                {(() => {
+                  const sortedData = [...data].sort(
+                    (a, b) => b.xpEarned - a.xpEarned
+                  );
+                  const topTwo = sortedData.slice(0, 2);
+
+                  const loggedInUser = sortedData.find(
+                    (entry) => entry.user.id === user?.id
+                  );
+
+                  const leaderboardData = [
+                    ...topTwo,
+                    ...(loggedInUser &&
+                    !topTwo.some(
+                      (entry) => entry.user.id === loggedInUser.user.id
+                    )
+                      ? [loggedInUser]
+                      : []),
+                  ];
+
+                  return (
+                    <LeaderboardCard
+                      showTitle={false}
+                      className="border border-primary-200"
+                      data={leaderboardData}
+                      authId={user?.id || ""}
+                    />
+                  );
+                })()}
+              </>
+            )}
+          </>
         )}
       <Card className="w-full p-3 border-gray-200 space-y-3 flex items-center justify-between">
         <div className="flex items-center justify-start gap-2">

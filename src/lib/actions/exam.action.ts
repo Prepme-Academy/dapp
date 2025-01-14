@@ -1,16 +1,20 @@
 import {
+  fetchAchievements,
   fetchExamAnalysis,
   fetchExamQuestions,
   fetchExams,
+  fetchWeeklyLeaderboard,
   getExamTypes,
   startExam,
   submitExam,
 } from "@/services/apis/exam.api";
 import {
+  Achievement,
   ExamAnalysisResponse,
   ExamQuestionsResponse,
   ExamsResponse,
   ExamTypesResponse,
+  LeaderboardEntry,
   StartExamResponse,
   SubmitExamRequest,
   SubmitExamResponse,
@@ -71,6 +75,26 @@ export const useExamAnalysis = (attemptId: number, authUserId: string) => {
     () => fetchExamAnalysis(attemptId, authUserId),
     {
       enabled: !!attemptId && !!authUserId,
+    }
+  );
+};
+
+export const useWeeklyLeaderboard = (authUserId: string) => {
+  return useQuery<LeaderboardEntry[], Error>(
+    ["weeklyLeaderboard", authUserId],
+    () => fetchWeeklyLeaderboard(authUserId),
+    {
+      enabled: !!authUserId,
+    }
+  );
+};
+
+export const useAchievements = (authUserId: string) => {
+  return useQuery<Achievement[], Error>(
+    ["achievements", authUserId],
+    () => fetchAchievements(authUserId),
+    {
+      enabled: !!authUserId,
     }
   );
 };

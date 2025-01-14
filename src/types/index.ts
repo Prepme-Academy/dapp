@@ -409,3 +409,41 @@ export interface StreakResponse {
   currentDay: string;
   weekDays: WeekDay[];
 }
+
+
+export interface User {
+  id: string;
+  email: string;
+  authId: string;
+  walletAddress: string;
+  username: string;
+  dailyDuration: number;
+  totalStreaks: number;
+  totalXp: number;
+  notificationEnabled: boolean;
+  onboarded: boolean;
+  referralCode: string;
+  totalPracticeTime: number;
+  totalTestsTaken: number;
+  createdAt: string;
+  lastPracticeDate: string;
+  updatedAt: string;
+}
+
+export interface LeaderboardEntry {
+  user: User;
+  xpEarned: number;
+  rank: number;
+}
+
+
+export interface Achievement {
+  id: number;
+  name: string;
+  description: string;
+  nftId: number;
+  completed: boolean;
+  metadataUrl: string;
+  completedAt: string;
+  nftMinted: boolean;
+}
