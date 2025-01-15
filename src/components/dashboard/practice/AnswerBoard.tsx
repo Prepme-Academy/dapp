@@ -128,8 +128,6 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     setCurrentSubQuestionIndex(
       !question?.subQuestions || subIndex === undefined ? 0 : subIndex
     );
-
-    // Update the URL query parameter
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set("q", questionIndex.toString());
     router.replace(`?${newSearchParams.toString()}`);
@@ -174,7 +172,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
 
     // Process questions
     const questions: SubmitExamRequestMainQuestion[] = examData.data.map(
-      (question) => {
+      (question, index) => {
         if (question.type === 4 && question.subQuestions) {
           // Handle sub-questions
           const subQuestions: SubmitExamRequestSubQuestion[] =
@@ -213,9 +211,9 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
             id: question.id,
             type: question.type,
             answered: !!selectedAnswers[question.id],
-            answer: selectedAnswers[question.id]
+            answer: selectedAnswers[index]
               ? question.options?.find(
-                  (option) => option.value === selectedAnswers[question.id]
+                  (option) => option.value === selectedAnswers[index]
                 ) || null
               : null,
           };
@@ -238,7 +236,6 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
       { attemptId: Number(id), authUserId, data: submitData },
       {
         onSuccess: () => {
-          // console.log("Exam submitted successfully:", data);
           setIsSubmitted(true);
           localStorage.removeItem(STORAGE_KEY);
           localStorage.removeItem(ANSWERS_STORAGE_KEY);
@@ -291,31 +288,35 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     );
   }
 
-  const totalQuestions =
-    examData?.data.reduce((acc, question) => {
-      if (!question.subQuestions?.length) {
-        return acc + 1;
-      }
-      return acc + question.subQuestions.length;
-    }, 0) || 0;
-
   const getAttemptedQuestions = () => {
     return (
       examData?.data.reduce((acc, question) => {
-        if (!question.subQuestions?.length) {
-          return acc + (selectedAnswers[question.id] ? 1 : 0);
+        if (question.type === 4) {
+          // If question type is 4, handle subQuestions
+          return (
+            acc +
+            question.subQuestions.reduce(
+              (subAcc, subQuestion) =>
+                subAcc + (selectedAnswers[subQuestion.id] ? 1 : 0),
+              0
+            )
+          );
+        } else {
+          return Object.keys(selectedAnswers).length;
         }
-        return (
-          acc +
-          question.subQuestions.reduce(
-            (subAcc, subQuestion) =>
-              subAcc + (selectedAnswers[subQuestion.id] ? 1 : 0),
-            0
-          )
-        );
       }, 0) || 0
     );
   };
+ 
+
+  const totalQuestions =
+    examData?.data.reduce((acc, question) => {
+      if (question.type === 4 && question.subQuestions?.length) {
+        return acc + question.subQuestions.length;
+      } else {
+        return acc + 1;
+      }
+    }, 0) || 0;
 
   const totalAttemptedQuestions = getAttemptedQuestions();
   const progressPercentage = (totalAttemptedQuestions / totalQuestions) * 100;
@@ -476,7 +477,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
                   <button
                     key={question.id}
                     className={`p-2 text-center border rounded-md ${
-                      selectedAnswers[question.id]
+                      selectedAnswers[index]
                         ? "bg-[#77C93E] text-white"
                         : "bg-gray-100"
                     }`}

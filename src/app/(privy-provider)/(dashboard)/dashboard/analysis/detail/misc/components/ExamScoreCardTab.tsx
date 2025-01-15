@@ -61,7 +61,7 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
                       />
                       <RenderScoreIcon status={status} />
                     </CardHeader>
-                    {!answer.subAnswers && (
+                    {answer.hasSub === false && (
                       <div className="flex items-center justify-start gap-1 text-xs">
                         <span className="font-normal text-[10px]">
                           Answer:{" "}
@@ -85,7 +85,8 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
         <DialogContent
           className={cn(
             "h-[95vh] overflow-hidden hover:overflow-y-auto hover:overflow-x-hidden",
-            userAnswers[selectedQuestion].subAnswers
+            userAnswers[selectedQuestion].subAnswers &&
+              userAnswers[selectedQuestion].hasSub === true
               ? "max-w-[1051px]"
               : "max-w-lg"
           )}
@@ -118,7 +119,8 @@ const ExamScoreCardTab: React.FC<ExamScoreCardTabProps> = ({
               </div>
             </DialogTitle>
           </DialogHeader>
-          {userAnswers[selectedQuestion].subAnswers ? (
+          {userAnswers[selectedQuestion].subAnswers &&
+          userAnswers[selectedQuestion].hasSub === true ? (
             <SubQuestionAnalysis
               question={userAnswers[selectedQuestion]}
               subAnswers={userAnswers[selectedQuestion].subAnswers}

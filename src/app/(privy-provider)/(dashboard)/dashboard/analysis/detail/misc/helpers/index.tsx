@@ -3,7 +3,7 @@ import { ExamAnalysisResponse } from "@/types";
 export const getQuestionStatus = (
   answer: ExamAnalysisResponse["data"]["userAnswers"][0]
 ) => {
-  if (answer.subAnswers) {
+  if (answer.hasSub === true && answer.subAnswers) {
     // For questions with sub-answers, check all sub-answers
     const allCorrect = answer.subAnswers.every((sub) => sub.correct === true);
     const allAnswered = answer.subAnswers.every((sub) => sub.correct !== null);
