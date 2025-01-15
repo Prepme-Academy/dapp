@@ -23,7 +23,6 @@ export default function NotificationPage() {
   const { user } = usePrivy();
   const { wallets } = useWallets();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  console.log("🚀 ~ NotificationPage ~ user:", user);
 
   const RegisterUser: CreateUserPayload = {
     email: user?.email?.address || undefined,
@@ -34,7 +33,6 @@ export default function NotificationPage() {
       "",
     authId: user?.id || "",
   };
-  console.log("🚀 ~ NotificationPage ~ RegisterUser:", RegisterUser);
 
   const OnBoardingUser: OnboardUserPayload = {
     username: username,

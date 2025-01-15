@@ -96,14 +96,9 @@ const DashboardHeader: React.FC = () => {
           <HeaderSkeletonLoader />
         ) : error ? (
           <div>
-            <Button
-              variant={"unstyled"}
-              disabled={disableLogout}
-              onClick={handleLogout}
-              className="bg-[#EAEBED] text-[#717172] hover:bg-secondary/80 w-fit px-4 h-10 white-gradient-border shadow-buttonshadow outline-none text-sm font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 rounded-xl"
-            >
-              Log out
-            </Button>
+           <div className="text-red-500">
+            Error loading user info: {error.message}
+          </div>
           </div>
         ) : (
           <div className="flex items-center justify-end gap-x-5">
