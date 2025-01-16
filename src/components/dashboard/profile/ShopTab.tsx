@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useUserInfo } from "@/lib/actions";
-import useClientStore from "@/store/clientStore";
 import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -256,7 +255,6 @@ const ShopTab: React.FC = () => {
 
 const ShopCollectables = () => {
   const { user } = usePrivy();
-  const { userInfo } = useClientStore();
   const router = useRouter();
   const authUserId = user?.id || "";
   const { data: fetchedUserInfo, isLoading: userInfoLoading } =
@@ -269,7 +267,11 @@ const ShopCollectables = () => {
       </h2>
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         <Card
-          onClick={() => router.push(`/dashboard/streak/${userInfo?.id}`)}
+          onClick={() =>
+            router.push(
+              `/dashboard/streak/${fetchedUserInfo?.id || `1212e12e2cq331ce`}`
+            )
+          }
           className="min-h-36 p-3 shadow-cardshadow border-gray-200  flex flex-col items-center justify-center gap-4"
         >
           <Image

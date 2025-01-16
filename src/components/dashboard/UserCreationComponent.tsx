@@ -5,10 +5,13 @@ import { CreateUserPayload } from "@/types"; // Adjust the import path as necess
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { createUser } from "@/services/apis/user.api";
 import { useRouter } from "next/navigation";
+import useClientStore from "@/store/clientStore";
+import Cookies from "js-cookie";
 
 const UserCreationComponent: React.FC = () => {
   const { user } = usePrivy();
   const { wallets } = useWallets();
+  const { isFirstVisit } = useClientStore();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -30,8 +33,13 @@ const UserCreationComponent: React.FC = () => {
       try {
         const userResponse = await createUser(RegisterUser);
         setSuccess("User created successfully!");
-        router.push("/dashboard/practice");
-        console.log("🚀 ~ handleCreateUser ~ userResponse:", userResponse);
+        if (isFirstVisit === false) {
+          router.push("/onboarding/username");
+        } else {
+          Cookies.set("onboarded", "true");
+          router.push("/dashboard/practice");
+        }
+        return userResponse;
       } catch (err) {
         setError("Failed to create user.");
         console.error("Error creating user:", err);
@@ -41,7 +49,7 @@ const UserCreationComponent: React.FC = () => {
     };
 
     handleCreateUser();
-  }, [user, wallets, router]);
+  }, [user, wallets, router, isFirstVisit]);
 
   return (
     <div className="p-4 max-w-md mx-auto hidden">

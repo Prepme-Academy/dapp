@@ -19,7 +19,7 @@ export default function NotificationPage() {
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: onboardUser } = useOnboardUser();
   const { username, examType, dailyDuration, resetState } = useUserStore();
-  const { setFirstVisit, userInfo } = useClientStore();
+  const { setFirstVisit } = useClientStore();
   const { user } = usePrivy();
   const { wallets } = useWallets();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,7 +28,6 @@ export default function NotificationPage() {
     email: user?.email?.address || undefined,
     walletAddress:
       user?.wallet?.address ||
-      userInfo?.walletAddress ||
       wallets[0]?.address ||
       "",
     authId: user?.id || "",
