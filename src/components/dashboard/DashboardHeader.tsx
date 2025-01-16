@@ -89,9 +89,9 @@ const DashboardHeader: React.FC = () => {
           <HeaderSkeletonLoader />
         ) : error ? (
           <div>
-           <div className="text-red-500">
-            Error loading user info: {error.message}
-          </div>
+            <div className="text-red-500">
+              Error loading user info: {error.message}
+            </div>
           </div>
         ) : (
           <div className="flex items-center justify-end gap-x-5">
