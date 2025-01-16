@@ -3,6 +3,7 @@ import {
   DashboardRightSidebar,
   DashboardSidebar,
 } from "@/components/dashboard";
+import UserCreationComponent from "@/components/dashboard/UserCreationComponent";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function DashboardLayout({
       <div className="flex flex-col lg:flex-row items-start lg:flex-1 lg:overflow-hidden">
         <DashboardSidebar />
         <section className="w-full lg:max-w-full lg:flex-1 p-4 lg:overflow-y-auto lg:h-full">
+          <UserCreationComponent />
           {children}
         </section>
         <DashboardRightSidebar />

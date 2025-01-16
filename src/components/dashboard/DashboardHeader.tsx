@@ -71,6 +71,7 @@ const DashboardHeader: React.FC = () => {
         userInfo={fetchedUserInfo}
         isLoading={userInfoLoading}
         handleLogout={handleLogout}
+        error={error}
       />
       <nav className="hidden lg:flex items-center justify-end lg:justify-between gap-x-5 flex-grow pl-6 py-4">
         <div className="relative w-[356px]">
@@ -94,8 +95,10 @@ const DashboardHeader: React.FC = () => {
         {userInfoLoading ? (
           <HeaderSkeletonLoader />
         ) : error ? (
-          <div className="text-red-500">
+          <div>
+           <div className="text-red-500">
             Error loading user info: {error.message}
+          </div>
           </div>
         ) : (
           <div className="flex items-center justify-end gap-x-5">

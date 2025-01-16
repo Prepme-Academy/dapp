@@ -311,7 +311,7 @@ export interface SubAnswer {
   correct: boolean | null;
   userOption: Option | null;
   correct_option: Option;
-  question?: Question; 
+  question?: Question;
 }
 
 export interface UserAnswer {
@@ -325,6 +325,8 @@ export interface UserAnswer {
   question: Question;
   userOption: Option | null;
   correct_option: Option;
+  hasSub: boolean;
+  isSub: boolean;
   subAnswers?: SubAnswer[];
 }
 
@@ -410,7 +412,6 @@ export interface StreakResponse {
   weekDays: WeekDay[];
 }
 
-
 export interface User {
   id: string;
   email: string;
@@ -435,7 +436,6 @@ export interface LeaderboardEntry {
   xpEarned: number;
   rank: number;
 }
-
 
 export interface Achievement {
   id: number;

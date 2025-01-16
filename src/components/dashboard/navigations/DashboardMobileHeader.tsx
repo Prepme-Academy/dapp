@@ -15,12 +15,14 @@ interface DashboardMobileHeaderProps {
   handleLogout: () => Promise<void>;
   userInfo: UserInfo | undefined;
   isLoading: boolean;
+  error: Error | null;
 }
 
 const DashboardMobileHeader: React.FC<DashboardMobileHeaderProps> = ({
   handleLogout,
   userInfo,
   isLoading,
+  error,
 }) => {
   const { ready, authenticated } = usePrivy();
 
@@ -37,6 +39,10 @@ const DashboardMobileHeader: React.FC<DashboardMobileHeaderProps> = ({
           <div className="w-[26px] h-[26px] bg-gray-300 rounded-full" />
           <div className="w-20 h-4 bg-gray-300 rounded" />
         </Button>
+      ) : error ? (
+        <div className="text-red-500">
+          Error loading user info: {error.message}
+        </div>
       ) : (
         <Popover>
           <PopoverTrigger className="text-sm font-normal border h-10 px-4 py-2 border-muted-100 text-muted-500 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
