@@ -19,7 +19,6 @@ const Providers: React.FC<ProvidersProps> = ({ children }) => {
 
   useEffect(() => {
     setIsClient(true);
-    // console.log("App loaded:", initializingState);
     setinitializingState(true);
   }, [initializingState, setinitializingState]);
 

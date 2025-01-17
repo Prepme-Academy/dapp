@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { useNotifications } from "@/hooks/useNotifications";
-import { useCreateUser, useOnboardUser } from "@/lib/actions";
+import { useOnboardUser } from "@/lib/actions";
 import useClientStore from "@/store/clientStore";
 import useUserStore from "@/store/userStore";
-import { CreateUserPayload, OnboardUserPayload } from "@/types";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { OnboardUserPayload } from "@/types";
+import { usePrivy } from "@privy-io/react-auth";
 import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -16,23 +16,12 @@ import { useState } from "react";
 export default function NotificationPage() {
   const router = useRouter();
   const { isEnabled, requestNotificationPermission } = useNotifications();
-  const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: onboardUser } = useOnboardUser();
   const { username, examType, dailyDuration, resetState } = useUserStore();
-  const { setFirstVisit, userInfo } = useClientStore();
+  const { setFirstVisit } = useClientStore();
   const { user } = usePrivy();
-  const { wallets } = useWallets();
+  const authId = user?.id || "";
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const RegisterUser: CreateUserPayload = {
-    email: user?.email?.address || undefined,
-    walletAddress:
-      user?.wallet?.address ||
-      userInfo?.walletAddress ||
-      wallets[0]?.address ||
-      "",
-    authId: user?.id || "",
-  };
 
   const OnBoardingUser: OnboardUserPayload = {
     username: username,
@@ -44,12 +33,6 @@ export default function NotificationPage() {
   const handleUserActions = async () => {
     setIsSubmitting(true);
     try {
-      const userResponse = await createUser(RegisterUser);
-
-      // Ensure authId is available
-      const authId = RegisterUser.authId;
-
-      // Onboard user with the correct authId
       const onboardResponse = await onboardUser({
         payload: OnBoardingUser,
         authId: authId,
@@ -59,7 +42,7 @@ export default function NotificationPage() {
       setFirstVisit(true);
       resetState();
       router.replace("/dashboard/practice");
-      return { userResponse, onboardResponse };
+      return { onboardResponse };
     } catch (error) {
       console.error("Error in user actions: ", error);
     } finally {
@@ -70,8 +53,8 @@ export default function NotificationPage() {
   const handleNotificationPermission = async () => {
     try {
       await Promise.all([requestNotificationPermission(), handleUserActions()]);
-    } catch {
-      // console.log("🚀 ~ handleNotificationPermission ~ error:", error);
+    } catch(error) {
+      console.log("🚀 ~ handleNotificationPermission ~ error:", error);
     }
   };
 

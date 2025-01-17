@@ -17,11 +17,10 @@ import { cn } from "@/lib/utils";
 import useExamStore from "@/store/examStore";
 import { useUserInfo } from "@/lib/actions";
 import Cookies from "js-cookie";
-import { useEffect } from "react";
 
 const DashboardHeader: React.FC = () => {
   const { ready, authenticated, logout, user } = usePrivy();
-  const { resetState, setUserInfo } = useClientStore();
+  const { resetState } = useClientStore();
   const { resetExamData, clearExamHistory } = useExamStore();
   const router = useRouter();
   const authUserId = user?.id || "";
@@ -30,12 +29,6 @@ const DashboardHeader: React.FC = () => {
     isLoading: userInfoLoading,
     error,
   } = useUserInfo(authUserId);
-
-  useEffect(() => {
-    if (user && fetchedUserInfo && !userInfoLoading) {
-      setUserInfo(fetchedUserInfo);
-    }
-  }, [fetchedUserInfo, setUserInfo, user, userInfoLoading]);
 
   const handleLogout = async () => {
     try {
@@ -96,9 +89,9 @@ const DashboardHeader: React.FC = () => {
           <HeaderSkeletonLoader />
         ) : error ? (
           <div>
-           <div className="text-red-500">
-            Error loading user info: {error.message}
-          </div>
+            <div className="text-red-500">
+              Error loading user info: {error.message}
+            </div>
           </div>
         ) : (
           <div className="flex items-center justify-end gap-x-5">

@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useUserInfo } from "@/lib/actions";
 import useExamStore from "@/store/examStore";
+import UserCreationComponent from "../dashboard/UserCreationComponent";
 
 type methods =
   | "wallet"
@@ -48,7 +49,7 @@ const AuthOptions: React.FC = () => {
   const router = useRouter();
   const { user, login, connectWallet, authenticated, ready } = usePrivy();
   const { wallets } = useWallets();
-  const { isFirstVisit, setFirstVisit, setUserInfo } = useClientStore();
+  const { isFirstVisit, setFirstVisit } = useClientStore();
   const { resetExamData, clearExamHistory } = useExamStore();
   const authUserId = user?.id || "";
   const { data: userInfo, isLoading: userInfoLoading } =
@@ -57,9 +58,8 @@ const AuthOptions: React.FC = () => {
   useEffect(() => {
     if (user && userInfo && !userInfoLoading) {
       setFirstVisit(userInfo.onboarded);
-      setUserInfo(userInfo);
     }
-  }, [userInfo, setFirstVisit, setUserInfo, user, userInfoLoading]);
+  }, [userInfo, setFirstVisit, user, userInfoLoading]);
 
   useEffect(() => {
     if (user && authenticated && ready) {
@@ -111,15 +111,6 @@ const AuthOptions: React.FC = () => {
   const handleSocialLogin = (method: methods) => {
     try {
       login({ loginMethods: [method] });
-
-      if (authenticated) {
-        if (isFirstVisit === false) {
-          router.push("/onboarding/username");
-        } else {
-          Cookies.set("onboarded", "true");
-          router.push("/dashboard/practice");
-        }
-      }
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -127,6 +118,7 @@ const AuthOptions: React.FC = () => {
 
   return (
     <section className="w-full grid grid-cols-1 gap-6">
+      <UserCreationComponent />
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
         <h2 className="col-span-2 text-base font-medium text-muted-500">
           Choose wallet to connect

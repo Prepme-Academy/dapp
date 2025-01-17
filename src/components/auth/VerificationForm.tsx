@@ -16,7 +16,7 @@ interface VerificationFormProps {
 
 const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
   const { user } = usePrivy();
-  const { isFirstVisit, setUserInfo, setFirstVisit } = useClientStore();
+  const { isFirstVisit, setFirstVisit } = useClientStore();
   const [resendEnabled, setResendEnabled] = useState(false);
   const [resendCountdown, setResendCountdown] = useState(60);
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
@@ -31,9 +31,8 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
   useEffect(() => {
     if (user && userInfo && !userInfoLoading) {
       setFirstVisit(userInfo.onboarded);
-      setUserInfo(userInfo);
     }
-  }, [userInfo, setFirstVisit, setUserInfo, user, userInfoLoading]);
+  }, [userInfo, setFirstVisit, user, userInfoLoading]);
 
   // Handle countdown timer
   useEffect(() => {
