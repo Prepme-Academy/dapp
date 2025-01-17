@@ -25,8 +25,11 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ email }) => {
   const router = useRouter();
   const { loginWithCode, sendCode, state } = useLoginWithEmail();
   const authUserId = user?.id || "";
-  const { data: userInfo, isLoading: userInfoLoading } =
-    useUserInfo(authUserId);
+  const address = user?.wallet?.address || "";
+  const { data: userInfo, isLoading: userInfoLoading } = useUserInfo(
+    authUserId,
+    address
+  );
 
   useEffect(() => {
     if (user && userInfo && !userInfoLoading) {

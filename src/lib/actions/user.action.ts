@@ -17,12 +17,12 @@ export const useCheckUsername = () => {
   return useMutation((username: string) => checkUsername(username));
 };
 
-export const useUserInfo = (authUserId: string) => {
+export const useUserInfo = (authUserId: string, address: string) => {
   return useQuery<UserInfo, Error>(
-    ['userInfo', authUserId],
-    () => fetchUserInfo(authUserId),
+    ["userInfo", authUserId],
+    () => fetchUserInfo(authUserId, address),
     {
-      enabled: !!authUserId,
+      enabled: !!authUserId && !!address,
     }
   );
 };
@@ -37,6 +37,6 @@ export const useOnboardUser = () => {
   return useMutation<
     OnboardUserResponse,
     Error,
-    { payload: OnboardUserPayload; authId: string }
-  >(({ payload, authId }) => onboardUser(payload, authId));
+    { payload: OnboardUserPayload; authId: string; address: string }
+  >(({ payload, authId, address }) => onboardUser(payload, authId, address));
 };

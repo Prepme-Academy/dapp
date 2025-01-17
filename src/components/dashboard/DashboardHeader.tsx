@@ -24,11 +24,12 @@ const DashboardHeader: React.FC = () => {
   const { resetExamData, clearExamHistory } = useExamStore();
   const router = useRouter();
   const authUserId = user?.id || "";
+  const address = user?.wallet?.address || "";
   const {
     data: fetchedUserInfo,
     isLoading: userInfoLoading,
     error,
-  } = useUserInfo(authUserId);
+  } = useUserInfo(authUserId, address);
 
   const handleLogout = async () => {
     try {

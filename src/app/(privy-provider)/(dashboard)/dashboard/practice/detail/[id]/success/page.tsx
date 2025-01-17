@@ -12,7 +12,7 @@ import useExamStore from "@/store/examStore";
 import { formatAxiosErrorMessage } from "@/utils/errors";
 import { usePrivy } from "@privy-io/react-auth";
 import { AxiosError } from "axios";
-import {  X } from "lucide-react";
+import { X } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -61,7 +61,8 @@ export default function PracticeSuccessPage() {
 const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
   const router = useRouter();
   const { user } = usePrivy();
-  const authUserId = user?.id;
+  const authUserId = user?.id || "";
+  const address = user?.wallet?.address || "";
   const { setExamData, addToExamHistory } = useExamStore();
 
   const {
@@ -69,7 +70,7 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
     isLoading,
     isError,
     error,
-  } = useExamAnalysis(Number(id), authUserId || "");
+  } = useExamAnalysis(Number(id), authUserId, address);
 
   useEffect(() => {
     if (analysisData?.data) {

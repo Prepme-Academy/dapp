@@ -17,6 +17,7 @@ interface ReadyCardProps {
 const ReadyCard: React.FC<ReadyCardProps> = ({ id }) => {
   const { user } = usePrivy();
   const authUserId = user?.id;
+  const address = user?.wallet?.address || "";
   const [examInfo, setExamInfo] = useState<StartExamResponse["data"] | null>(
     null
   );
@@ -31,14 +32,14 @@ const ReadyCard: React.FC<ReadyCardProps> = ({ id }) => {
     if (!authUserId) return;
 
     startExam(
-      { examId: parseInt(id), authUserId },
+      { examId: parseInt(id), authUserId, address },
       {
         onSuccess: (data) => {
           setExamInfo(data.data);
         },
       }
     );
-  }, [authUserId, id, startExam]);
+  }, [authUserId, id, startExam, address]);
 
   if (isStartingExam) {
     return (

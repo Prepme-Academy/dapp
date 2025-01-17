@@ -36,7 +36,8 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { user } = usePrivy();
-  const authUserId = user?.id;
+  const authUserId = user?.id || "";
+  const address = user?.wallet?.address || "";
 
   const initialQuestionIndex = Number(searchParams.get("q")) || 0;
   const STORAGE_KEY = `exam-${id}-timer`;
@@ -76,7 +77,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     isLoading,
     isError,
     error,
-  } = useExamQuestions(Number(id), authUserId || "");
+  } = useExamQuestions(Number(id), authUserId, address);
   const { mutate: submitExam, isLoading: isSubmitting } = useSubmitExam();
 
   const scrollToTop = () => {
@@ -233,7 +234,7 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
     };
 
     submitExam(
-      { attemptId: Number(id), authUserId, data: submitData },
+      { attemptId: Number(id), authUserId, address, data: submitData },
       {
         onSuccess: () => {
           setIsSubmitted(true);
@@ -307,7 +308,6 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
       }, 0) || 0
     );
   };
- 
 
   const totalQuestions =
     examData?.data.reduce((acc, question) => {

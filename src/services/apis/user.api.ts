@@ -9,17 +9,24 @@ import {
 } from "@/types";
 import { BASE_URL } from "..";
 
-
-export const checkUsername = async (username: string): Promise<CheckUsernameResponse> => {
-  const response = await axios.post(`${BASE_URL}/user/check-username`, { username });
+export const checkUsername = async (
+  username: string
+): Promise<CheckUsernameResponse> => {
+  const response = await axios.post(`${BASE_URL}/user/check-username`, {
+    username,
+  });
   return response.data;
 };
 
-export const fetchUserInfo = async (authUserId: string): Promise<UserInfo> => {
+export const fetchUserInfo = async (
+  authUserId: string,
+  address: string
+): Promise<UserInfo> => {
   const response = await axios.get(`${BASE_URL}/user/me`, {
     headers: {
-      'auth-user-id': authUserId
-    }
+      "auth-user-id": authUserId,
+      Address: address,
+    },
   });
   return response.data;
 };
@@ -37,12 +44,14 @@ export const createUser = async (
 
 export const onboardUser = async (
   payload: OnboardUserPayload,
-  authId: string
+  authId: string,
+  address: string
 ): Promise<OnboardUserResponse> => {
   const response = await axios.patch(`${BASE_URL}/user/onboard`, payload, {
     headers: {
       "ngrok-skip-browser-warning": "true",
-      'auth-user-id': authId,
+      "auth-user-id": authId,
+      Address: address,
     },
   });
   return response.data;

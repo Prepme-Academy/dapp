@@ -21,6 +21,7 @@ export default function NotificationPage() {
   const { setFirstVisit } = useClientStore();
   const { user } = usePrivy();
   const authId = user?.id || "";
+  const address = user?.wallet?.address || "";
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const OnBoardingUser: OnboardUserPayload = {
@@ -36,6 +37,7 @@ export default function NotificationPage() {
       const onboardResponse = await onboardUser({
         payload: OnBoardingUser,
         authId: authId,
+        address:address
       });
 
       Cookies.set("onboarded", "true");

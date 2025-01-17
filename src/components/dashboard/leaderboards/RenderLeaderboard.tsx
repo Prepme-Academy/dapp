@@ -8,9 +8,11 @@ import ErrorDisplay from "@/components/ui/ErrorDisplay";
 
 const RenderLeaderboard: React.FC = () => {
   const { user } = usePrivy();
-  const authUserId = user?.id;
+  const authUserId = user?.id || "";
+  const address = user?.wallet?.address || "";
   const { data, isLoading, isError, error, refetch } = useWeeklyLeaderboard(
-    authUserId || ""
+    authUserId,
+    address
   );
 
   if (isLoading) {

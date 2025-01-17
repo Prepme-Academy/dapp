@@ -11,8 +11,9 @@ import { useUserInfo } from "@/lib/actions";
 const MyEarningTab: React.FC = () => {
   const { user } = usePrivy();
   const authUserId = user?.id || "";
+  const address = user?.wallet?.address || "";
   const { data: fetchedUserInfo, isLoading: userInfoLoading } =
-    useUserInfo(authUserId);
+    useUserInfo(authUserId,address);
 
   return (
     <div className="w-full space-y-4">
