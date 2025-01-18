@@ -14,6 +14,7 @@ const ExplorePastQuestions: React.FC = () => {
   const router = useRouter();
   const { user } = usePrivy();
   const [authUserId, setAuthUserId] = useState<string | null>(null);
+  const [address, setAddress] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   // Extract query parameters from the URL
@@ -25,8 +26,9 @@ const ExplorePastQuestions: React.FC = () => {
   const [sortOption, setSortOption] = useState<string>("popularity");
 
   useEffect(() => {
-    if (user?.id) {
+    if (user?.id && user?.wallet?.address) {
       setAuthUserId(user.id);
+      setAddress(user.wallet.address);
     }
   }, [user]);
 
@@ -43,6 +45,7 @@ const ExplorePastQuestions: React.FC = () => {
     year: year || "",
     sort: sort || "",
     authUserId: authUserId || "",
+    address: address || "",
   });
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {

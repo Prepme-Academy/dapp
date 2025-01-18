@@ -32,14 +32,15 @@ interface AnalysisSidebarProps {
 const AnalysisSidebar: React.FC<AnalysisSidebarProps> = ({ id }) => {
   const { user } = usePrivy();
   const router = useRouter();
-  const authUserId = user?.id;
+  const authUserId = user?.id || "";
+  const address = user?.wallet?.address || "";
 
   const {
     data: analysisData,
     isLoading,
     isError,
     error,
-  } = useExamAnalysis(Number(id), authUserId || "");
+  } = useExamAnalysis(Number(id), authUserId, address);
 
   if (isLoading || !analysisData) {
     return <div>Loading...</div>;

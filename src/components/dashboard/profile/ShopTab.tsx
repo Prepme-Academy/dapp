@@ -257,8 +257,9 @@ const ShopCollectables = () => {
   const { user } = usePrivy();
   const router = useRouter();
   const authUserId = user?.id || "";
+  const address = user?.wallet?.address || "";
   const { data: fetchedUserInfo, isLoading: userInfoLoading } =
-    useUserInfo(authUserId);
+    useUserInfo(authUserId,address);
 
   return (
     <div className="w-full flex flex-col items-start justify-start gap-4">

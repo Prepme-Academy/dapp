@@ -12,8 +12,11 @@ const EditProfile: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const { user } = usePrivy();
   const authUserId = user?.id || "";
-  const { data: fetchedUserInfo, isLoading: userInfoLoading } =
-    useUserInfo(authUserId);
+  const address = user?.wallet?.address || "";
+  const { data: fetchedUserInfo, isLoading: userInfoLoading } = useUserInfo(
+    authUserId,
+    address
+  );
 
   if (!userInfoLoading && !fetchedUserInfo) return "Loading user info....";
 

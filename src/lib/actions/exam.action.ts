@@ -31,10 +31,11 @@ export const useExams = (params: {
   year: string;
   sort: string;
   authUserId: string;
+  address: string;
 }) => {
   return useQuery<ExamsResponse, Error>(
     ["exams", params],
-    () => fetchExams(params, params.authUserId),
+    () => fetchExams(params, params.authUserId, params.address),
     {
       enabled: !!params.authUserId,
     }
@@ -45,16 +46,22 @@ export const useStartExam = () => {
   return useMutation<
     StartExamResponse,
     Error,
-    { examId: number; authUserId: string }
-  >(({ examId, authUserId }) => startExam(examId, authUserId));
+    { examId: number; authUserId: string; address: string }
+  >(({ examId, authUserId, address }) =>
+    startExam(examId, authUserId, address)
+  );
 };
 
-export const useExamQuestions = (attemptId: number, authUserId: string) => {
+export const useExamQuestions = (
+  attemptId: number,
+  authUserId: string,
+  address: string
+) => {
   return useQuery<ExamQuestionsResponse, Error>(
     ["examQuestions", attemptId],
-    () => fetchExamQuestions(attemptId, authUserId),
+    () => fetchExamQuestions(attemptId, authUserId, address),
     {
-      enabled: !!attemptId && !!authUserId,
+      enabled: !!attemptId && !!authUserId && !!address,
     }
   );
 };
@@ -63,38 +70,47 @@ export const useSubmitExam = () => {
   return useMutation<
     SubmitExamResponse,
     Error,
-    { attemptId: number; authUserId: string; data: SubmitExamRequest }
-  >(({ attemptId, authUserId, data }) =>
-    submitExam(attemptId, authUserId, data)
+    {
+      attemptId: number;
+      authUserId: string;
+      address: string;
+      data: SubmitExamRequest;
+    }
+  >(({ attemptId, authUserId, address, data }) =>
+    submitExam(attemptId, authUserId, address, data)
   );
 };
 
-export const useExamAnalysis = (attemptId: number, authUserId: string) => {
+export const useExamAnalysis = (
+  attemptId: number,
+  authUserId: string,
+  address: string
+) => {
   return useQuery<ExamAnalysisResponse, Error>(
     ["examAnalysis", attemptId],
-    () => fetchExamAnalysis(attemptId, authUserId),
+    () => fetchExamAnalysis(attemptId, authUserId, address),
     {
-      enabled: !!attemptId && !!authUserId,
+      enabled: !!attemptId && !!authUserId && !!address,
     }
   );
 };
 
-export const useWeeklyLeaderboard = (authUserId: string) => {
+export const useWeeklyLeaderboard = (authUserId: string, address: string) => {
   return useQuery<LeaderboardEntry[], Error>(
     ["weeklyLeaderboard", authUserId],
-    () => fetchWeeklyLeaderboard(authUserId),
+    () => fetchWeeklyLeaderboard(authUserId, address),
     {
-      enabled: !!authUserId,
+      enabled: !!authUserId && !!address,
     }
   );
 };
 
-export const useAchievements = (authUserId: string) => {
+export const useAchievements = (authUserId: string, address: string) => {
   return useQuery<Achievement[], Error>(
     ["achievements", authUserId],
-    () => fetchAchievements(authUserId),
+    () => fetchAchievements(authUserId, address),
     {
-      enabled: !!authUserId,
+      enabled: !!authUserId && !!address,
     }
   );
 };

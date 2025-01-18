@@ -20,14 +20,15 @@ export default function AnalysisInfoPage() {
   const currentTab = searchParams.get("tab") || "exam-scorecard";
 
   const { user } = usePrivy();
-  const authUserId = user?.id;
+  const authUserId = user?.id || "";
+  const address = user?.wallet?.address || "";
 
   const {
     data: analysisData,
     isLoading,
     isError,
-    error
-  } = useExamAnalysis(Number(params.id), authUserId || "");
+    error,
+  } = useExamAnalysis(Number(params.id), authUserId, address);
 
   if (isLoading) {
     return <div>Loading...</div>;

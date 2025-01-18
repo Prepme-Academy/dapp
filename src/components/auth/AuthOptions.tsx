@@ -52,8 +52,11 @@ const AuthOptions: React.FC = () => {
   const { isFirstVisit, setFirstVisit } = useClientStore();
   const { resetExamData, clearExamHistory } = useExamStore();
   const authUserId = user?.id || "";
-  const { data: userInfo, isLoading: userInfoLoading } =
-    useUserInfo(authUserId);
+  const address = user?.wallet?.address || "";
+  const { data: userInfo, isLoading: userInfoLoading } = useUserInfo(
+    authUserId,
+    address
+  );
 
   useEffect(() => {
     if (user && userInfo && !userInfoLoading) {
