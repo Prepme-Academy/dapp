@@ -7,12 +7,11 @@ import {
   UserInfo,
   UserResponse,
 } from "@/types";
-import { BASE_URL } from "..";
 
 export const checkUsername = async (
   username: string
 ): Promise<CheckUsernameResponse> => {
-  const response = await axios.post(`${BASE_URL}/user/check-username`, {
+  const response = await axios.post("/api/user/check-username", {
     username,
   });
   return response.data;
@@ -22,7 +21,7 @@ export const fetchUserInfo = async (
   authUserId: string,
   address: string
 ): Promise<UserInfo> => {
-  const response = await axios.get(`${BASE_URL}/user/me`, {
+  const response = await axios.get("/api/user/user-info", {
     headers: {
       "auth-user-id": authUserId,
       Address: address,
@@ -34,11 +33,7 @@ export const fetchUserInfo = async (
 export const createUser = async (
   payload: CreateUserPayload
 ): Promise<UserResponse> => {
-  const response = await axios.post(`${BASE_URL}/user/create`, payload, {
-    headers: {
-      "ngrok-skip-browser-warning": "true",
-    },
-  });
+  const response = await axios.post("/api/user/create-user", payload);
   return response.data;
 };
 
@@ -47,7 +42,7 @@ export const onboardUser = async (
   authId: string,
   address: string
 ): Promise<OnboardUserResponse> => {
-  const response = await axios.patch(`${BASE_URL}/user/onboard`, payload, {
+  const response = await axios.patch("/api/user/onboard", payload, {
     headers: {
       "ngrok-skip-browser-warning": "true",
       "auth-user-id": authId,
