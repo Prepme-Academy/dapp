@@ -6,11 +6,21 @@ import Image from "next/image";
 import { useState } from "react";
 import { referralSocialLinks } from "./routes";
 import Link from "next/link";
+import { usePrivy } from "@privy-io/react-auth";
+import { useUserInfo } from "@/lib/actions";
 
 const ReferralComponent: React.FC = () => {
   const [copied, setCopied] = useState(false);
+  const { user } = usePrivy();
+  const authUserId = user?.id || "";
+  const address = user?.wallet?.address || "";
+  const { data, isLoading, error } = useUserInfo(authUserId, address);
 
-  const referralLink = "https://prepme.academy//susanmayfhaodh13456";
+  const referralLink = isLoading
+    ? "Loading..."
+    : error
+    ? `Error : ${error.message}`
+    : `https://prepme.academy/login?ref=${data.referralCode}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(referralLink);
@@ -46,11 +56,13 @@ const ReferralComponent: React.FC = () => {
             type="email"
             id="email"
             placeholder="Enter emails separated by commas"
-            className="w-full outline-none border border-muted-100 h-10 px-4 focus:border-primary-300 rounded-lg text-sm font-normal placeholder:text-secondary-300"
+            className="w-full outline-none border border-muted-100 h-10 px-4 focus:border-primary-300 rounded-lg text-sm font-normal placeholder:text-secondary-300 disabled:bg-gray-200 disabled:cursor-not-allowed"
+            disabled
           />
           <Button
             variant={"unstyled"}
             className="bg-primary-400 text-white w-full lg:w-fit h-10 gradient-border shadow-buttonshadow outline-none text-sm text-center font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+            disabled
           >
             Send
           </Button>

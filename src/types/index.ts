@@ -7,6 +7,7 @@ export interface CreateUserPayload {
   email?: string;
   walletAddress: string;
   authId: string;
+  inviteCode?: string;
 }
 
 export interface UserResponse {
@@ -396,9 +397,23 @@ export interface UserInfo {
   appleId: string | null;
   twitterId: string | null;
   facebookId: string | null;
+  referralCode: string;
+  totalPracticeTime: number;
+  totalTestsTaken: number;
+  createdAt: string;
+  lastPracticeDate: string;
+  updatedAt: string;
+  preferredExam: PreferredExam;
+}
+
+export interface PreferredExam {
+  id: number;
+  name: string;
+  created_at: string;
+  code: string | null;
+  logo: string;
   createdAt: string;
   updatedAt: string;
-  preferredExam: string | null;
 }
 
 export interface WeekDay {
