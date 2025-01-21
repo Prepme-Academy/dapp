@@ -10,10 +10,9 @@ import {
   SubmitExamRequest,
   SubmitExamResponse,
 } from "@/types";
-import { BASE_URL } from "..";
 
 export const getExamTypes = async (): Promise<ExamTypesResponse> => {
-  const response = await axios.get(`${BASE_URL}/exam/types`, {
+  const response = await axios.get("/api/exam/get-types", {
     headers: {
       "ngrok-skip-browser-warning": "true",
     },
@@ -26,7 +25,7 @@ export const fetchExams = async (
   authUserId: string,
   address: string
 ): Promise<ExamsResponse> => {
-  const response = await axios.get(`${BASE_URL}/exam`, {
+  const response = await axios.get("/api/exam/all-exam", {
     params,
     headers: {
       "auth-user-id": authUserId,
@@ -42,7 +41,7 @@ export const startExam = async (
   address: string
 ): Promise<StartExamResponse> => {
   const response = await axios.post(
-    `${BASE_URL}/exam/start/${examId}`,
+    `/api/exam/begin-exam/${examId}`,
     {},
     {
       headers: {
@@ -59,7 +58,7 @@ export const fetchExamQuestions = async (
   authUserId: string,
   address: string
 ) => {
-  const response = await axios.get(`${BASE_URL}/exam/questions/${attemptId}`, {
+  const response = await axios.get(`/api/exam/get-questions/${attemptId}`, {
     headers: {
       "auth-user-id": authUserId,
       Address: address,
@@ -75,7 +74,7 @@ export const submitExam = async (
   data: SubmitExamRequest
 ): Promise<SubmitExamResponse> => {
   const response = await axios.post(
-    `${BASE_URL}/exam/submit/${attemptId}`,
+    `/api/exam/submit/${attemptId}`,
     data,
     {
       headers: {
@@ -92,7 +91,7 @@ export const fetchExamAnalysis = async (
   authUserId: string,
   address: string
 ): Promise<ExamAnalysisResponse> => {
-  const response = await axios.get(`${BASE_URL}/exam/analysis/${attemptId}`, {
+  const response = await axios.get(`/api/exam/analysis/${attemptId}`, {
     headers: {
       "auth-user-id": authUserId,
       Address: address,
@@ -105,7 +104,7 @@ export const fetchWeeklyLeaderboard = async (
   authUserId: string,
   address: string
 ): Promise<LeaderboardEntry[]> => {
-  const response = await axios.get(`${BASE_URL}/leaderboard/weekly`, {
+  const response = await axios.get("/api/activities/leaderboard", {
     headers: {
       "auth-user-id": authUserId,
       Address: address,
@@ -118,7 +117,7 @@ export const fetchAchievements = async (
   authUserId: string,
   address: string
 ): Promise<Achievement[]> => {
-  const response = await axios.get(`${BASE_URL}/achievements/me`, {
+  const response = await axios.get("/api/activities/achievements", {
     headers: {
       "auth-user-id": authUserId,
       Address: address,
