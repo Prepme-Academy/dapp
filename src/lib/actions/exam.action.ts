@@ -22,7 +22,12 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useExamTypes = () => {
-  return useQuery<ExamTypesResponse, Error>(["examTypes"], getExamTypes);
+  return useQuery<ExamTypesResponse, Error>(["examTypes"], getExamTypes, {
+    staleTime: 5 * 60 * 1000, // Data is fresh for 5 minutes
+    cacheTime: 10 * 60 * 1000, // Data stays in cache for 10 minutes
+    refetchOnWindowFocus: false, // Disable refetching on window focus
+    refetchOnMount: false, // Disable refetching on component mount
+  });
 };
 
 export const useExams = (params: {
@@ -38,6 +43,10 @@ export const useExams = (params: {
     () => fetchExams(params, params.authUserId, params.address),
     {
       enabled: !!params.authUserId,
+      staleTime: 5 * 60 * 1000, // Data is fresh for 5 minutes
+      cacheTime: 10 * 60 * 1000, // Data stays in cache for 10 minutes
+      refetchOnWindowFocus: false, // Disable refetching on window focus
+      refetchOnMount: false, // Disable refetching on component mount
     }
   );
 };
@@ -62,6 +71,10 @@ export const useExamQuestions = (
     () => fetchExamQuestions(attemptId, authUserId, address),
     {
       enabled: !!attemptId && !!authUserId && !!address,
+      staleTime: 5 * 60 * 1000, // Data is fresh for 5 minutes
+      cacheTime: 10 * 60 * 1000, // Data stays in cache for 10 minutes
+      refetchOnWindowFocus: false, // Disable refetching on window focus
+      refetchOnMount: false, // Disable refetching on component mount
     }
   );
 };
@@ -91,6 +104,10 @@ export const useExamAnalysis = (
     () => fetchExamAnalysis(attemptId, authUserId, address),
     {
       enabled: !!attemptId && !!authUserId && !!address,
+      staleTime: 5 * 60 * 1000, // Data is fresh for 5 minutes
+      cacheTime: 10 * 60 * 1000, // Data stays in cache for 10 minutes
+      refetchOnWindowFocus: false, // Disable refetching on window focus
+      refetchOnMount: false, // Disable refetching on component mount
     }
   );
 };
@@ -101,6 +118,10 @@ export const useWeeklyLeaderboard = (authUserId: string, address: string) => {
     () => fetchWeeklyLeaderboard(authUserId, address),
     {
       enabled: !!authUserId && !!address,
+      staleTime: 5 * 60 * 1000, // Data is fresh for 5 minutes
+      cacheTime: 10 * 60 * 1000, // Data stays in cache for 10 minutes
+      refetchOnWindowFocus: false, // Disable refetching on window focus
+      refetchOnMount: false, // Disable refetching on component mount
     }
   );
 };
@@ -111,6 +132,10 @@ export const useAchievements = (authUserId: string, address: string) => {
     () => fetchAchievements(authUserId, address),
     {
       enabled: !!authUserId && !!address,
+      staleTime: 5 * 60 * 1000, // Data is fresh for 5 minutes
+      cacheTime: 10 * 60 * 1000, // Data stays in cache for 10 minutes
+      refetchOnWindowFocus: false, // Disable refetching on window focus
+      refetchOnMount: false, // Disable refetching on component mount
     }
   );
 };

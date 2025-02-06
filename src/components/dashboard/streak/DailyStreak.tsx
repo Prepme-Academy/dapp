@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {   X  } from "lucide-react";
+import { X } from "lucide-react";
 import Image from "next/image";
 import { usePrivy } from "@privy-io/react-auth";
 import { useWeeklyStreak } from "@/lib/actions/activities.action";
@@ -13,15 +13,14 @@ const DailyStreak = ({}: { id: string }) => {
   const router = useRouter();
   const { user } = usePrivy();
   const authUserId = user?.id || "";
-  
-  const { 
-    data, 
-    isLoading, 
-    error, 
-    refetch 
-  } = useWeeklyStreak(authUserId);
+  const address = user?.wallet?.address || "";
 
-  const currentStreak = 
+  const { data, isLoading, error, refetch } = useWeeklyStreak(
+    authUserId,
+    address
+  );
+
+  const currentStreak =
     data?.weekDays.filter((day) => day.isComplete).length || 0;
 
   if (isLoading) {
@@ -101,11 +100,10 @@ const DailyStreak = ({}: { id: string }) => {
   );
 };
 
-
 const StreakSkeleton = () => (
   <Card className="w-full max-w-[483px] mx-auto p-4 border-grey-500 flex flex-col items-center justify-center relative animate-pulse">
     <div className="absolute right-3 top-3 w-10 h-10 bg-gray-200 rounded-full" />
-    
+
     <div className="flex flex-col items-center justify-center gap-2 mt-6 relative">
       {/* Fire icon placeholder */}
       <div className="w-[99px] h-[99px] bg-gray-200 rounded-full" />
@@ -117,14 +115,16 @@ const StreakSkeleton = () => (
 
     <Card className="w-full p-3 bg-transparent border-[#DFE2E6] mt-4">
       <div className="grid grid-cols-7 gap-4 w-full">
-        {Array(7).fill(null).map((_, index) => (
-          <div key={index} className="flex flex-col items-center gap-2">
-            <div className="w-10 h-10 bg-gray-200 rounded-full" />
-            <div className="w-8 h-4 bg-gray-200 rounded" />
-          </div>
-        ))}
+        {Array(7)
+          .fill(null)
+          .map((_, index) => (
+            <div key={index} className="flex flex-col items-center gap-2">
+              <div className="w-10 h-10 bg-gray-200 rounded-full" />
+              <div className="w-8 h-4 bg-gray-200 rounded" />
+            </div>
+          ))}
       </div>
-      
+
       <Card className="w-full mt-3 py-4 px-8 border-grey-500">
         <div className="h-4 w-full bg-gray-200 rounded mb-2" />
         <div className="h-4 w-3/4 bg-gray-200 rounded mx-auto" />

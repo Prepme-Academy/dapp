@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { CreateUserPayload } from "@/types"; // Adjust the import path as necessary
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { createUser } from "@/services/apis/user.api";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import useClientStore from "@/store/clientStore";
 import Cookies from "js-cookie";
 
@@ -16,6 +16,8 @@ const UserCreationComponent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const referralCode = searchParams.get("ref") || undefined;
 
   useEffect(() => {
     const handleCreateUser = async () => {
@@ -28,6 +30,7 @@ const UserCreationComponent: React.FC = () => {
         email: user?.email?.address || undefined,
         walletAddress: user?.wallet?.address || wallets[0]?.address || "",
         authId: user?.id || "",
+        inviteCode: referralCode,
       };
 
       try {
@@ -49,7 +52,7 @@ const UserCreationComponent: React.FC = () => {
     };
 
     handleCreateUser();
-  }, [user, wallets, router, isFirstVisit]);
+  }, [user, wallets, router, isFirstVisit, referralCode]);
 
   return (
     <div className="p-4 max-w-md mx-auto hidden">

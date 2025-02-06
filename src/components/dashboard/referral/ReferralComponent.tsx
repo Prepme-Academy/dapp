@@ -6,16 +6,62 @@ import Image from "next/image";
 import { useState } from "react";
 import { referralSocialLinks } from "./routes";
 import Link from "next/link";
+import { usePrivy } from "@privy-io/react-auth";
+import { useSendUserInfomation, useUserInfo } from "@/lib/actions";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
+import { formatAxiosErrorMessage } from "@/utils/errors";
+import { AxiosError } from "axios";
 
 const ReferralComponent: React.FC = () => {
   const [copied, setCopied] = useState(false);
+  const [email, setEmail] = useState("");
+  const { user } = usePrivy();
+  const authUserId = user?.id || "";
+  const address = user?.wallet?.address || "";
+  const { data, isLoading, error } = useUserInfo(authUserId, address);
+  const {
+    mutate,
+    isLoading: IsSubmittingInvite,
+    isError: IsSumitError,
+    error: InviteError,
+  } = useSendUserInfomation();
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
 
-  const referralLink = "https://prepme.academy//susanmayfhaodh13456";
+  const referralLink = isLoading
+    ? "Loading..."
+    : error
+    ? `Error : ${error.message}`
+    : `https://prepme.academy/login?ref=${data.referralCode}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(referralLink);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleUserInviteSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSuccessMessage(null);
+    setApiError(null);
+
+    mutate(
+      { email, authId: authUserId, address },
+      {
+        onSuccess: (data) => {
+          if (data.success) {
+            setEmail("");
+            setSuccessMessage(data.message);
+            setTimeout(() => {
+              setSuccessMessage(null);
+            }, 2000);
+          } else {
+            setApiError(data.message);
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -41,20 +87,53 @@ const ReferralComponent: React.FC = () => {
         <label htmlFor="email" className="text-sm font-normal text-muted-500">
           Invite through email
         </label>
-        <div className="flex flex-col md:flex-row items-center justify-start gap-3 w-full">
+        <form
+          onSubmit={handleUserInviteSubmit}
+          className="flex flex-col md:flex-row items-center justify-start gap-3 w-full"
+        >
           <input
             type="email"
             id="email"
             placeholder="Enter emails separated by commas"
-            className="w-full outline-none border border-muted-100 h-10 px-4 focus:border-primary-300 rounded-lg text-sm font-normal placeholder:text-secondary-300"
+            className="w-full outline-none border border-muted-100 h-10 px-4 focus:border-primary-300 rounded-lg text-sm font-normal placeholder:text-secondary-300 disabled:bg-gray-200 disabled:cursor-not-allowed"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <Button
+            type="submit"
             variant={"unstyled"}
             className="bg-primary-400 text-white w-full lg:w-fit h-10 gradient-border shadow-buttonshadow outline-none text-sm text-center font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+            disabled={email.length === 0 || IsSubmittingInvite}
           >
-            Send
+            {IsSubmittingInvite ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              "Send"
+            )}
           </Button>
-        </div>
+        </form>
+        {apiError && (
+          <Alert variant="destructive" className="w-full">
+            <AlertDescription>{apiError}</AlertDescription>
+          </Alert>
+        )}
+        {IsSumitError && (
+          <Alert variant="destructive" className="w-full">
+            <AlertDescription>
+              {formatAxiosErrorMessage(InviteError as AxiosError)}
+            </AlertDescription>
+          </Alert>
+        )}
+        {successMessage && (
+          <Alert className="w-full bg-green-50 border-green-200">
+            <AlertDescription className="text-green-600">
+              {successMessage}
+            </AlertDescription>
+          </Alert>
+        )}
         <h6 className="select-none text-sm font-normal text-center w-full py-6">
           OR
         </h6>

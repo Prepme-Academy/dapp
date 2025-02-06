@@ -3,6 +3,7 @@ import {
   createUser,
   fetchUserInfo,
   onboardUser,
+  sendUserInvite,
 } from "@/services/apis/user.api";
 import {
   CreateUserPayload,
@@ -10,6 +11,7 @@ import {
   OnboardUserResponse,
   UserInfo,
   UserResponse,
+  CheckUsernameResponse,
 } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -23,6 +25,10 @@ export const useUserInfo = (authUserId: string, address: string) => {
     () => fetchUserInfo(authUserId, address),
     {
       enabled: !!authUserId && !!address,
+      staleTime: 5 * 60 * 1000, // Data is fresh for 5 minutes
+      cacheTime: 10 * 60 * 1000, // Data stays in cache for 10 minutes
+      refetchOnWindowFocus: false, // Disable refetching on window focus
+      refetchOnMount: false, // Disable refetching on component mount
     }
   );
 };
@@ -39,4 +45,15 @@ export const useOnboardUser = () => {
     Error,
     { payload: OnboardUserPayload; authId: string; address: string }
   >(({ payload, authId, address }) => onboardUser(payload, authId, address));
+};
+
+export const useSendUserInfomation = () => {
+  return useMutation<
+    CheckUsernameResponse,
+    Error,
+    { email: string; authId: string; address: string }
+  >(
+    ({ email, authId, address }) =>
+      sendUserInvite(email, authId, address) as Promise<CheckUsernameResponse>
+  );
 };
