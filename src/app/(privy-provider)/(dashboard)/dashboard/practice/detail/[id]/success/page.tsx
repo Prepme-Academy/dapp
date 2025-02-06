@@ -7,6 +7,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { useUserInfo } from "@/lib/actions";
 import { useExamAnalysis } from "@/lib/actions/exam.action";
 import useExamStore from "@/store/examStore";
 import { formatAxiosErrorMessage } from "@/utils/errors";
@@ -64,6 +65,7 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
   const authUserId = user?.id || "";
   const address = user?.wallet?.address || "";
   const { setExamData, addToExamHistory } = useExamStore();
+  const { refetch: fetchedUpdatedUserInfo } = useUserInfo(authUserId, address);
 
   const {
     data: analysisData,
@@ -76,8 +78,9 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
     if (analysisData?.data) {
       setExamData(analysisData.data);
       addToExamHistory(analysisData.data);
+      fetchedUpdatedUserInfo();
     }
-  }, [analysisData, setExamData, addToExamHistory]);
+  }, [analysisData, setExamData, addToExamHistory, fetchedUpdatedUserInfo]);
 
   if (isLoading) {
     return (
