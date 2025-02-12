@@ -159,9 +159,9 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
       <div className="flex flex-col items-center justify-center gap-3">
         <Image
           src="/icons/dashboard/success.svg"
-          alt="info icon"
-          width={50}
-          height={50}
+          alt="success icon"
+          width={114}
+          height={116}
           priority
         />
         <h6 className="text-xs text-center text-muted-400 select-none flex items-center justify-start gap-1 w-fit rounded-full bg-[#FFF0A6] px-2 py-1">
@@ -384,6 +384,7 @@ const SuccessTab = ({ id }: { id: string | string[] | undefined }) => {
           Continue
         </Button>
       </CardFooter>
+      <p className="w-full py-2 text-center underline text-sm font-normal text-primary-400">Share result</p>
     </Card>
   );
 };
