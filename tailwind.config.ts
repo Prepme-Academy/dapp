@@ -22,6 +22,7 @@ export default {
         adbg: "url('/background/adbg.png')",
         authbg: "url('/background/authbg.png')",
         herobg: "url('/background/svg/hero.svg')",
+        "share-linear": "radial-gradient(78.78% 282.07% at 79.5% 27.91%, #D8ECFE 0%, #D5F5FF 0.01%, #E2EBF3 100%)",
       },
       colors: {
         background: "hsl(var(--background))",

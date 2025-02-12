@@ -4,6 +4,7 @@ import ExploreExamType from "./ExploreExamType";
 import ExplorePastQuestions from "./ExplorePastQuestions";
 import PracticeModal from "./PracticeModal";
 import ReadyCard from "./ReadyCard";
+import ShareResult from "./ShareResult";
 import StartPracticeSearch from "./StartPracticeSearch";
 
 
@@ -14,5 +15,6 @@ export {
   ExplorePastQuestions,
   PracticeModal,
   ReadyCard,
+  ShareResult,
   StartPracticeSearch,
 };
