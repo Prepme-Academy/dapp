@@ -15,7 +15,7 @@ import { AxiosError } from "axios";
 
 const ReferralComponent: React.FC = () => {
   const [copied, setCopied] = useState(false);
-  const [email, setEmail] = useState("");
+  const [emailInput, setEmailInput] = useState<string>("");
   const { user } = usePrivy();
   const authUserId = user?.id || "";
   const address = user?.wallet?.address || "";
@@ -41,27 +41,48 @@ const ReferralComponent: React.FC = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleUserInviteSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSuccessMessage(null);
     setApiError(null);
 
+    const emails = emailInput.split(",").map((email) => email.trim());
+    const invalidEmails = emails.filter((email) => !isValidEmail(email));
+
+    if (invalidEmails.length > 0) {
+      setApiError(`Invalid email addresses: ${invalidEmails.join(", ")}`);
+      return;
+    }
+
     mutate(
-      { email, authId: authUserId, address },
+      { emails, authId: authUserId, address },
       {
         onSuccess: (data) => {
-          if (data.success) {
-            setEmail("");
-            setSuccessMessage(data.message);
-            setTimeout(() => {
-              setSuccessMessage(null);
-            }, 2000);
-          } else {
-            setApiError(data.message);
-          }
+          const successMessages = data.map((d) => d.message);
+          setSuccessMessage(successMessages.join(", "));
+          setEmailInput("");
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 2000);
+        },
+        onError: (error: Error) => {
+          const axiosError = error as AxiosError;
+          setApiError(
+            (axiosError.response?.data as { message: string })?.message ||
+              "Failed to send invite. Please try again."
+          );
         },
       }
     );
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailInput(e.target.value);
   };
 
   return (
@@ -92,18 +113,18 @@ const ReferralComponent: React.FC = () => {
           className="flex flex-col md:flex-row items-center justify-start gap-3 w-full"
         >
           <input
-            type="email"
+            type="text"
             id="email"
             placeholder="Enter emails separated by commas"
             className="w-full outline-none border border-muted-100 h-10 px-4 focus:border-primary-300 rounded-lg text-sm font-normal placeholder:text-secondary-300 disabled:bg-gray-200 disabled:cursor-not-allowed"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={emailInput}
+            onChange={handleEmailChange}
           />
           <Button
             type="submit"
             variant={"unstyled"}
             className="bg-primary-400 text-white w-full lg:w-fit h-10 gradient-border shadow-buttonshadow outline-none text-sm text-center font-medium hover:opacity-85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-            disabled={email.length === 0 || IsSubmittingInvite}
+            disabled={emailInput.length === 0 || IsSubmittingInvite}
           >
             {IsSubmittingInvite ? (
               <>

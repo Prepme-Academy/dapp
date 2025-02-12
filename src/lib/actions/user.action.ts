@@ -49,11 +49,8 @@ export const useOnboardUser = () => {
 
 export const useSendUserInfomation = () => {
   return useMutation<
-    CheckUsernameResponse,
+    CheckUsernameResponse[],
     Error,
-    { email: string; authId: string; address: string }
-  >(
-    ({ email, authId, address }) =>
-      sendUserInvite(email, authId, address) as Promise<CheckUsernameResponse>
-  );
+    { emails: string[]; authId: string; address: string }
+  >(({ emails, authId, address }) => sendUserInvite(emails, authId, address));
 };

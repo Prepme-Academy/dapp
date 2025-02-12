@@ -78,7 +78,7 @@ const ReadyCard: React.FC<ReadyCardProps> = ({ id }) => {
             <Image
               src="/icons/dashboard/info.svg"
               alt="info icon"
-              width={56}
+              width={137}
               height={50}
               priority
             />

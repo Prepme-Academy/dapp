@@ -557,10 +557,10 @@ const AnswerBoard: React.FC<AnswerBoardProps> = ({ id }) => {
           <DialogTitle>
             <div className="flex flex-col items-center justify-center gap-3">
               <Image
-                src="/icons/dashboard/info.svg"
-                alt="info icon"
-                width={56}
-                height={50}
+                src="/icons/dashboard/areusure.svg"
+                alt="areusure icon"
+                width={77}
+                height={80}
                 priority
               />
               <h2 className="text-lg md:text-xl text-center text-muted-500">

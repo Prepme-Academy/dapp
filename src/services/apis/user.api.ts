@@ -53,14 +53,14 @@ export const onboardUser = async (
 };
 
 export const sendUserInvite = async (
-  email: string,
+  emails: string[],
   authId: string,
   address: string
-): Promise<CheckUsernameResponse> => {
+): Promise<CheckUsernameResponse[]> => {
   const response = await axios.post(
     "/api/user/send-invite",
     {
-      email,
+      emails,
     },
     {
       headers: {
