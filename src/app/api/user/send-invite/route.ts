@@ -4,7 +4,7 @@ import { BASE_URL } from "@/services";
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json();
-  const authId = req.headers.get("auth-id");
+  const authId = req.headers.get("auth-user-id");
   const address = req.headers.get("address");
 
   try {
